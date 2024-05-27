@@ -92,17 +92,7 @@ height: max-content;
 width: 100%;
 }
 }
-.vanilla-calendar-grid {
-display: flex;
-flex-grow: 1;
-flex-wrap: wrap;
-justify-content: space-between;
-}
-.vanilla-calendar-column {
-display: flex;
-flex: 1;
-flex-direction: column;
-}
+
 /*AJUSTES NO CALENDÁRIO */
 /*LEGENDA DO CALENDÁRIO */
 .legend-grid {
@@ -139,7 +129,7 @@ background-color: yellow;
 }
 @media (max-width: 1024px) {
 .legend-grid {
-grid-template-columns: repeat(3, 1fr);
+grid-template-columns: repeat(2, 1fr);
 }
 }
 @media (max-width: 768px) {
