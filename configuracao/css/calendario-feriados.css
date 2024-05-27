@@ -69,6 +69,10 @@ row-gap: 0;
 /*.vanilla-calendar-day__popup {
     width: 12rem;
 }*/
+.vanilla-calendar-day__popup{
+    left: max(100px, min(calc(100% - 200px), 50%));
+    right: max(100px, min(calc(100% - 200px), 50%));
+}
 .vanilla-calendar_multiple {
 width: 100%;
 }
