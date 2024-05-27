@@ -45,10 +45,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 document.querySelector('.botao_buscar_localizacao').addEventListener('click', function (e) {
                     const selectEstado = document.getElementById('cmbEstado');
+                    const selectAno = document.getElementById('cmbAno');
+                    const ano = document.getElementById('cmbAno').value;
                     const uf = document.getElementById('cmbEstado').value;
                     const cidadeSlug = document.getElementById('cmbCidade').value;
                 
-                    if (uf.length === 0) {
+                    if (ano.length === 0) {
+                        document.getElementById('BotaoBuscar').disabled = true;
+                        selectAno.style.border = '1px solid #f5c6cb';
+                        selectAno.style.background = '#f8d7da';
+                    } else if (uf.length === 0) {
                         document.getElementById('BotaoBuscar').disabled = true;
                         selectEstado.style.border = '1px solid #f5c6cb';
                         selectEstado.style.background = '#f8d7da';
