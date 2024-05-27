@@ -15,6 +15,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('cmbEstado').innerHTML = option;
                 document.getElementById('cmbEstado').style.display = 'block';
 
+                // Adicione o evento de mudança de ano
+                document.getElementById('cmbAno').addEventListener('change', function (e) {
+                    var ano = document.getElementById('cmbAno').value;
+                    if (ano) {
+                        document.getElementById('BotaoBuscar').disabled = false;
+                        document.getElementById('cmbEstado').style.border = '';
+                        document.getElementById('cmbEstado').style.background = '';
+                        document.getElementById('cmbCidade').style.border = '';
+                        document.getElementById('cmbCidade').style.background = '';
+                    } else {
+                        // Limpa as opções da cidade se o estado não estiver selecionado
+                        document.getElementById('cmbCidade').innerHTML = '<option hidden="true" value="">Selecione o Ano</option>';
+                        document.getElementById('cmbCidade').style.display = 'none';
+                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('cmbEstado').style.border = '1px solid #f5c6cb';
+                        document.getElementById('cmbEstado').style.background = '#f8d7da';
+                    }
+                });
+
                 // Adicione o evento de mudança de estado aqui, após os dados serem carregados
                 document.getElementById('cmbEstado').addEventListener('change', function (e) {
                     var uf = document.getElementById('cmbEstado').value;
