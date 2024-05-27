@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
 
-                document.querySelector('botaoBuscar').addEventListener('click', function (e) {
+                document.getElementById('botaoBuscar').addEventListener('click', function (e) {
                     const selectEstado = document.getElementById('cmbEstado');
                     const selectAno = document.getElementById('cmbAno');
                     const ano = document.getElementById('cmbAno').value;

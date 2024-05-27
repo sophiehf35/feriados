@@ -96,7 +96,7 @@ section.secao-inicial p {
         border-right: 2px solid #d2d8dd
     }
 
-    #BotaoBuscar {
+    .botao-buscar {
         width: 100%;
         height: 60px
     }
@@ -104,7 +104,7 @@ section.secao-inicial p {
 }
 
 @media screen and (max-width: 767px) {
-    #BotaoBuscar {
+    .botao-buscar {
         height:40px;
         margin: 0
     }
@@ -121,7 +121,7 @@ section.secao-inicial p {
         border-radius: 0
     }
 
-    #BotaoBuscar {
+    .botao-buscar {
         border-radius: 0 3px 3px 0
     }
 
