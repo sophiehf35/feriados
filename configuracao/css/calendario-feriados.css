@@ -66,9 +66,9 @@ background-color:unset;
 .vanilla-calendar-days {
 row-gap: 0;
 }
-.vanilla-calendar-day__popup {
+/*.vanilla-calendar-day__popup {
     width: 12rem;
-}
+}*/
 .vanilla-calendar_multiple {
 width: 100%;
 }
@@ -92,7 +92,17 @@ height: max-content;
 width: 100%;
 }
 }
-
+.vanilla-calendar-grid {
+display: flex;
+flex-grow: 1;
+flex-wrap: wrap;
+justify-content: space-between;
+}
+.vanilla-calendar-column {
+display: flex;
+flex: 1;
+flex-direction: column;
+}
 /*AJUSTES NO CALENDÁRIO */
 /*LEGENDA DO CALENDÁRIO */
 .legend-grid {
