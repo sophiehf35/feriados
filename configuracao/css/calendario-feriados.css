@@ -66,6 +66,9 @@ background-color:unset;
 .vanilla-calendar-days {
 row-gap: 0;
 }
+[data-calendar-theme=light] .vanilla-calendar-week__day {
+    color: #64748b!important;
+}
 /*.vanilla-calendar-day__popup {
     width: 12rem;
 }*/
