@@ -76,9 +76,15 @@
                <div class="wrapper">
                   <div style="position: relative; z-index: 2;" class="container-xl">
                      <h1 data-slug="home" data-estado="todos" data-cidade="todas" data-bairro="todos">Feriados</h1>
-                     <p>Selecione o estado ou cidade para filtrar os feriados.</p>
+                     <p>Encontre os feriados de acordo com o ano, estado ou cidade.</p>
                      <form action="#" method="post" novalidate="novalidate">
                         <div class="row">
+                           <div id="estado" class="col-lg-4 col-md-4 col-sm-12">
+                              <select style="margin-bottom: 10px;" class="wide form-control select_customizado ano" name="ano" id="cmbAno">
+                                 <option hidden="true" value="">Selecione o Ano</option>
+                                 <option disabled="disabled" default="true" value="">Selecione o Ano</option>
+                              </select>
+                           </div>
                            <div id="estado" class="col-lg-4 col-md-4 col-sm-12">
                               <select style="margin-bottom: 10px;" class="wide form-control select_customizado estado" name="estado" id="cmbEstado">
                                  <option hidden="true" value="">Selecione o Estado</option>
@@ -118,14 +124,35 @@
                </div>
             </section>
             <section class="bg_color_1">
-               <div class="container-fluid">
-                  <div class="main_title_2">
-                     <span><em></em></span>
-                     <h2>Feriados estaduais</h2>
-                     <p>Veja os feriados nacionais e estaduais de cada estado do Brasil.</p>
-                  </div>
-                  <div id="slideDeEstados" class="swiper mySwiper">
-                     <div class="swiper-wrapper"></div>
+               <div class="container-xl margin_80_55">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <div class="card card-year">
+                          <div class="card-body text-center">
+                            <h5 class="card-title">Feriados 2024</h5>
+                            <p class="card-text">Veja os feriados do ano de 2024.</p>
+                            <a href="/feriados-2024/" class="btn btn-primary">Ver Feriados</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="card card-year">
+                          <div class="card-body text-center">
+                            <h5 class="card-title">Feriados 2025</h5>
+                            <p class="card-text">Veja os feriados do ano de 2025.</p>
+                            <a href="/feriados-2025/" class="btn btn-primary">Ver Feriados</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="card card-year">
+                          <div class="card-body text-center">
+                            <h5 class="card-title">Feriados 2026</h5>
+                            <p class="card-text">Veja os feriados do ano de 2026.</p>
+                            <a href="/feriados-2026/" class="btn btn-primary">Ver Feriados</a>
+                          </div>
+                        </div>
+                      </div>
                   </div>
                </div>
             </section>
