@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /*
+Disallow: /cdn-cgi/
+
+Sitemap: https://www.feriados20.com.br/sitemap.xml

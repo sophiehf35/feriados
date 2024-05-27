@@ -1,0 +1,18 @@
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>https://www.feriados20.com.br/sitemap/sitemap-feriados-ano.xml</loc>
+        <lastmod>2023-12-31</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://www.feriados20.com.br/sitemap/sitemap-feriados-cidade.xml</loc>
+        <lastmod>2023-12-31</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://www.feriados20.com.br/sitemap/sitemap-feriados-estado.xml</loc>
+        <lastmod>2023-12-31</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://www.feriados20.com.br/sitemap/sitemap-feriados-geral.xml</loc>
+        <lastmod>2023-12-31</lastmod>
+    </sitemap>
+</sitemapindex>

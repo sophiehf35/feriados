@@ -1,0 +1,49 @@
+{
+  "id":345417679477152,
+  "nome_do_site":"Feriados 20",
+  "nome_do_logo":"logo-feriados-20",
+  "autor_padrao":"Feriados 20",
+  "dominio":"https://www.feriados20.com.br",
+  "numero_artigos_pagina_home":25,
+  "numero_artigos_pagina_categoria":10,
+  "numero_ferramentas_pagina_categoria" : 10,
+  "permite_profissionais": 0,
+  "possui_ferramentas": 0,
+  "permite_logo_no_rodape":0,
+  "tipo_home": "personalizada",
+  "numero_profissionais_por_pagina":0,
+  "conteudo_destaque_pagina_categoria":0,
+  "conteudo_destaque_pagina_artigo":1,
+  "endereco_funcao_php":"https://gerenciador.linkasites.com.br/configuracao/php/funcoes/recebe-dados/",
+  "cdn_imagens":1,
+  "diretorio_cdn_imagens":"https://ik.imagekit.io/feriados",
+  "botao_superior_direito":0,
+  "exibe_categorias_de_artigos":0,
+  "possui_google_analytics":1,
+  "codigo_google_analytics":"G-3EEHJRFQ21",
+  "possui_google_adsense":0,
+  "codigo_google_adsense":"",
+  "possui_clarity":0,
+  "codigo_clarity":"c6por4ipyr",
+  "header":{
+     "fixo_em_todas_paginas":1,
+     "fixo_em_algumas_paginas":0
+  },
+  "js_customizado": {
+   "paginas_artigo": [],
+   "paginas_categoria": []
+ },
+  "paginas_fixas":{
+     "slugs":[
+        "home",
+        "fale-conosco",
+        "politica-de-privacidade",
+        "quem-somos"
+     ],
+     "meta_titulo_padrao":"| feriados nacionais estaduais municipais",
+     "meta_descricao_padrao":"Feriados nacionais 2024 ✔️ feriados estaduais ✔️ feriados municipais ✔️ feriados 2024 ✔️ buscar feriados ✔️ feriados da cidade ✔️ feriados do Brasil"
+  },
+  "paginas_categorias":{
+     "slugs":[]
+  }
+}
