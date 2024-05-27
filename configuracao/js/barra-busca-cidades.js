@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
 
-                document.querySelector('.botao_buscar_localizacao').addEventListener('click', function (e) {
+                document.querySelector('botaoBuscar').addEventListener('click', function (e) {
                     const selectEstado = document.getElementById('cmbEstado');
                     const selectAno = document.getElementById('cmbAno');
                     const ano = document.getElementById('cmbAno').value;
