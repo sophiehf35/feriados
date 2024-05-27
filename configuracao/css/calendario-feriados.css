@@ -1,0 +1,146 @@
+/*AJUSTES NO CALENDÁRIO */
+.bg-orange {
+background-color: #ffc107 !important;
+color: #fff !important;
+}
+.bg-red {
+background-color: #ff5050 !important;
+color: #fff !important;
+}
+[data-calendar-theme=light].vanilla-calendar {
+background-color:unset;
+}
+.vanilla-calendar-column {
+background: #fff;
+box-shadow: 0 0 30px 0 rgb(0 0 0 / 33%);
+border-radius: 5px;
+}
+.vanilla-calendar-header{
+background: #b01233;
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+margin-bottom: 0;
+}
+[data-calendar-theme=light] .vanilla-calendar-month.vanilla-calendar-month_disabled {
+color: #fff;
+opacity: 1;
+}
+[data-calendar-theme=light] .vanilla-calendar-year.vanilla-calendar-year_disabled {
+color: #fff;
+}
+.vanilla-calendar-wrapper{
+border-bottom-left-radius: 5px;
+background: #fff;
+border-bottom-right-radius: 5px;
+}
+.vanilla-calendar-week {
+margin-bottom: 0;
+padding: 5px;
+background: #f8f8f8;
+}
+.vanilla-calendar.vanilla-calendar_multiple .vanilla-calendar-days {
+border-bottom-right-radius: 5px;
+border-bottom-left-radius: 5px;
+background: #fff;
+}
+.vanilla-calendar-grid{
+row-gap: 0.5rem;
+column-gap: 0.5rem;
+}
+.vanilla-calendar-day__btn {
+font-size: 0.8rem;
+border-radius: unset;
+}
+[data-calendar-theme=light] .vanilla-calendar-day__btn {
+background-color:unset;
+}
+.vanilla-calendar-days {
+row-gap: 0;
+}
+.vanilla-calendar-day__popup {
+    width: 12rem;
+}
+.vanilla-calendar_multiple {
+width: 100%;
+}
+.vanilla-calendar {
+position: relative;
+box-sizing: border-box;
+display: flex;
+min-width: 272px;
+max-width: 100%;
+flex-direction: column;
+border-radius: .75rem;
+padding: 0;
+opacity: 1;
+transition-property: opacity;
+transition-timing-function: cubic-bezier(.4,0,.2,1);
+transition-duration: .15s;
+height: max-content;
+}
+@supports ((width: -webkit-fit-content) or (width: -moz-fit-content) or (width: fit-content)) {
+.vanilla-calendar_multiple {
+width: 100%;
+}
+}
+.vanilla-calendar-grid {
+display: flex;
+flex-grow: 1;
+flex-wrap: wrap;
+justify-content: space-between;
+}
+.vanilla-calendar-column {
+display: flex;
+flex: 1;
+flex-direction: column;
+}
+/*AJUSTES NO CALENDÁRIO */
+/*LEGENDA DO CALENDÁRIO */
+.legend-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 0.5rem;
+}
+.legend-item {
+display: flex;
+align-items: center;
+padding: 0.5rem;
+border: 1px solid #ddd;
+border-radius: 0.25rem;
+background-color: #fff;
+}
+.color-box {
+width: 20px;
+height: 20px;
+display: inline-block;
+margin-right: 0.5rem;
+border-radius: 3px;
+}
+.bg-red {
+background-color: red;
+}
+.bg-blue {
+background-color: blue;
+}
+.bg-green {
+background-color: green;
+}
+.bg-yellow {
+background-color: yellow;
+}
+@media (max-width: 1024px) {
+.legend-grid {
+grid-template-columns: repeat(3, 1fr);
+}
+}
+@media (max-width: 768px) {
+.legend-grid {
+grid-template-columns: repeat(2, 1fr);
+}
+}
+@media (max-width: 480px) {
+.legend-grid {
+grid-template-columns: 1fr;
+}
+}
+/*LEGENDA DO CALENDÁRIO */

@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('cmbAno').addEventListener('change', function (e) {
                     var ano = document.getElementById('cmbAno').value;
                     if (ano) {
-                        document.getElementById('BotaoBuscar').disabled = false;
+                        document.getElementById('botaoBuscar').disabled = false;
                         document.getElementById('cmbEstado').style.border = '';
                         document.getElementById('cmbEstado').style.background = '';
                         document.getElementById('cmbCidade').style.border = '';
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Limpa as opções da cidade se o estado não estiver selecionado
                         document.getElementById('cmbCidade').innerHTML = '<option hidden="true" value="">Selecione o Ano</option>';
                         document.getElementById('cmbCidade').style.display = 'none';
-                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('botaoBuscar').disabled = true;
                         document.getElementById('cmbEstado').style.border = '1px solid #f5c6cb';
                         document.getElementById('cmbEstado').style.background = '#f8d7da';
                     }
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         cmbCidade.innerHTML = option;
                         cmbCidade.value = '';
                         cmbCidade.style.display = 'block';
-                        document.getElementById('BotaoBuscar').disabled = false;
+                        document.getElementById('botaoBuscar').disabled = false;
                         document.getElementById('cmbEstado').style.border = '';
                         document.getElementById('cmbEstado').style.background = '';
                         document.getElementById('cmbCidade').style.border = '';
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Limpa as opções da cidade se o estado não estiver selecionado
                         document.getElementById('cmbCidade').innerHTML = '<option hidden="true" value="">Selecione a Cidade</option>';
                         document.getElementById('cmbCidade').style.display = 'none';
-                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('botaoBuscar').disabled = true;
                         document.getElementById('cmbEstado').style.border = '1px solid #f5c6cb';
                         document.getElementById('cmbEstado').style.background = '#f8d7da';
                     }
@@ -70,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     const cidadeSlug = document.getElementById('cmbCidade').value;
                 
                     if (ano.length === 0) {
-                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('botaoBuscar').disabled = true;
                         selectAno.style.border = '1px solid #f5c6cb';
                         selectAno.style.background = '#f8d7da';
                     } else if (uf.length === 0) {
-                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('botaoBuscar').disabled = true;
                         selectEstado.style.border = '1px solid #f5c6cb';
                         selectEstado.style.background = '#f8d7da';
                     } else {
@@ -92,13 +92,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     if (uf.length === 0 && cidadeSlug.length === 0) {
-                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('botaoBuscar').disabled = true;
                     } else if (uf.length === 0) {
-                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('botaoBuscar').disabled = true;
                         selectEstado.style.border = '1px solid #f5c6cb';
                         selectEstado.style.background = '#f8d7da';
                     } else if (cidadeSlug.length === 0) {
-                        document.getElementById('BotaoBuscar').disabled = true;
+                        document.getElementById('botaoBuscar').disabled = true;
                     } else {
                         const destino = cidadeSlug;
                         const dominio = window.location.protocol + '//' + window.location.hostname;
