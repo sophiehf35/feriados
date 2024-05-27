@@ -402,7 +402,7 @@
                  const data = popoverElement.dataset.calendarDay;
                  const feriado = feriados[data];
                  new bootstrap.Popover(popoverElement, {
-                     trigger: isMobile ? 'click' : 'hover',
+                     trigger: isMobile ? 'focus' : 'hover',
                      placement: 'top',
                      title: feriado.tipo,
                      content: feriado.descricao,
