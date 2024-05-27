@@ -1,12 +1,21 @@
 /*AJUSTES NO CALENDÁRIO */
-.bg-orange {
-background-color: #ffc107 !important;
-color: #fff !important;
+.bg-feriado-nacional {
+    background-color: red;
+    color: #fff;
 }
-.bg-red {
-background-color: #ff5050 !important;
-color: #fff !important;
+.bg-feriado-estadual {
+    background-color: orangered;
+    color: #fff;
 }
+.bg-feriado-municipal {
+    background-color: green;
+    color: #fff;
+}
+.bg-ponto-facultativo {
+    background-color: blue;
+    color: #fff;
+}
+
 [data-calendar-theme=light].vanilla-calendar {
 background-color:unset;
 }

@@ -195,6 +195,19 @@
                            </figure>
                         </div>
                      </div>
+                     <div id="legendaWidget" class="box_detail widget">
+                        <div class="titulo_secao">
+                           <h3 class="titulo">LEGENDA CALENDÁRIO</h3>
+                        </div>
+                        <div class="conteudo_secao_sidebar">
+                           <div class="legend-grid">
+                              <div class="legend-item"><span class="color-box bg-feriado-nacional"></span> Feriado Nacional</div>
+                              <div class="legend-item"><span class="color-box bg-blue"></span> Feriado Estadual</div>
+                              <div class="legend-item"><span class="color-box bg-green"></span> Feriado Municipal</div>
+                              <div class="legend-item"><span class="color-box bg-ponto-facultativo"></span> Ponto Facultativo</div>
+                           </div>
+                        </div>
+                     </div>
                      <div id="sumarioWidget" class="box_detail widget">
                         <div class="titulo_secao">
                            <h3 class="titulo">SUMÁRIO</h3>
@@ -258,79 +271,67 @@
              const hoje = new Date().toISOString().split('T')[0];
              const feriados = {
                  "2024-01-01": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Confraternização Universal</p></div>"
                  },
-                 "2024-01-20": {
-                     "modifier": "bg-blue",
-                     "html": "<div><u><b>Feriado Municipal</b></u><p style=\"margin: 5px 0 0;\"></p></div>"
-                 },
                  "2024-02-12": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Carnaval</p></div>"
                  },
                  "2024-02-13": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Carnaval</p></div>"
                  },
                  "2024-02-14": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Quarta-feira de Cinzas</p></div>"
                  },
                  "2024-03-29": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Sexta-feira Santa</p></div>"
                  },
                  "2024-04-21": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Tiradentes</p></div>"
                  },
                  "2024-05-01": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Dia do Trabalhador</p></div>"
                  },
                  "2024-05-30": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Corpus Christi</p></div>"
                  },
-                 "2024-08-15": {
-                     "modifier": "bg-green",
-                     "html": "<div><u><b>Feriado Estadual</b></u><p style=\"margin: 5px 0 0;\">Adesão do Pará à independência do Brasil</p></div>"
-                 },
                  "2024-09-07": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Independência do Brasil</p></div>"
                  },
                  "2024-10-12": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Nossa Senhora Aparecida</p></div>"
                  },
                  "2024-10-28": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Dia do Servidor Público</p></div>"
                  },
                  "2024-11-02": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Finados</p></div>"
                  },
-                 "2024-11-06": {
-                     "modifier": "bg-blue",
-                     "html": "<div><u><b>Feriado Municipal</b></u><p style=\"margin: 5px 0 0;\">Aniversário Altamira</p></div>"
-                 },
                  "2024-11-15": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Proclamação da República</p></div>"
                  },
                  "2024-12-24": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Véspera de Natal</p></div>"
                  },
                  "2024-12-25": {
-                     "modifier": "bg-red",
+                     "modifier": "bg-feriado-nacional",
                      "html": "<div><u><b>Feriado Nacional</b></u><p style=\"margin: 5px 0 0;\">Natal</p></div>"
                  },
                  "2024-12-31": {
-                     "modifier": "bg-yellow",
+                     "modifier": "bg-ponto-facultativo",
                      "html": "<div><u><b>Ponto Facultativo</b></u><p style=\"margin: 5px 0 0;\">Véspera de Ano-Novo</p></div>"
                  }
              };

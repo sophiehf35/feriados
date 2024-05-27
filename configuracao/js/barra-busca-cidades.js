@@ -20,17 +20,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     var ano = document.getElementById('cmbAno').value;
                     if (ano) {
                         document.getElementById('botaoBuscar').disabled = false;
+                        document.getElementById('cmbAno').style.border = '';
+                        document.getElementById('cmbAno').style.background = '';
                         document.getElementById('cmbEstado').style.border = '';
                         document.getElementById('cmbEstado').style.background = '';
                         document.getElementById('cmbCidade').style.border = '';
                         document.getElementById('cmbCidade').style.background = '';
                     } else {
                         // Limpa as opções da cidade se o estado não estiver selecionado
-                        document.getElementById('cmbCidade').innerHTML = '<option hidden="true" value="">Selecione o Ano</option>';
+                        document.getElementById('cmbEstado').innerHTML = '<option hidden="true" value="">Selecione o Estado</option>';
+                        document.getElementById('cmbEstado').style.display = 'none';
+                        document.getElementById('cmbCidade').innerHTML = '<option hidden="true" value="">Selecione a Cidade</option>';
                         document.getElementById('cmbCidade').style.display = 'none';
                         document.getElementById('botaoBuscar').disabled = true;
-                        document.getElementById('cmbEstado').style.border = '1px solid #f5c6cb';
-                        document.getElementById('cmbEstado').style.background = '#f8d7da';
+                        document.getElementById('cmbAno').style.border = '1px solid #f5c6cb';
+                        document.getElementById('cmbAno').style.background = '#f8d7da';
                     }
                 });
 
