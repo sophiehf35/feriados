@@ -91,26 +91,34 @@
          </div>
         <div class="filtro-estados-cidades">
            <div class="container">
-              <form action="#" method="post" novalidate="novalidate">
-                 <div class="row">
-                    <div id="estado" class="col-lg-4 col-md-4 col-sm-12">
-                       <select style="margin-bottom: 10px;" class="wide form-control select_customizado estado" name="estado" id="cmbEstado">
-                          <option hidden="true" value="">Selecione o Estado</option>
-                          <option disabled="disabled" default="true" value="">Selecione o Estado</option>
-                       </select>
-                       <input style="display: none" name="estado_extenso" id="estado_extenso">
-                    </div>
-                    <div id="cidade" class="col-lg-4 col-md-4 col-sm-12">
-                       <select style="margin-bottom: 10px;" class="wide form-control select_customizado cidade" name="cidade" id="cmbCidade">
-                          <option hidden="true" value="">Selecione a Cidade</option>
-                          <option disabled="disabled" default="true" value="">Selecione a Cidade</option>
-                       </select>
-                    </div>
-                    <div class="col-lg-4 div_botao_buscar">
-                       <input type="button" class="botao_buscar_localizacao" id="BotaoBuscar" value="ACESSAR">
-                    </div>
-                 </div>
-              </form>
+            <form action="#" method="post" novalidate="novalidate">
+               <div class="row">
+                  <div id="ano" class="col-lg-3 col-md-4 col-sm-12 pe-md-0">
+                     <select style="margin-bottom: 10px;" class="wide form-control select_customizado ano" name="ano" id="cmbAno">
+                        <option hidden="true" value="">Selecione o Ano</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                     </select>
+                  </div>
+                  <div id="estado" class="col-lg-3 col-md-4 col-sm-12 ps-md-0 pe-md-0">
+                     <select style="margin-bottom: 10px;" class="wide form-control select_customizado estado" name="estado" id="cmbEstado">
+                        <option hidden="true" value="">Selecione o Estado</option>
+                        <option disabled="disabled" default="true" value="">Selecione o Estado</option>
+                     </select>
+                     <input style="display: none" name="estado_extenso" id="estado_extenso">
+                  </div>
+                  <div id="cidade" class="col-lg-3 col-md-4 col-sm-12 ps-md-0 pe-lg-0">
+                     <select style="margin-bottom: 10px;" class="wide form-control select_customizado cidade" name="cidade" id="cmbCidade">
+                        <option hidden="true" value="">Selecione a Cidade</option>
+                        <option disabled="disabled" default="true" value="">Selecione a Cidade</option>
+                     </select>
+                  </div>
+                  <div class="col-lg-3 div_botao_buscar">
+                     <input type="button" class="botao-buscar" id="botaoBuscar" value="ACESSAR">
+                  </div>
+               </div>
+            </form>
            </div>
         </div>
          <main>
