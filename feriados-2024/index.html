@@ -395,7 +395,7 @@
              calendar.init();
      
              var isMobile = ('ontouchstart' in window);
-             var popoverElements = document.querySelectorAll('.bg-feriado-nacional, .bg-ponto-facultativo');
+             var popoverElements = document.getElementById('calendar').querySelectorAll('.bg-feriado-nacional, .bg-ponto-facultativo');
      
              popoverElements.forEach(function(popoverElement) {
                  const data = popoverElement.dataset.calendarDay;
