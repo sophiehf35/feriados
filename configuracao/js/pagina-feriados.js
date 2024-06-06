@@ -701,7 +701,7 @@ function carregaComentariosAvaliacoes(config) {
           },
           pagination: {
             limit: 10,
-            summary: visualizacaoMobile ? false : true,
+            summary: false,
             buttonsCount: 2
           },
           resizable: true,
@@ -766,7 +766,7 @@ function carregaComentariosAvaliacoes(config) {
           },
           pagination: {
             limit: 10,
-            summary: false,
+            summary: visualizacaoMobile ? false : true,
             buttonsCount: 2
           },
           resizable: true,
