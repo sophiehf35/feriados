@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         var cidades = dados[uf].cidades;
                         var option = '<option hidden="true" value="">Selecione a Cidade</option>';
                         cidades.forEach(cidade => {
-                            option += `<option value="${uf}/${cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-')}-${uf}">${cidade}</option>`;
+                            option += `<option value="${cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-')}-${uf}">${cidade}</option>`;
                         });
                         var cmbCidade = document.getElementById('cmbCidade');
                         cmbCidade.innerHTML = option;
@@ -83,9 +83,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         let destino;
 
                         if (cidade.length !== 0) {
-                            destino = cidade;
+                            destino = `${ano}/${uf}/${cidade}`;
                         } else if (uf.length !== 0) {
-                            destino = uf;
+                            destino = `${ano}/${uf}`;
                         } else if (ano.length !== 0) {
                             destino = ano;
                         }
