@@ -292,192 +292,93 @@ window.addEventListener("DOMContentLoaded", function (event) {
   const inputSexoComentario = formComentario.querySelector("#sexo");
   const inputAvaliacaoComentario = formComentario.querySelector("#avaliacao");
   const inputMensagemComentario = formComentario.querySelector("#mensagem");
-  
+
   const botaoEnviarComentario = document.querySelector("#envia_comentario");
   const divNotificacaoComentario = document.querySelector("#div_notificacao_comentario");
   const divBarraComentario = document.querySelector("#div_barra_comentario");
-  
+
   function validarFormularioComentario(config) {
-      botaoEnviarComentario.addEventListener("click", function (event) {
+    botaoEnviarComentario.addEventListener("click", function(event) {
         event.preventDefault();
-        
+
         if (inputNomeComentario.value === "") {
-          //CAMPO DO NOME VAZIO
-          exibirNotificacaoComentario("erro", "Erro, preencha seu nome", inputNomeComentario);
+            //CAMPO DO NOME VAZIO
+            exibirNotificacao("erro", "Erro, preencha seu nome", inputNomeComentario, divNotificacaoComentario);
         } else if (inputEmailComentario.value === "") {
-          //CAMPO DO EMAIL VAZIO
-          exibirNotificacaoComentario("erro", "Erro, preencha seu email", inputEmailComentario);
+            //CAMPO DO EMAIL VAZIO
+            exibirNotificacao("erro", "Erro, preencha seu email", inputEmailComentario, divNotificacaoComentario);
         } else if (validarEmail(inputEmailComentario.value) !== true) {
-          //EMAIL INVÁLIDO
-          exibirNotificacaoComentario("erro", "Erro, preencha com um email válido", inputEmailComentario);
+            //EMAIL INVÁLIDO
+            exibirNotificacao("erro", "Erro, preencha com um email válido", inputEmailComentario, divNotificacaoComentario);
         } else if (inputSexoComentario.value === "") {
-          //CAMPO DO DEPARTAMENTO VAZIO
-          exibirNotificacaoComentario("erro", "Erro, selecione o seu sexo", inputSexoComentario);
+            //CAMPO DO DEPARTAMENTO VAZIO
+            exibirNotificacao("erro", "Erro, selecione o seu sexo", inputSexoComentario, divNotificacaoComentario);
         } else if (inputAvaliacaoComentario.value === "") {
-          //CAMPO DO DEPARTAMENTO VAZIO
-          exibirNotificacaoComentario("erro", "Erro , selecione sua nota", inputAvaliacaoComentario);
+            //CAMPO DO DEPARTAMENTO VAZIO
+            exibirNotificacao("erro", "Erro , selecione sua nota", inputAvaliacaoComentario, divNotificacaoComentario);
         } else if (inputMensagemComentario.value === "") {
-          //CAMPO DE MENSAGEM VAZIA
-          exibirNotificacaoComentario("erro", "Erro, preencha sua mensagem", inputMensagemComentario);
+            //CAMPO DE MENSAGEM VAZIA
+            exibirNotificacao("erro", "Erro, preencha sua mensagem", inputMensagemComentario, divNotificacaoComentario);
         } else {
-          //TODOS OS CAMPOS PREENCHIDOS
-          divBarraComentario.innerHTML =
-            '<div style="height: 1.5rem;" class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>';
-      
-          divBarraComentario.classList.remove("d-none");
-          divBarraComentario.classList.add("d-block", "fade", "show");
-          criaBarraProgresso(1350);
-      
-          setTimeout(function () {
-            enviaComentario(
-              config.id,
-              tipo_pagina,
-              id_pagina,
-              inputNomeComentario.value,
-              inputEmailComentario.value,
-              inputSexoComentario.value,
-              inputAvaliacaoComentario.value,
-              inputMensagemComentario.value
-            );
-          }, 600);
+            //TODOS OS CAMPOS PREENCHIDOS
+            divBarraComentario.innerHTML =
+                '<div style="height: 1.5rem;" class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>';
+
+            divBarraComentario.classList.remove("d-none");
+            divBarraComentario.classList.add("d-block", "fade", "show");
+            criaBarraProgresso(1350);
+
+            const campos = {
+                "id": id_comentario,
+                "tipo_pagina": tipo_pagina,
+                "nome": inputNomeComentario.value,
+                "email": inputEmailComentario.value,
+                "sexo": inputSexoComentario.value,
+                "avaliacao": inputAvaliacaoComentario.value,
+                "mensagem": inputMensagemComentario.value
+            };
+
+            setTimeout(function() {
+                enviaDados(
+                    config.endereco_funcao_php,
+                    'adicionarComentariosPaginaLivrocep',
+                    config.id,
+                    id_pagina,
+                    campos,
+                    divNotificacaoComentario,
+                    divBarraComentario,
+                    formComentario
+                );
+            }, 600);
+
         }
-      });
-      
-      inputNomeComentario.addEventListener("focus", function () {
-        ocultaNotificacaoComentario(verificaTipoAlerta(), inputNomeComentario);
-      });
-      
-      inputEmailComentario.addEventListener("focus", function () {
-        ocultaNotificacaoComentario(verificaTipoAlerta(), inputEmailComentario);
-      });
-      
-      inputSexoComentario.addEventListener("focus", function () {
-        ocultaNotificacaoComentario(verificaTipoAlerta(), inputSexoComentario);
-      });
-      
-      inputAvaliacaoComentario.addEventListener("focus", function () {
-        ocultaNotificacaoComentario(verificaTipoAlerta(), inputAvaliacaoComentario);
-      });
-      
-      inputMensagemComentario.addEventListener("focus", function () {
-        ocultaNotificacaoComentario(verificaTipoAlerta(), inputMensagemComentario);
-      });
-      
-      inputNomeComentario.addEventListener("input", function (event) {
+    });
+
+    inputNomeComentario.addEventListener("input", function() {
+        ocultaNotificacao(verificaTipoAlerta(divNotificacaoComentario), inputNomeComentario, divNotificacaoComentario);
+    });
+
+    inputEmailComentario.addEventListener("input", function() {
+        ocultaNotificacao(verificaTipoAlerta(divNotificacaoComentario), inputEmailComentario, divNotificacaoComentario);
+    });
+
+    inputSexoComentario.addEventListener("input", function() {
+        ocultaNotificacao(verificaTipoAlerta(divNotificacaoComentario), inputSexoComentario, divNotificacaoComentario);
+    });
+
+    inputAvaliacaoComentario.addEventListener("input", function() {
+        ocultaNotificacao(verificaTipoAlerta(divNotificacaoComentario), inputAvaliacaoComentario, divNotificacaoComentario);
+    });
+
+    inputMensagemComentario.addEventListener("input", function() {
+        ocultaNotificacao(verificaTipoAlerta(divNotificacaoComentario), inputMensagemComentario, divNotificacaoComentario);
+    });
+
+    inputNomeComentario.addEventListener("input", function(event) {
         var valorCampo = this.value;
         var valorFiltrado = valorCampo.replace(/[^a-zA-ZÀ-ÿ\s]/g, ""); // Permite apenas letras, incluindo letras acentuadas e espaços
         this.value = valorFiltrado;
-      });
-  }
-  
-  function enviaComentario(id_site, nome, email, sexo, avaliacao, mensagem) {
-    const data = new URLSearchParams();
-    data.append("funcao", "AdicionarComentariosPaginaDeArtigos");
-    data.append("parametro1_da_funcao", id_site);
-    data.append("parametro2_da_funcao", tipo_pagina);
-    data.append("parametro3_da_funcao", id_pagina);
-    data.append("id", id_comentario);
-    data.append("nome", nome);
-    data.append("email", email);
-    data.append("sexo", sexo);
-    data.append("avaliacao", avaliacao);
-    data.append("mensagem", mensagem);
-  
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: data.toString(),
-    };
-  
-    fetch(config.endereco_funcao_php, options)
-      .then((response) => {
-        if (!response.ok) {
-          console.error("Erro na solicitação: " + response.status);
-          return;
-        }
-        return response.json();
-      })
-      .then((data) => {
-        ocultaBarraComentario();
-        if (data.status == 1) {
-          exibirNotificacaoComentario(
-            "sucesso",
-            "Parabéns, comentário enviado com sucesso, em breve será revisado."
-          );
-        } else {
-          exibirNotificacaoComentario("erro", data.mensagem, "");
-        }
-      })
-      .catch((error) => {
-        console.error("Ocorreu um erro durante a solicitação:", error);
-      });
-  }
-  
-  function exibirNotificacaoComentario(tipo, mensagem, campo) {
-    var classeMensagem = "";
-  
-    if (tipo == "erro") {
-      classeMensagem = "danger";
-      iconeMensagem = "#exclamation-triangle-fill";
-      campo.classList.add("is-invalid");
-    } else if (tipo == "sucesso") {
-      classeMensagem = "success";
-      iconeMensagem = "#check-circle-fill";
-    }
-  
-    divNotificacaoComentario.innerHTML =
-      '<div class="alert alert-' +
-      classeMensagem +
-      ' alert-dismissible d-flex align-items-center" style="margin-bottom:0px;" role="alert"><svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="' +
-      tipo +
-      ':"><use xlink:href="/assets/svg/icones.svg' +
-      iconeMensagem +
-      '"></use></svg><div>' +
-      mensagem +
-      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
-  
-    divNotificacaoComentario.classList.add("d-block", "fade", "show");
-    divNotificacaoComentario.classList.remove("d-none");
-    verificaFechamentoNotificacao("comentario", campo);
-  }
-  
-  function ocultaNotificacaoComentario(tipo, campo) {
-    if (tipo == "erro") {
-        campo.classList.remove("is-invalid");
-        divNotificacaoComentario.classList.remove("show");
-        divNotificacaoComentario.classList.add("fade", "d-none");
-        divNotificacaoComentario.innerHTML = "";
-    } else if (tipo == "sucesso") {
-        divNotificacaoComentario.classList.remove("show");
-        divNotificacaoComentario.classList.add("fade", "d-none");
-        divNotificacaoComentario.innerHTML = "";
-    }
-  }
-  
-  function ocultaBarraComentario() {
-    divBarraComentario.innerHTML = "";
-    formComentario.reset();
-    inputNomeComentario.focus();
-    inputEmailComentario.focus();
-    inputEmailComentario.blur();
-    divBarraComentario.classList.remove("show");
-    divBarraComentario.classList.add("fade", "d-none");
-  }
-  
-  function verificaTipoAlerta() {
-      if (divNotificacaoComentario) {
-          var tipoAlerta = divNotificacaoComentario.querySelector('.alert');
-          if (tipoAlerta) {
-              if (tipoAlerta.classList.contains('alert-danger')) {
-                  return 'erro';
-              } else if (tipoAlerta.classList.contains('alert-success')) {
-                  return 'sucesso';
-              } 
-          }
-      }
-      return 'nenhum';
+    });
   }
   /* FUNÇÃO PARA VALIDAR E ENVIAR FORMULÁRIO DE COMENTÁRIO */
   
@@ -566,110 +467,123 @@ window.addEventListener("DOMContentLoaded", function (event) {
   /* FUNÇÃO PARA CRIAR SECTION E CARREGAR OS ARTIGOS RELACIONADOS */
   
   /* FUNÇÃO PARA CRIAR SECTION E CARREGAR OS COMENTÁRIOS */
-  function carregaComentariosAvaliacoes() {
-  
-    const numeroComentarios = document.querySelector("h1").dataset.comentarios;
-    if (numeroComentarios > 0) {
-  
-        fetch('/configuracao/json/comentarios.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erro ao buscar dados. Código de status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-  
-                const comentariosArtigo = data.filter(dados => dados.id_artigo === parseInt(document.querySelector("h1").dataset.id, 10) && dados.id_comentario_pai === 0);
-                const lista_comentarios = comentariosArtigo.map(dados => {
-                    const estrelas = Array.from({
-                            length: 5
-                        }, (_, index) =>
-                        index < dados.avaliacao ?
-                        '<i class="icon_star voted"></i>' :
-                        '<i class="icon_star"></i>'
-                    ).join('');
-                    const imagemAvatar = sexo === '1' ? '<img src="../img/feminino_comentario.webp">' : '<img src="../img/masculino_comentario.webp">';
-                    const options = {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    };
-                    data_hora_criacao = new Date(dados.data_hora_criacao).toLocaleDateString('pt-BR', options);
-  
-                return `
-                  <div class="review-box clearfix">
-                      <figure class="rev-thumb">${imagemAvatar}</figure>
-                      <div class="rev-content">
-                          <div class="rating_pequeno">${estrelas}</div>
-                          <div class="rev-info">${dados.nome}</div>
-                          <div class="botao_responder_comentario responder" id="${dados.id}">Responder<i style="margin-left:5px" class="fa fa-reply"></i></div>
-                          <div class="rev-info">${data_hora_criacao}</div>
-                          <div class="rev-text">
-                              <p>${dados.comentario.charAt(0).toUpperCase() + dados.comentario.slice(1)}</p>
-                          </div>
-                      </div>
-                  </div>
-                  ${ListarComentariosDeRespostas(data, dados.id, 30)}
-                  `;
-                }).join('');
-  
-                const secaoEnviaComentarios = document.getElementById('envia_comentarios');
-                secaoEnviaComentarios.insertAdjacentHTML(
-                    "beforebegin",
-                    '<section id="comentarios"><div style="margin-bottom: 20px; padding:0px" class="reviews-container box_detail"><div class="titulo_secao"><h3 class="titulo">COMENTÁRIOS</h3></div><div style="padding: 20px 20px 15px 20px;">' +
-                    lista_comentarios +
-                    "</div></div></section>"
-                );
-  
-                function ListarComentariosDeRespostas(comentarios, id_comentario_pai, marginleft = 0) {
-                    const comentariosRespostas = comentarios.filter(comentario => comentario.id_comentario_pai === id_comentario_pai);
-                    const output = comentariosRespostas.map(comentario => {
-  
-                        const estrelas = Array.from({
-                                length: 5
-                            }, (_, index) =>
-                            index < comentario.avaliacao ?
-                            '<i class="icon_star voted"></i>' :
-                            '<i class="icon_star"></i>'
-                        ).join('');
-                        const imagemAvatar = comentario.sexo === '1' ? '<img src="../img/feminino_comentario.webp">' : '<img src="../img/masculino_comentario.webp">';
-                        const options = {
-                            weekday: 'long',
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                        };
-  
-                        return `
-                        <div style="margin-left:${marginleft}px" class="review-box clearfix">
-                            <figure class="rev-thumb">${imagemAvatar}</figure>
-                            <div class="rev-content">
-                                <div class="rating_pequeno">${estrelas}</div>
-                                <div class="rev-info">${comentario.nome}</div>
-                                <div class="botao_responder_comentario responder" id="${comentario.id}">Responder<i style="margin-left:5px" class="fa fa-reply"></i></div>
-                                <div class="rev-info">${new Date(comentario.data_hora_criacao).toLocaleDateString('pt-BR', options)}</div>
-                                <div class="rev-text">
-                                    <p>${comentario.comentario.charAt(0).toUpperCase() + comentario.comentario.slice(1)}</p>
-                                </div>
+function carregaComentariosAvaliacoes(config) {
+
+  const numeroComentarios = document.querySelector("h1").dataset.comentarios;
+  if (numeroComentarios > 0) {
+
+      fetch('/configuracao/json/livrocep/comentarios.json')
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error(`Erro ao buscar dados. Código de status: ${response.status}`);
+              }
+              return response.json();
+          })
+          .then(data => {
+
+              const comentariosPagina = data.filter(dados =>
+                  dados.tipo_pagina === document.querySelector("h1").dataset.tipoPagina &&
+                  parseInt(dados.id_pagina, 10) === parseInt(document.querySelector("h1").dataset.idPagina, 10) &&
+                  dados.id_comentario_pai === "0"
+              );
+
+              const lista_comentarios = comentariosPagina.map(dados => {
+                  const estrelas = Array.from({
+                          length: 5
+                      }, (_, index) =>
+                      index < dados.avaliacao ?
+                      '<i class="icon_star voted"></i>' :
+                      '<i class="icon_star"></i>'
+                  ).join('');
+
+                  const imagemAvatar = `${dados.sexo === '1' ? (config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '/img') + '/feminino_comentario.webp' : (config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '/img') + '/masculino_comentario.webp'}`;
+                  const tagAvatar = `<img width="80px" height="80px" src="data:image/webp;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="${imagemAvatar}" data-srcset="${imagemAvatar}">`;
+                  
+                  const options = {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                  };
+                  const data_hora_criacao = new Date(dados.data_hora_criacao).toLocaleDateString('pt-BR', options);
+
+                  return `
+                    <div class="review-box clearfix">
+                        <figure class="rev-thumb">${tagAvatar}</figure>
+                        <div class="rev-content">
+                            <div class="rating_pequeno">${estrelas}</div>
+                            <div class="rev-info">${dados.nome}</div>
+                            <div class="botao_responder_comentario responder" id="${dados.id}">Responder<i style="margin-left:5px" class="fa fa-reply"></i></div>
+                            <div class="rev-info">${data_hora_criacao}</div>
+                            <div class="rev-text">
+                                <p>${dados.comentario.charAt(0).toUpperCase() + dados.comentario.slice(1)}</p>
                             </div>
                         </div>
-                        ${ListarComentariosDeRespostas(comentarios, comentario.id, marginleft + 30)}
-                    `;
-                    }).join('');
-  
-                    return output;
-                }
-  
-            })
-            .catch(error => {
-                console.error('Erro ao buscar dados:', error);
-            });
-  
-    }
+                    </div>
+                    ${ListarComentariosDeRespostas(data, dados.id, 30)}
+                `;
+              }).join('');
+
+              const secaoEnviaComentarios = document.getElementById('envia_comentarios');
+              secaoEnviaComentarios.insertAdjacentHTML(
+                  "beforebegin",
+                  '<section id="comentarios"><div style="margin-bottom: 20px; padding:0px" class="reviews-container box_detail"><div class="titulo_secao"><h3 class="titulo">COMENTÁRIOS</h3></div><div style="padding: 20px 20px 15px 20px;">' +
+                  lista_comentarios +
+                  "</div></div></section>"
+              );
+
+              AdiarImagens();
+
+              function ListarComentariosDeRespostas(comentarios, id_comentario_pai, marginleft = 0) {
+                  const comentariosRespostas = comentarios.filter(comentario => comentario.id_comentario_pai === id_comentario_pai);
+                  const output = comentariosRespostas.map(comentario => {
+
+                      const estrelas = Array.from({
+                              length: 5
+                          }, (_, index) =>
+                          index < comentario.avaliacao ?
+                          '<i class="icon_star voted"></i>' :
+                          '<i class="icon_star"></i>'
+                      ).join('');
+
+                      const imagemAvatar = `${dados.sexo === '1' ? (config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '/img') + '/feminino_comentario.webp' : (config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '/img') + '/masculino_comentario.webp'}`;
+                      const tagAvatar = `<img width="80px" height="80px" src="data:image/webp;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="${imagemAvatar}" data-srcset="${imagemAvatar}">`;
+
+                      const options = {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                      };
+
+                      return `
+                      <div style="margin-left:${marginleft}px" class="review-box clearfix">
+                          <figure class="rev-thumb">${tagAvatar}</figure>
+                          <div class="rev-content">
+                              <div class="rating_pequeno">${estrelas}</div>
+                              <div class="rev-info">${comentario.nome}</div>
+                              <div class="botao_responder_comentario responder" id="${comentario.id}">Responder<i style="margin-left:5px" class="fa fa-reply"></i></div>
+                              <div class="rev-info">${new Date(comentario.data_hora_criacao).toLocaleDateString('pt-BR', options)}</div>
+                              <div class="rev-text">
+                                  <p>${comentario.comentario.charAt(0).toUpperCase() + comentario.comentario.slice(1)}</p>
+                              </div>
+                          </div>
+                      </div>
+                      ${ListarComentariosDeRespostas(comentarios, comentario.id, marginleft + 30)}
+                  `;
+                  }).join('');
+
+                  return output;
+              }
+
+          })
+          .catch(error => {
+              console.error('Erro ao buscar dados:', error);
+          });
+
   }
-  /* FUNÇÃO PARA CRIAR SECTION E CARREGAR OS COMENTÁRIOS */
+}
+/* FUNÇÃO PARA CRIAR SECTION E CARREGAR OS COMENTÁRIOS */
   
   /* FUNÇÃO PARA CRIAR SECTION E CARREGAR O CONTEÚDO EM DESTAQUE */
   function carregaConteudoDestaque(config) {
