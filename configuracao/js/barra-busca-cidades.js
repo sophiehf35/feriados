@@ -8,17 +8,19 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             dados = data; // Atribua os dados à variável dados
             if (dados) {
-                var option = '<option hidden="true" value="">Selecione o Estado</option>';
-                Object.keys(dados).forEach(estado => {
-                    option += `<option value="${estado}">${dados[estado].estado}</option>`;
-                });
-                document.getElementById('cmbEstado').innerHTML = option;
-                document.getElementById('cmbEstado').style.display = 'block';
-
+                
                 // Adicione o evento de mudança de ano
                 document.getElementById('cmbAno').addEventListener('change', function (e) {
                     var ano = document.getElementById('cmbAno').value;
                     if (ano) {
+
+                        var option = '<option hidden="true" value="">Selecione o Estado</option>';
+                        Object.keys(dados).forEach(estado => {
+                            option += `<option value="${estado}">${dados[estado].estado}</option>`;
+                        });
+                        document.getElementById('cmbEstado').innerHTML = option;
+                        document.getElementById('cmbEstado').style.display = 'block';
+
                         document.getElementById('botaoBuscar').disabled = false;
                         document.getElementById('cmbAno').style.border = '';
                         document.getElementById('cmbAno').style.background = '';
