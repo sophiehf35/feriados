@@ -769,7 +769,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
           ],
           data: Object.entries(dados).map(([uf, { estado }], index) => ({
             id: index + 1,
-            cidade: gridjs.html(`<a href='/${uf}/'>Feriados ${estado}</a>`)
+            estado: gridjs.html(`<a href='/${uf}/'>Feriados ${estado}</a>`)
           })),
           className: {
             table: 'table table-striped'

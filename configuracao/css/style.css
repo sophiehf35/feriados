@@ -132,3 +132,6 @@ section.secao-inicial p {
 #pagina-feriados p {
     text-align: justify;
 }
+.gridjs-search-input {
+    width: 100%;
+}
