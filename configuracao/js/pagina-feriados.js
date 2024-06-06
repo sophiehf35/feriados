@@ -766,7 +766,7 @@ function carregaComentariosAvaliacoes(config) {
           },
           pagination: {
             limit: 10,
-            summary: visualizacaoMobile ? false : true,
+            summary: false,
             buttonsCount: 2
           },
           resizable: true,
