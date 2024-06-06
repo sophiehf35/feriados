@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //FUNÇÃO PARA IMPRIMIR TABELA DE FERIADOS
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('imprimirTableFeriados').addEventListener("click", function (event) {
-      const tituloDocumento = document.querySelector('#artigo h2').textContent;
+      const tituloDocumento = document.querySelector('#pagina-feriados h2').textContent;
       const printWindow = window.open();
       if (printWindow) {
         printWindow.document.write(`<html><head><title>${tituloDocumento} (fonte: www.feriados20.com.br)</title>`);
