@@ -1,8 +1,8 @@
-var ua = navigator.userAgent;
-var acessoMobile = /Android|webOS|iPhone|iPad|iPod/i.test(ua);
-
-//FUNÇÃO PARA ABREVIAR NOMES DOS MESES
 document.addEventListener('DOMContentLoaded', function() {
+
+  var acessoMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  //FUNÇÃO PARA ABREVIAR NOMES DOS MESES
   if (acessoMobile) {
       // Abreviar nomes dos meses
       const linhasData = document.querySelectorAll("table.tabela-customizada.feriados > tbody > tr > td.th");
@@ -42,6 +42,82 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       }
   }
+
+  //FUNÇÃO PARA INSERIR BOTÃO DE IMPRIMIR TABELA ABAIXO DE TODAS AS TABELAS DE FERIADO
+  if (!acessoMobile) {
+      const tabela = document.querySelector('table.tabela-customizada.feriados');
+      if (tabela !== null) {
+          const button = document.createElement('button');
+          button.id = 'imprimirTableFeriados';
+          button.style.width = '100%';
+          button.style.marginTop = '10px';
+          button.className = 'btn_1 full-width fe-pulse';
+          button.type = 'button';
+          button.textContent = 'IMPRIMIR OU SALVAR TABELA';
+          tabela.insertAdjacentElement('afterend', button);
+      }
+  }
+
+  //FUNÇÃO PARA CARREGAR CALENDÁRIO (POPOVERS E DADOS)
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl)
+  })
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+
+  const hoje = new Date().toISOString().split('T')[0];
+
+  const popups = {};
+  for (const data in feriados) {
+      if (feriados.hasOwnProperty(data)) {
+          const feriado = feriados[data];
+          popups[data] = {
+              modifier: feriado.classe,
+          };
+      }
+  }
+
+  const calendar = new VanillaCalendar('#calendar', {
+      type: 'multiple',
+      months: 12,
+      settings: {
+          lang: 'pt-br',
+          visibility: {
+              theme: 'light',
+              weekend: false,
+              daysOutside: false,
+          },
+          selection: {
+              day: false,
+              month: false,
+              year: false,
+          },
+          selected: {
+              month: 0,
+          },
+      },
+      popups: popups,
+  });
+  calendar.init();
+
+  var isMobile = ('ontouchstart' in window);
+  var popoverElements = document.getElementById('calendar').querySelectorAll('.bg-feriado-nacional, .bg-ponto-facultativo');
+
+  popoverElements.forEach(function(popoverElement) {
+      const data = popoverElement.dataset.calendarDay;
+      const feriado = feriados[data];
+      new bootstrap.Popover(popoverElement, {
+          trigger: isMobile ? 'focus' : 'hover',
+          placement: 'top',
+          title: feriado.tipo,
+          content: feriado.nome + '(' + feriado.descricao + ')',
+          html: true
+      });
+  });
+
 });
 
 
@@ -77,25 +153,6 @@ document.addEventListener('click', function(event) {
   }
 });
 
-
-//FUNÇÃO PARA INSERIR BOTÃO DE IMPRIMIR TABELA ABAIXO DE TODAS AS TABELAS DE FERIADO
-document.addEventListener('DOMContentLoaded', function() {
-  if (!acessoMobile) {
-      const tabela = document.querySelector('table.tabela-customizada.feriados');
-      if (tabela !== null) {
-          const button = document.createElement('button');
-          button.id = 'imprimirTableFeriados';
-          button.style.width = '100%';
-          button.style.marginTop = '10px';
-          button.className = 'btn_1 full-width fe-pulse';
-          button.type = 'button';
-          button.textContent = 'IMPRIMIR OU SALVAR TABELA';
-          tabela.insertAdjacentElement('afterend', button);
-      }
-  }
-});
-
-
 //FUNÇÃO PARA IMPRIMIR TABELA DE FERIADOS
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('imprimirTableFeriados').addEventListener("click", function (event) {
@@ -120,38 +177,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* FUNÇÃO EXIBIR SUMÁRIO */
 window.addEventListener("DOMContentLoaded", function (event) {
-    //Get all headings only from the actual contents.
-    var contentContainer = document.getElementById("artigo");
-    var headings = contentContainer.querySelectorAll("h2,h3,h4,h5");
+    var contentContainer = document.getElementById("paginas-feriados");
+
+    var headings = Array.from(headings_geral).filter(function(heading) {
+      var tag = heading.tagName.toLowerCase();
+      var text = heading.textContent.trim();
+      return (
+        (tag === "h3" && text !== "IMAGEM DE CAPA" && text !== "ANÚNCIO" && text !== "SUMÁRIO" && text !== "VER NO MAPA" && text !== "LINKS ÚTEIS" && text !== "DEIXE UM COMENTÁRIO" && text !== "COMENTÁRIOS") ||
+        (tag === "h2" || tag === "h4" || tag === "h5")
+      );
+    });
   
     var tocContainer = document.getElementById("toc");
-    // create ul element and set the attributes.
     var ul = document.createElement("ul");
   
     ul.setAttribute("id", "tocList");
     ul.setAttribute("class", "sidenav");
   
-    // Loop through the headings NodeList
     for (i = 0; i <= headings.length - 1; i++) {
       var id = headings[i].innerHTML
         .toLowerCase()
         .replace(",", "")
         .replace("!", "")
         .replace(".", "")
-        .replace(/ /g, "-"); // Set the ID to the header text, all lower case with hyphens instead of spaces.
-      var level = headings[i].localName.replace("h", ""); // Getting the header a level for hierarchy
-      var title = headings[i].innerHTML; // Set the title to the text of the header
+        .replace(/ /g, "-");
+      var level = headings[i].localName.replace("h", "");
+      var title = headings[i].innerHTML;
   
-      headings[i].setAttribute("id", id); // Set header ID to its text in lower case text with hyphens instead of spaces.
+      headings[i].setAttribute("id", id);
   
-      var li = document.createElement("li"); // create li element.
-      li.setAttribute("class", "sidenav__item"); // Assign a class to the li
+      var li = document.createElement("li");
+      li.setAttribute("class", "sidenav__item");
   
-      var a = document.createElement("a"); // Create a link'
-      a.setAttribute("href", "#" + id); // Set the href to the heading ID
+      var a = document.createElement("a");
+      a.setAttribute("href", "#" + id);
       a.innerHTML =
         "<span style='justify-content: center; align-items: center; line-height: unset;' class='mx-1' data-icon='&#x39;'></span>" +
-        title; // Set the link text to the heading text
+        title;
   
       li.setAttribute("class", "sidenav__item");
   
@@ -173,14 +235,12 @@ window.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   
-    toc.appendChild(ul); // add list to the container
+    toc.appendChild(ul);
   
-    // Add a class to the first list item to allow for toggling active state.
     var links = tocContainer.getElementsByClassName("sidenav__item");
   
     links[0].classList.add("current");
   
-    // Loop through the links and add the active class to the current/clicked link
     for (var i = 0; i < links.length; i++) {
       links[i].addEventListener("click", function () {
         var current = document.getElementsByClassName("current");
