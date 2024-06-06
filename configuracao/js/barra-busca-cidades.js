@@ -6,17 +6,17 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('/configuracao/json/estados-e-cidades.json')
         .then(response => response.json())
         .then(data => {
-            dados = data; // Atribua os dados à variável dados
+            dados = data;
             if (dados) {
-                
+
                 // Adicione o evento de mudança de ano
                 document.getElementById('cmbAno').addEventListener('change', function (e) {
                     var ano = document.getElementById('cmbAno').value;
                     if (ano) {
 
                         var option = '<option hidden="true" value="">Selecione o Estado</option>';
-                        Object.keys(dados).forEach(estado => {
-                            option += `<option value="${estado}">${dados[estado].estado}</option>`;
+                        Object.keys(dados).forEach(uf => {
+                            option += `<option value="${uf}">${dados[uf].estado}</option>`;
                         });
                         document.getElementById('cmbEstado').innerHTML = option;
                         document.getElementById('cmbEstado').style.display = 'block';
@@ -40,14 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
 
-                // Adicione o evento de mudança de estado aqui, após os dados serem carregados
+                // Adicione o evento de mudança de estado
                 document.getElementById('cmbEstado').addEventListener('change', function (e) {
                     var uf = document.getElementById('cmbEstado').value;
                     if (uf) {
                         var cidades = dados[uf].cidades;
                         var option = '<option hidden="true" value="">Selecione a Cidade</option>';
                         cidades.forEach(cidade => {
-                            option += `<option value="${uf + '/feriados-' + cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-') + '-' + uf + '-cidade'}">${cidade}</option>`;
+                            option += `<option value="${uf}/${cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-')}-${uf}">${cidade}</option>`;
                         });
                         var cmbCidade = document.getElementById('cmbCidade');
                         cmbCidade.innerHTML = option;
@@ -73,24 +73,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     const selectAno = document.getElementById('cmbAno');
                     const ano = document.getElementById('cmbAno').value;
                     const uf = document.getElementById('cmbEstado').value;
-                    const cidadeSlug = document.getElementById('cmbCidade').value;
+                    const cidade = document.getElementById('cmbCidade').value;
                 
                     if (ano.length === 0) {
                         document.getElementById('botaoBuscar').disabled = true;
                         selectAno.style.border = '1px solid #f5c6cb';
                         selectAno.style.background = '#f8d7da';
-                    } else if (uf.length === 0) {
-                        document.getElementById('botaoBuscar').disabled = true;
-                        selectEstado.style.border = '1px solid #f5c6cb';
-                        selectEstado.style.background = '#f8d7da';
                     } else {
+
                         let destino;
-                        if (cidadeSlug.length === 0) {
-                            const estado = document.getElementById("cmbEstado").options[document.getElementById("cmbEstado").selectedIndex].text;
-                            destino = '/feriados-' + estado.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-') + '-' + uf + '-estado';
-                        } else {
-                            destino = cidadeSlug;
+
+                        if (cidade.length !== 0) {
+                            destino = cidade;
+                        } else if (uf.length !== 0) {
+                            destino = uf;
+                        } else if (ano.length !== 0) {
+                            destino = ano;
                         }
+
                         const dominio = window.location.protocol + '//' + window.location.hostname;
                         if (destino.length > 0) {
                             window.location.href = dominio + '/' + destino + '/';
