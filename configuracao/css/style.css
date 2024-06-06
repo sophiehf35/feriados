@@ -129,3 +129,6 @@ section.secao-inicial p {
         padding-left: 0
     }
 }
+#pagina-feriados p {
+    text-align: justify;
+}
