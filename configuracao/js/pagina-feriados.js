@@ -760,7 +760,6 @@ window.addEventListener("DOMContentLoaded", function (event) {
       })
       .then(dados => {
 
-        const uf = document.querySelector('h1').dataset.uf;
         const visualizacaoMobile = window.innerWidth < 600;
 
         new gridjs.Grid({
@@ -768,7 +767,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
             { name: 'ID', hidden: window.innerWidth < 600 },
             { name: 'Estado' },
           ],
-          data: dados.map((estado, index) => ({
+          data: dados.map((uf, estado, index) => ({
             id: index + 1,
             cidade: gridjs.html(`<a href='/${uf}/'>Feriados ${estado}</a>`)
           })),
