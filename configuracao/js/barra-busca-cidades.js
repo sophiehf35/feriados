@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 document.getElementById('botaoBuscar').addEventListener('click', function (e) {
-                    const selectEstado = document.getElementById('cmbEstado');
                     const selectAno = document.getElementById('cmbAno');
                     const ano = document.getElementById('cmbAno').value;
                     const uf = document.getElementById('cmbEstado').value;
@@ -91,22 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             destino = ano;
                         }
 
-                        const dominio = window.location.protocol + '//' + window.location.hostname;
-                        if (destino.length > 0) {
-                            window.location.href = dominio + '/' + destino + '/';
-                        }
-                    }
-
-                    if (uf.length === 0 && cidadeSlug.length === 0) {
-                        document.getElementById('botaoBuscar').disabled = true;
-                    } else if (uf.length === 0) {
-                        document.getElementById('botaoBuscar').disabled = true;
-                        selectEstado.style.border = '1px solid #f5c6cb';
-                        selectEstado.style.background = '#f8d7da';
-                    } else if (cidadeSlug.length === 0) {
-                        document.getElementById('botaoBuscar').disabled = true;
-                    } else {
-                        const destino = cidadeSlug;
                         const dominio = window.location.protocol + '//' + window.location.hostname;
                         if (destino.length > 0) {
                             window.location.href = dominio + '/' + destino + '/';
