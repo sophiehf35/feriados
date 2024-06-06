@@ -675,6 +675,7 @@ function carregaComentariosAvaliacoes(config) {
       .then(dados => {
 
         const visualizacaoMobile = window.innerWidth < 600;
+        const ano = document.querySelector('h1').dataset.ano;
 
         new gridjs.Grid({
           columns: [
@@ -683,7 +684,7 @@ function carregaComentariosAvaliacoes(config) {
           ],
           data: Object.entries(dados).map(([uf, { estado }], index) => ({
             id: index + 1,
-            estado: gridjs.html(`<a href='/${uf}/'>Feriados ${estado}</a>`)
+            estado: gridjs.html(`<a href='/${ano}/${uf}/'>Feriados ${estado} ${ano} </a>`)
           })),
           className: {
             table: 'table table-striped'
@@ -717,7 +718,8 @@ function carregaComentariosAvaliacoes(config) {
               to: 'a',
               of: 'de',
               results: 'resultados'
-            }
+            },
+            noRecordsFound: 'Nenhum estado encontrado para a busca'
           }
         }).render(document.getElementById('tabela-estados'));
 
@@ -781,7 +783,8 @@ function carregaComentariosAvaliacoes(config) {
               to: 'a',
               of: 'de',
               results: 'resultados'
-            }
+            },
+            noRecordsFound: 'Nenhuma cidade encontrada para a busca'
           }
         }).render(document.getElementById('tabela-cidades'));
 
