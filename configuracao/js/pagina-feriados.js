@@ -451,7 +451,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
                       `;
   
                       // Adiciona a seção de artigos relacionados ao DOM ou faz o que for necessário
-                      const secaoArtigo = document.getElementById('artigo');
+                      const secaoArtigo = document.getElementById('pagina-feriados');
                       secaoArtigo.insertAdjacentElement('afterend', secaoRelacionadas);
                   }
               
