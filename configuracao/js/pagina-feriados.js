@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
   calendar.init();
 
   var isMobile = ('ontouchstart' in window);
-  var popoverElements = document.getElementById('calendar').querySelectorAll('.bg-feriado-nacional, .bg-ponto-facultativo');
+  var popoverElements = document.getElementById('calendar').querySelectorAll('.bg-feriado-nacional, .bg-ponto-facultativo, .bg-ponto-estadual');
 
   popoverElements.forEach(function(popoverElement) {
       const data = popoverElement.dataset.calendarDay;
@@ -113,8 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
           trigger: isMobile ? 'focus' : 'hover',
           placement: 'top',
           title: feriado.tipo,
-          //content: feriado.nome + (feriado.descricao !== '' ? '(' + feriado.descricao + ')' : ''),
-          content: feriado.nome,
+          content: feriado.nome + (feriado.descricao !== '' ? '(' + feriado.descricao + ')' : ''),
           html: true
       });
   });
