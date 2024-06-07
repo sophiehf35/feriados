@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 //PREENCHE O ESTADO DE ACORDO COM A PÁGINA
-                if (document.querySelector("h1").dataset.estado !== "todos") {
-                    document.querySelector("#cmbEstado").value = document.querySelector("h1").dataset.ano;
+                if (document.querySelector("h1").dataset.uf !== "todos") {
+                    document.querySelector("#cmbEstado").value = document.querySelector("h1").dataset.uf;
                     document.querySelector("#cmbEstado").dispatchEvent(new Event('change'));
                 }
 
