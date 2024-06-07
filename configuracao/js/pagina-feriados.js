@@ -665,6 +665,8 @@ function carregaComentariosAvaliacoes(config) {
 
     if(document.querySelector('h1').dataset.tipoPagina === 'ano') {
 
+      const ano = document.querySelector('h1').dataset.ano;
+
       fetch('/configuracao/json/estados-e-cidades.json')
       .then(response => {
         if (!response.ok) {
@@ -675,8 +677,7 @@ function carregaComentariosAvaliacoes(config) {
       .then(dados => {
 
         const visualizacaoMobile = window.innerWidth < 600;
-        const ano = document.querySelector('h1').dataset.ano;
-
+        
         new gridjs.Grid({
           columns: [
             { name: 'ID', hidden: window.innerWidth < 600 },
@@ -727,6 +728,64 @@ function carregaComentariosAvaliacoes(config) {
       .catch(error => {
         console.error('Erro ao buscar dados:', error);
       });
+
+      const meses = [
+        { "id": 1, "mes": "janeiro", "slug": "janeiro" },
+        { "id": 2, "mes": "fevereiro", "slug": "fevereiro" },
+        { "id": 3, "mes": "março", "slug": "marco" },
+        { "id": 4, "mes": "abril", "slug": "abril" },
+        { "id": 5, "mes": "maio", "slug": "maio" },
+        { "id": 6, "mes": "setembro", "slug": "setembro" },
+        { "id": 7, "mes": "outubro", "slug": "outubro" },
+        { "id": 8, "mes": "novembro", "slug": "novembro" },
+        { "id": 9, "mes": "dezembro", "slug": "dezembro" }
+      ];
+
+      new gridjs.Grid({
+        columns: [
+          { name: 'ID', hidden: window.innerWidth < 600 },
+          { name: 'Mês' },
+        ],
+        data: meses.map(({ id, mes, slug }) => [
+          id,
+          gridjs.html(`<a href='/${ano}/${slug}/'>Feriados ${mes} ${ano}</a>`)
+        ]),
+        className: {
+          table: 'table table-striped'
+        },
+        style: {
+          th: {
+            background: '#fff',
+            color: '#000',
+            padding: '0.5rem'
+          },
+          td: {
+            padding: '0.5rem'
+          }
+        },
+        pagination: {
+          limit: 10,
+          summary: false,
+          buttonsCount: 2
+        },
+        resizable: true,
+        sort: true,
+        search: true,
+        language: {
+          search: {
+            placeholder: 'Digite o nome do mês'
+          },
+          pagination: {
+            previous: window.innerWidth < 600 ? '<' : 'Anterior',
+            next: window.innerWidth < 600 ? '>' : 'Próximo',
+            showing: 'Exibindo',
+            to: 'a',
+            of: 'de',
+            results: 'resultados'
+          },
+          noRecordsFound: 'Nenhum mês encontrado para a busca'
+        }
+      }).render(document.getElementById('tabela-meses'));
 
     } else if(document.querySelector('h1').dataset.tipoPagina === 'estado') {
 
