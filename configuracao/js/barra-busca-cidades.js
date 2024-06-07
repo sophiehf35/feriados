@@ -4,10 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //PREENCHE OS SELECT DE ACORDO COM A PÁGINA
 
-    if(document.querySelector('h1').dataset.tipoPagina === 'ano') {
+    if (document.querySelector('h1').dataset.tipoPagina === 'ano') {
 
         if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
-          document.getElementById('cmbAno').value.dispatchEvent(new Event('change'));
+            document.querySelector('h1').dataset.ano.dispatchEvent(new Event('change')); 
         }
     }
 
