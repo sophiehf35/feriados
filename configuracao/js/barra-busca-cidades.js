@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.querySelector('h1').dataset.tipoPagina === 'ano') {
 
         if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
-            document.querySelector('h1').dataset.ano.dispatchEvent(new Event('change')); 
+            document.getElementById('cmbAno').value = document.querySelector('h1').dataset.ano;
+            document.getElementById('cmbAno').dispatchEvent(new Event('change'));
         }
     }
 
