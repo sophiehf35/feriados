@@ -2,7 +2,16 @@
 document.addEventListener('DOMContentLoaded', function () {
     let dados; // Declare a variável dados no escopo mais amplo
 
-    // CARREGA OS ESTADOS
+    //PREENCHE OS SELECT DE ACORDO COM A PÁGINA
+
+    if(document.querySelector('h1').dataset.tipoPagina === 'ano') {
+
+        if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
+          document.getElementById('cmbAno').value.dispatchEvent(new Event('change'));
+        }
+    }
+
+    //CARREGA OS ESTADOS
     fetch('/configuracao/json/estados-e-cidades.json')
         .then(response => response.json())
         .then(data => {
