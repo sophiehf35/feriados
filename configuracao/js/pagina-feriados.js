@@ -763,11 +763,7 @@ function carregaComentariosAvaliacoes(config) {
             padding: '0.5rem'
           }
         },
-        pagination: {
-          limit: 10,
-          summary: false,
-          buttonsCount: 2
-        },
+        pagination: false,
         resizable: true,
         sort: true,
         search: true,
