@@ -785,6 +785,8 @@ function carregaComentariosAvaliacoes(config) {
 
     } else if(document.querySelector('h1').dataset.tipoPagina === 'estado') {
 
+      const ano = document.querySelector('h1').dataset.ano;
+
       fetch('/configuracao/json/estados-e-cidades.json')
       .then(response => {
         if (!response.ok) {
@@ -804,7 +806,7 @@ function carregaComentariosAvaliacoes(config) {
           ],
           data: dados[uf].cidades.map((cidade, index) => ({
             id: index + 1,
-            cidade: gridjs.html(`<a href='/${uf}/${cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-')}-${uf}'>Feriados ${cidade} ${ano}</a>`)
+            cidade: gridjs.html(`<a href='/${ano}/${uf}/${cidade.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-')}-${uf}/'>Feriados ${cidade} ${ano}</a>`)
           })),
           className: {
             table: 'table table-striped'
