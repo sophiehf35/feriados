@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
   calendar.init();
 
   var isMobile = ('ontouchstart' in window);
-  var popoverElements = document.getElementById('calendar').querySelectorAll('.bg-feriado-nacional, .bg-ponto-facultativo, .bg-ponto-estadual');
+  var popoverElements = document.getElementById('calendar').querySelectorAll('.bg-feriado-nacional, .bg-feriado-estadual, .bg-ponto-facultativo');
 
   popoverElements.forEach(function(popoverElement) {
       const data = popoverElement.dataset.calendarDay;
