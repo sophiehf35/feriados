@@ -40,6 +40,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
 
+                //PREENCHE O ANO DE ACORDO COM A PÁGINA
+                if (document.querySelector("h1").dataset.ano !== "todos") {
+                    document.querySelector("#cmbAno").value = document.querySelector("h1").dataset.ano;
+                    document.querySelector("#cmbAno").dispatchEvent(new Event('change'));
+                }
+
                 // Adicione o evento de mudança de estado
                 document.getElementById('cmbEstado').addEventListener('change', function (e) {
                     var uf = document.getElementById('cmbEstado').value;
@@ -67,6 +73,18 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('cmbEstado').style.background = '#f8d7da';
                     }
                 });
+
+                //PREENCHE O ESTADO DE ACORDO COM A PÁGINA
+                if (document.querySelector("h1").dataset.estado !== "todos") {
+                    document.querySelector("#cmbEstado").value = document.querySelector("h1").dataset.ano;
+                    document.querySelector("#cmbEstado").dispatchEvent(new Event('change'));
+                }
+
+                //PREENCHE A CIDADE DE ACORDO COM A PÁGINA
+                if (document.querySelector("h1").dataset.cidade !== "todas") {
+                    document.querySelector("#cmbCidade").value = document.querySelector("h1").dataset.cidade;
+                    document.querySelector("#cmbCidade").dispatchEvent(new Event('change'));
+                }
 
                 document.getElementById('botaoBuscar').addEventListener('click', function (e) {
                     const selectAno = document.getElementById('cmbAno');
@@ -102,27 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => console.error('Erro ao carregar estados:', error));
-
-    //PREENCHE OS SELECT DE ACORDO COM A PÁGINA
-
-    if (document.querySelector('h1').dataset.tipoPagina === 'ano') {
-
-        if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
-            document.getElementById('cmbAno').value = document.querySelector('h1').dataset.ano;
-            document.getElementById('cmbAno').dispatchEvent(new Event('change'));
-        }
-    } else if (document.querySelector('h1').dataset.tipoPagina === 'estado') {
-        if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
-            document.getElementById('cmbAno').value = document.querySelector('h1').dataset.ano;
-            document.getElementById('cmbAno').dispatchEvent(new Event('change'));
-        }
-
-        if (Array.from(document.getElementById('cmbEstado').options).some(option => option.value === document.querySelector('h1').dataset.estado)) {
-            document.getElementById('cmbEstado').value = document.querySelector('h1').dataset.estado;
-            document.getElementById('cmbEstado').dispatchEvent(new Event('change'));
-        }
-
-    }
 
 });
 /* BARRA BUSCA FERIADOS MUNICIPAIS - ESTADO | CIDADE */
