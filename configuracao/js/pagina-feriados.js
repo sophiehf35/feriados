@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
           trigger: isMobile ? 'focus' : 'hover',
           placement: 'top',
           title: feriado.tipo,
-          content: feriado.nome + '(' + feriado.descricao + ')',
+          content: feriado.nome + (feriado.descricao !== '' ? '(' + feriado.descricao + ')' : ''),
           html: true
       });
   });
