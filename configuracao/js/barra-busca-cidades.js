@@ -2,16 +2,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     let dados; // Declare a variável dados no escopo mais amplo
 
-    //PREENCHE OS SELECT DE ACORDO COM A PÁGINA
-
-    if (document.querySelector('h1').dataset.tipoPagina === 'ano') {
-
-        if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
-            document.getElementById('cmbAno').value = document.querySelector('h1').dataset.ano;
-            document.getElementById('cmbAno').dispatchEvent(new Event('change'));
-        }
-    }
-
     //CARREGA OS ESTADOS
     fetch('/configuracao/json/estados-e-cidades.json')
         .then(response => response.json())
@@ -112,5 +102,27 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => console.error('Erro ao carregar estados:', error));
+
+    //PREENCHE OS SELECT DE ACORDO COM A PÁGINA
+
+    if (document.querySelector('h1').dataset.tipoPagina === 'ano') {
+
+        if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
+            document.getElementById('cmbAno').value = document.querySelector('h1').dataset.ano;
+            document.getElementById('cmbAno').dispatchEvent(new Event('change'));
+        }
+    } else if (document.querySelector('h1').dataset.tipoPagina === 'estado') {
+        if (Array.from(document.getElementById('cmbAno').options).some(option => option.value === document.querySelector('h1').dataset.ano)) {
+            document.getElementById('cmbAno').value = document.querySelector('h1').dataset.ano;
+            document.getElementById('cmbAno').dispatchEvent(new Event('change'));
+        }
+
+        if (Array.from(document.getElementById('cmbEstado').options).some(option => option.value === document.querySelector('h1').dataset.estado)) {
+            document.getElementById('cmbEstado').value = document.querySelector('h1').dataset.estado;
+            document.getElementById('cmbEstado').dispatchEvent(new Event('change'));
+        }
+
+    }
+
 });
 /* BARRA BUSCA FERIADOS MUNICIPAIS - ESTADO | CIDADE */
