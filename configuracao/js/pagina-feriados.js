@@ -407,7 +407,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
                       // Embaralha a ordem dos artigos relacionados
                       relacionadas.sort(() => Math.random() - 0.5);
   
-                      // Pega os primeiros 4 artigos relacionados
+                      // Pega as primeiras 4 cidades do mesmo estado
                       const cidadesRelacionadas = relacionadas.slice(0, 4);
                       
                       // Cria a seção de artigos relacionados
