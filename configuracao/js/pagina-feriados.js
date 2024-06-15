@@ -382,7 +382,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
   }
   /* FUNÇÃO PARA VALIDAR E ENVIAR FORMULÁRIO DE COMENTÁRIO */
   
-  /* FUNÇÃO PARA CRIAR SECTION E CARREGAR OS ARTIGOS RELACIONADOS */
+  /* FUNÇÃO PARA CRIAR SECTION E CARREGAR AS CIDADES RELACIONADAS */
   function carregaCidadesRelacionadas(config, uf, slugPagina) {
 
       fetch('/configuracao/json/cidades-relacionadas.json')
@@ -450,9 +450,9 @@ window.addEventListener("DOMContentLoaded", function (event) {
                           </div>
                       `;
   
-                      // Adiciona a seção de artigos relacionados ao DOM ou faz o que for necessário
-                      const secaoArtigo = document.getElementById('pagina-feriados');
-                      secaoArtigo.insertAdjacentElement('afterend', secaoRelacionadas);
+                      // Adiciona a seção de cidades relacionadas ao DOM
+                      const secaoConteudo = document.querySelector("#pagina-feriados > div > div.col-lg-8")
+                      secaoConteudo.insertAdjacentElement('afterend', secaoRelacionadas);
                   }
               
                   
@@ -464,7 +464,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
           });
   
   }
-  /* FUNÇÃO PARA CRIAR SECTION E CARREGAR OS ARTIGOS RELACIONADOS */
+  /* FUNÇÃO PARA CRIAR SECTION E CARREGAR AS CIDADES RELACIONADAS */
   
   /* FUNÇÃO PARA CRIAR SECTION E CARREGAR OS COMENTÁRIOS */
 function carregaComentariosAvaliacoes(config) {
