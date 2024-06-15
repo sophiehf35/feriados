@@ -383,7 +383,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
   /* FUNÇÃO PARA VALIDAR E ENVIAR FORMULÁRIO DE COMENTÁRIO */
   
   /* FUNÇÃO PARA CRIAR SECTION E CARREGAR AS CIDADES RELACIONADAS */
-  function carregaCidadesRelacionadas(config, uf, slugPagina) {
+  function carregaCidadesRelacionadas(config, uf, slugPagina, ano) {
 
       fetch('/configuracao/json/cidades-relacionadas.json')
           .then(response => {
@@ -421,7 +421,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
                                   <div class="row">
                                       ${cidadesRelacionadas.map(relacionada => `
                                           <div class="col-lg-6 col-sm-6 mb-3">
-                                              <a href="/${uf}/${relacionada.slug}">
+                                              <a href="/${ano}//${uf}/${relacionada.slug}">
                                                   <div class="card border-0 rounded-0 text-white overflow zoom position-relative mb-0">
                                                       <div class="ratio_right-cover-2 image-wrapper">
                                                           <img
@@ -653,7 +653,7 @@ function carregaComentariosAvaliacoes(config) {
     defineVariaveisUniversais(slugDaPagina).then(config => {
 
       if(document.querySelector('h1').dataset.tipoPagina === 'cidade') {
-        carregaCidadesRelacionadas(config, document.querySelector("h1").dataset.uf, document.querySelector("h1").dataset.slug);
+        carregaCidadesRelacionadas(config, document.querySelector("h1").dataset.uf, document.querySelector("h1").dataset.slug, document.querySelector("h1").dataset.ano);
       }
       carregaConteudoDestaque(config);
       carregaComentariosAvaliacoes();
