@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="color-scheme" content="only light">
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+      <title>${data[0].meta_titulo_google}</title>
+      <meta name="description" content="${data[0].meta_descricao_google}">
+      <meta name="author" content="Feriados">
+      <link rel="canonical" href="${urlDoSite}/${ano}/">
+      <!-- OPEN GRAPH -->
+      <meta property="og:locale" content="pt_BR">
+      <meta property="og:type" content="article">
+      <meta property="og:title" content="${data[0].meta_titulo_google}">
+      <meta property="og:description" content="${data[0].meta_descricao_google}">
+      <meta property="og:url" content="${urlDoSite}/${ano}/">
+      <meta property="og:site_name" content="Feriados Web">
+      <meta property="article:published_time" content="${new Date(data[0].data_hora_criacao).toISOString().replace(/\.\d{3}/, '').replace('Z', '')}-03:00">
+      <meta property="article:modified_time" content="${new Date(data[0].data_hora_atualizacao).toISOString().replace(/\.\d{3}/, '').replace('Z', '')}-03:00">
+      <meta property="article:author" content="Feriados">
+      <meta property="article:section" content="Feriados ${ano}">
+      <meta property="og:image" content="${diretorioCdnImagens}${imagemDestaque}">
+      <meta property="og:image:alt" content="Imagem ilustrativa feriados ${ano}">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="675">
+      <!-- TWITTER -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${data[0].meta_titulo_google}">
+      <meta name="twitter:description" content="${data[0].meta_descricao_google}">
+      <meta name="twitter:image" content="${diretorioCdnImagens}${imagemDestaque}">
+      <meta name="twitter:image:alt" content="Imagem ilustrativa feriados ${ano}">
+      <!-- FAVICONS -->
+      <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+      <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+      <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+      <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+      <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+      <link rel="manifest" href="/manifest.json">
+      <meta name="msapplication-TileColor" content="#ffffff">
+      <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+      <meta name="theme-color" content="#ffffff">
+      <!-- BASE CSS -->
+      <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" defer>
+      <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+      <link rel="stylesheet" type="text/css" href="/assets/css/vendors.css">
+      <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+      <link rel="stylesheet" type="text/css" href="/assets/css/blog.css">
+      <link rel="stylesheet" type="text/css" href="/assets/css/sumario.css">
+      <!-- PLUGINS -->
+      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro/build/vanilla-calendar.min.css">
+      <link rel="stylesheet" type="text/css" href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css">
+      <!-- PLUGINS -->
+      <!-- CSS CONFIGURADO -->
+      <link rel="stylesheet" type="text/css" href="/configuracao/css/cor-padrao.css">
+      <link rel="stylesheet" type="text/css" href="/configuracao/css/style.css">
+      <link rel="stylesheet" type="text/css" href="/configuracao/css/calendario-feriados.css">
+      <!-- CSS CONFIGURADO -->
+      <!-- DESIGN -->
+      <style>#artigo figure img{opacity:unset}.rev-text p{text-align:justify}ins.adsbygoogle[data-ad-status=unfilled]{display:none!important}</style>
+      <!-- DESIGN -->
+   </head>
+   <body>
+      <div id="page" class="theia-exception">
+         <header>
+            <nav class="navbar navbar-expand-lg" aria-label="menu">
+               <div style="padding: 5px 30px;" class="container-fluid">
+                  <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu" aria-controls="menu" aria-label="botão menu mobile">
+                  <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div id="logo" class="mx-auto"></div>
+               </div>
+            </nav>
+         </header>
+         <div class="sub_header_in">
+            <div style="text-align: center;" class="container-xl">
+               <h1 data-tipo-pagina="cidade" data-id="${data[0].id}" data-ano="${ano}" data-uf="${data[0].uf}" data-cidade="${data[0].slug}" data-comentarios="${data[0].comentarios}">${data[0].meta_titulo_google}</h1>
+            </div>
+            <div class="bc-icons-2">
+               <ol style="background-color:unset;margin-bottom:0" class="breadcrumb lighten-4 justify-content-center" itemscope itemtype="https://schema.org/BreadcrumbList">
+                  <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                     <a itemprop="item" class="link_breadcumb" href="/"><span itemprop="name">Feriados</span></a>
+                     <meta itemprop="position" content="1">
+                     <span class="mx-1" data-icon="9" style="vertical-align:middle;color:#fff"></span>
+                  </li>
+                  <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                     <a itemprop="item" class="link_breadcumb" href="/${ano}/"><span itemprop="name">${ano}</span></a>
+                     <meta itemprop="position" content="2">
+                     <span class="mx-1" data-icon="9" style="vertical-align:middle;color:#fff"></span>
+                  </li>
+                  <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                     <a itemprop="item" class="link_breadcumb" href="/${ano}/${data[0].uf}/"><span itemprop="name">${data[0].estado}</span></a>
+                     <meta itemprop="position" content="3">
+                     <span class="mx-1" data-icon="9" style="vertical-align:middle;color:#fff"></span>
+                  </li>
+                  <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                     <span itemprop="name">${data[0].cidade}</span>
+                     <meta itemprop="position" content="4">
+                  </li>
+               </ol>
+            </div>
+         </div>
+         <div class="filtro-estados-cidades">
+            <div class="container">
+               <form action="#" method="post" novalidate="novalidate">
+                  <div class="row">
+                     <div id="ano" class="col-lg-3 col-md-4 col-sm-12 pe-md-0">
+                        <select style="margin-bottom: 10px;" class="wide form-control select_customizado ano" name="ano" id="cmbAno">
+                           <option hidden="true" value="">Selecione o Ano</option>
+                           <option value="2024">2024</option>
+                           <option value="2025">2025</option>
+                           <option value="2026">2026</option>
+                        </select>
+                     </div>
+                     <div id="estado" class="col-lg-3 col-md-4 col-sm-12 ps-md-0 pe-md-0">
+                        <select style="margin-bottom: 10px;" class="wide form-control select_customizado estado" name="estado" id="cmbEstado">
+                           <option hidden="true" value="">Selecione o Estado</option>
+                           <option disabled="disabled" default="true" value="">Selecione o Estado</option>
+                        </select>
+                        <input style="display: none" name="estado_extenso" id="estado_extenso">
+                     </div>
+                     <div id="cidade" class="col-lg-3 col-md-4 col-sm-12 ps-md-0 pe-lg-0">
+                        <select style="margin-bottom: 10px;" class="wide form-control select_customizado cidade" name="cidade" id="cmbCidade">
+                           <option hidden="true" value="">Selecione a Cidade</option>
+                           <option disabled="disabled" default="true" value="">Selecione a Cidade</option>
+                        </select>
+                     </div>
+                     <div class="col-lg-3 div_botao_buscar">
+                        <input type="button" class="botao-buscar" id="botaoBuscar" value="ACESSAR">
+                     </div>
+                  </div>
+               </form>
+            </div>
+         </div>
+         <main>
+            <div id="pagina-feriados" style="padding-top: 20px; padding-bottom: 20px;" class="container-xl">
+               <div class="row">
+                  <div class="col-lg-8">
+                     <section class="box_account">
+                        <div style="box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 10%); background-color: #fff; padding: 20px; border-radius: 3px;">
+                           <p><b>Feriados ${data[0].cidade} ${ano}:</b> confira abaixo todos os feriados ${data[0].cidade} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${data[0].cidade} ${data[0].uf} ${ano}.</p>
+                        </div>
+                     </section>
+                     <section class="box_account">
+                        <div id="calendar"></div>
+                     </section>
+                     <section class="box_account">
+                        <div style="box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 10%); background-color: #fff; padding: 20px; border-radius: 3px;">
+                           <h2>Feriados ${data[0].cidade} ${ano}</h2>
+                           <p>É importante ressaltar que os feriados da cidade de ${data[0].cidade} ${ano} podem sofrer alterações a qualquer momento, isso por que os prefeitos das cidades possuem autonomia para criarem e alterarem novos feriados.</p>
+                        </div>
+                     </section>
+                     <section class="mb-4">
+                        ${tabelaFeriados}
+                     </section>
+                     <section class="box_account">
+                        <div style="box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 10%); background-color: #fff; padding: 20px; border-radius: 3px;">
+                           <h2>Feriado ${data[0].cidade} ${ano}</h2>
+                           <p>Caso tenha alguma sugestão a respeito de algum feriado ${data[0].cidade} ${ano} fique à vontade para enviar um comentário no formulário abaixo.</p>
+                        </div>
+                     </section>
+                     <section id="envia_comentarios">
+                        <div style="margin-bottom: 20px; padding:0px" class="reviews-container box_detail">
+                           <div class="titulo_secao">
+                              <h3 class="titulo">DEIXE UM COMENTÁRIO</h3>
+                           </div>
+                           <div style="padding: 20px 20px 15px 20px;">
+                              <form method="POST" action="" id="formularioDeComentario">
+                                 <div class="row g-3">
+                                    <div class="col-md-6">
+                                       <div class="form-floating">
+                                          <input type="text" class="form-control" id="nome" placeholder="Insira seu Nome" maxlength="35"">
+                                          <label for="nome">Insira seu Nome</label>
+                                       </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                       <div class="form-floating">
+                                          <input type="email" class="form-control" id="email" placeholder="Insira seu Email" maxlength="200"">
+                                          <label for="email">Insira seu Email</label>
+                                       </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                       <div id="div_sexo" class="form-floating">
+                                          <select class="form-select" id="sexo">
+                                             <option hidden="true" value="">Selecione seu Sexo</option>
+                                             <option value="1">Feminino</option>
+                                             <option value="2">Masculino</option>
+                                          </select>
+                                          <label for="sexo">Selecione seu Sexo</label>
+                                       </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                       <div id="div_avaliacao" class="form-floating">
+                                          <select class="form-select" id="avaliacao">
+                                             <option hidden="true" value="">Selecione uma Nota</option>
+                                             <option value="1">01 Estrela</option>
+                                             <option value="2">02 Estrelas</option>
+                                             <option value="3">03 Estrelas</option>
+                                             <option value="4">04 Estrelas</option>
+                                             <option value="5">05 Estrelas</option>
+                                          </select>
+                                          <label for="avaliacao">Selecione uma Nota</label>
+                                       </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                       <div class="form-floating">
+                                          <textarea style="height:130px;" class="form-control" placeholder="Insira seu Comentário*" id="mensagem" maxlength="1000"></textarea>
+                                          <label for="mensagem">Insira seu Comentário*</label>
+                                       </div>
+                                    </div>
+                                    <div id="div_notificacao_comentario" class="col-12 d-none"></div>
+                                    <div id="div_barra_comentario" class="col-12 d-none"></div>
+                                    <div class="col-md-12">
+                                       <input type="hidden" name="id" id="id" value="0" />
+                                       <input type="button" id="envia_comentario" class="botao_envia_comentario btn_1" value="ENVIAR">
+                                    </div>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                     </section>
+                     <section class="box_account">
+                        <div style="box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 10%); background-color: #fff; padding: 20px; border-radius: 3px;">
+                           <h2 style="font-weight: 600; font-size:22px; text-align:center;">Perguntas frequentes feriados nacionais ${ano}</h2>
+                           <p style="text-align:center">Confira abaixo algumas perguntas e respostas sobre os feriados nacionais ${ano}.</p>
+                           <div itemscope="" itemtype="https://schema.org/FAQPage" class="row">
+                              <div itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question" class="col-md-6">
+                                 <h3 style="margin: 10px 0px; font-size:18px; padding-left: 0px;" itemprop="name">Quantos feriados nacionais de ${ano} são em dia de semana?</h3>
+                                 <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                    <div style="text-align:justify" itemprop="text">
+                                       ${(data[0].numero_agencias >= 1) ? ((data[0].numero_agencias === 1) ? `
+                                       <p>Existe 1 agência dos correios em ${data[0].bairro} ${data[0].cidade} ${data[0].uf}.</p>
+                                       ` : `
+                                       <p>Existem ${data[0].numero_lockers} agências dos correios em ${data[0].bairro} ${data[0].cidade} ${data[0].uf}.</p>
+                                       `) : 'Não existem agências no bairro.'}
+                                    </div>
+                                 </div>
+                              </div>
+                              <div itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question" class="col-md-6">
+                                 <h3 style="margin: 10px 0px; font-size:18px; padding-left: 0px;" itemprop="name">Quantos feriados nacionais de ${ano} são no final de semana?</h3>
+                                 <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                                    <div style="text-align:justify" itemprop="text">
+                                       ${(data[0].numero_lockers >= 1) ? ((data[0].numero_lockers === 1) ? `
+                                       <p>Existe 1 locker dos correios em ${data[0].bairro} ${data[0].cidade} ${data[0].uf}.</p>
+                                       ` : `
+                                       <p>Existem ${data[0].numero_lockers} lockers dos correios em ${data[0].bairro} ${data[0].cidade} ${data[0].uf}.</p>
+                                       `) : 'Não existem lockers no bairro.'}
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </section>
+                  </div>
+                  <aside class="col-xl-4 col-lg-4 col-md-12">
+                     <div id="imagemCapaWidget" class="box_detail widget">
+                        <div class="titulo_secao">
+                           <h3 class="titulo">IMAGEM DE CAPA</h3>
+                        </div>
+                        <div class="secao_imagem_de_capa conteudo_secao_sidebar">
+                           <figure class="figure_container">
+                              <img width="950" height="587" src="data:image/webp;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}" sizes="(max-width: 125px), (max-width: 150px), (max-width: 175px), (max-width: 200px), (max-width: 225px), (max-width: 250px), (max-width: 275px), (max-width: 300px), (max-width: 325px), (max-width: 350px), (max-width: 375px), (max-width: 400px), (max-width: 425px), (max-width: 450px), (max-width: 475px), (-webkit-min-device-pixel-ratio: 1.1) AND (-webkit-max-device-pixel-ratio: 1.5) 80.5vw, (-webkit-min-device-pixel-ratio: 1.6) AND (-webkit-max-device-pixel-ratio: 2) 57.5vw, (-webkit-min-device-pixel-ratio: 2.1) AND (-webkit-max-device-pixel-ratio: 2.5) 42.5vw, (-webkit-min-device-pixel-ratio: 2.6) AND (-webkit-max-device-pixel-ratio: 3) 39.5vw, (-webkit-min-device-pixel-ratio: 3.1) AND (-webkit-max-device-pixel-ratio: 3.5) 32.5vw, (-webkit-min-device-pixel-ratio: 3.6) AND (-webkit-max-device-pixel-ratio: 4) 28.5vw" data-srcset="${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-250 250w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-300 300w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-350 350w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-400 400w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-450 450w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-500 500w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-550 550w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-600 600w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-650 650w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-700 700w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-750 750w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-800 800w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-850 850w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-900 900w, ${(cdnImagens === 1 ? diretorioCdnImagens : "/img")}${imagemDestaque.replace((urlDoSite + "/img"), "")}?tr=w-950 950w" class="img-fluid" title="Agência dos Correios ${data[0].bairro} ${data[0].cidade} ${data[0].uf}" alt="Imagem ilustrativa agência dos correios ${data[0].bairro} ${data[0].cidade} ${data[0].uf}" itemprop="image">
+                           </figure>
+                        </div>
+                     </div>
+                     <div id="legendaWidget" class="box_detail widget">
+                        <div class="titulo_secao">
+                           <h3 class="titulo">LEGENDA CALENDÁRIO</h3>
+                        </div>
+                        <div class="conteudo_secao_sidebar">
+                           <div class="legend-grid">
+                              <div class="legend-item"><span class="color-box bg-feriado-nacional"></span> Feriado Nacional</div>
+                              <div class="legend-item"><span class="color-box bg-feriado-estadual"></span> Feriado Estadual</div>
+                              <div class="legend-item"><span class="color-box bg-feriado-municipal"></span> Feriado Municipal</div>
+                              <div class="legend-item"><span class="color-box bg-ponto-facultativo"></span> Ponto Facultativo</div>
+                           </div>
+                        </div>
+                     </div>
+                     <div id="sumarioWidget" class="box_detail widget">
+                        <div class="titulo_secao">
+                           <h3 class="titulo">SUMÁRIO</h3>
+                        </div>
+                        <div class="conteudo_secao_sidebar">
+                           <div id="toc"></div>
+                        </div>
+                     </div>
+                     <div class="box_detail widget">
+                        <div class="titulo_secao">
+                           <h3 class="titulo">LINKS ÚTEIS</h3>
+                        </div>
+                        <div class="conteudo_secao_sidebar">
+                           <div>
+                              <ul style="margin-bottom: 0px;" class="links">
+                                 <li><a href="https://buscacepcorreios.com.br/" target="_blank">Busca Cep</a></li>
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </aside>
+               </div>
+            </div>
+         </main>
+      </div>
+      <div id="toTop"></div>
+      <!-- PLUGINS -->
+      <script type="text/javascript" language="javascript" src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro/build/vanilla-calendar.min.js"></script>
+      <!-- PLUGINS -->
+      <!-- SCRIPTS BASE -->
+      <script type="text/javascript" language="javascript" src="/assets/js/bootstrap.bundle.min.js" defer></script>
+      <script type="text/javascript" language="javascript" src="/assets/js/intersection-observer.js" defer></script>
+      <script type="text/javascript" language="javascript" src="/assets/js/menu.js" ></script>
+      <script type="text/javascript" language="javascript" src="/assets/js/rodape.js"></script>
+      <script type="text/javascript" language="javascript" src="/assets/js/universal.js"></script>
+      <!-- SCRIPTS BASE -->
+      <!-- JS CONFIGURADO -->
+      <script type="text/javascript" language="javascript" src="/configuracao/js/barra-busca-cidades.js"></script>
+      <script type="text/javascript" language="javascript" src="/configuracao/js/pagina-feriados.js"></script>
+      <!-- JS CONFIGURADO -->
+      <!-- JSON SCHEMA DO GOOGLE -->
+      <script type="application/ld+json">
+         {
+           "@context": "https://schema.org",
+           "@type": "BlogPosting",
+           "headline": "${data[0].meta_titulo_google}",
+           "image": [
+             "${diretorioCdnImagens}${imagemDestaque}"
+            ],
+           ${criacaoEModificacaoSchema}
+           "mainEntityOfPage": "${urlDoSite}/${ano}/",
+           ${criadorDoConteudoSchema}
+         }
+      </script>
+      <!-- JSON SCHEMA DO GOOGLE -->
+      <script>const feriados = ${JSON.stringify(feriados)};</script>
+   </body>
+</html>

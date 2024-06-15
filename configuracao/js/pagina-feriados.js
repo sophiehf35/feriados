@@ -451,7 +451,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
                       `;
   
                       // Adiciona a seção de cidades relacionadas ao DOM
-                      const secaoConteudo = document.querySelector("#pagina-feriados > div")
+                      const secaoConteudo = document.querySelector("#pagina-feriados > div > div.col-lg-8")
                       secaoConteudo.insertAdjacentElement('afterend', secaoRelacionadas);
                   }
               
