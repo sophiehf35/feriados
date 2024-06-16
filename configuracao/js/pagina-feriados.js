@@ -421,14 +421,14 @@ window.addEventListener("DOMContentLoaded", function (event) {
                                   <div class="row">
                                       ${cidadesRelacionadas.map(relacionada => `
                                           <div class="col-lg-6 col-sm-6 mb-3">
-                                              <a href="/${ano}//${uf}/${relacionada.slug}">
+                                              <a href="/${ano}/${uf}/${relacionada.slug}">
                                                   <div class="card border-0 rounded-0 text-white overflow zoom position-relative mb-0">
                                                       <div class="ratio_right-cover-2 image-wrapper">
                                                           <img
                                                               src="data:image/webp;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-                                                              data-src="${(config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '')}/cidades/${uf}/${relacionada.imagem_destaque}"
+                                                              data-src="${(config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '')}/${ano}/cidades/${relacionada.imagem_destaque}"
                                                               data-srcset="${Array.from({ length: 15 }, (_, i) => 
-                                                                  `${(config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '')}/cidades/${uf}/${relacionada.imagem_destaque}?tr=w-${250 + i * 50} ${250 + i * 50}w`
+                                                                  `${(config.cdn_imagens === 1 ? config.diretorio_cdn_imagens : '')}/${ano}/cidades/${relacionada.imagem_destaque}?tr=w-${250 + i * 50} ${250 + i * 50}w`
                                                               ).join(', ')}"
                                                               sizes="(max-width: 125px), (max-width: 150px), (max-width: 175px), (max-width: 200px), (max-width: 225px), (max-width: 250px), (max-width: 275px), (max-width: 300px), (max-width: 325px), (max-width: 350px), (max-width: 375px), (max-width: 400px), (max-width: 425px), (max-width: 450px), (max-width: 475px), (-webkit-min-device-pixel-ratio: 1.1) AND (-webkit-max-device-pixel-ratio: 1.5) 80.5vw, (-webkit-min-device-pixel-ratio: 1.6) AND (-webkit-max-device-pixel-ratio: 2) 57.5vw, (-webkit-min-device-pixel-ratio: 2.1) AND (-webkit-max-device-pixel-ratio: 2.5) 42.5vw, (-webkit-min-device-pixel-ratio: 2.6) AND (-webkit-max-device-pixel-ratio: 3) 39.5vw, (-webkit-min-device-pixel-ratio: 3.1) AND (-webkit-max-device-pixel-ratio: 3.5) 32.5vw, (-webkit-min-device-pixel-ratio: 3.6) AND (-webkit-max-device-pixel-ratio: 4) 28.5vw"
                                                               title="${relacionada.titulo_imagem_destaque}"
