@@ -341,7 +341,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
             setTimeout(function() {
                 enviaDados(
                     config.endereco_funcao_php,
-                    'adicionarComentariosPaginaLivrocep',
+                    'adicionarComentariosPaginaFeriado',
                     config.id,
                     id_pagina,
                     campos,
