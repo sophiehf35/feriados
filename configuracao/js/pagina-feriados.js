@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
 
-  const calendar = new VanillaCalendar('#calendar', {
+  const calendar = new VanillaCalendar('#calendario-de-feriados', {
       type: 'multiple',
       months: 12,
       settings: {
