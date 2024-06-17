@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
               year: false,
           },
           selected: {
+              year: 2025,
               month: 0,
           },
       },
