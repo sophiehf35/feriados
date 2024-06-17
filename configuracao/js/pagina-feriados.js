@@ -835,8 +835,8 @@ function carregaComentariosAvaliacoes(config) {
                 placeholder: 'Digite o nome da cidade'
             },
             pagination: {
-              previous: visualizacaoMobile ? '<' : 'Anterior',
-              next: visualizacaoMobile ? '>' : 'Próximo',
+              previous: '<',
+              next: '>',
               showing: 'Exibindo',
               to: 'a',
               of: 'de',

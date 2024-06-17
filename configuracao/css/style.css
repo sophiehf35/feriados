@@ -138,3 +138,9 @@ section.secao-inicial p {
 .gridjs-search-input {
     width: 100%;
 }
+.gridjs-pagination {
+    text-align: center;
+}
+.gridjs-pagination .gridjs-pages {
+    float: unset;
+}
