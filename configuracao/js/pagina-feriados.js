@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const calendar = new VanillaCalendar('#calendario-de-feriados', {
       type: 'multiple',
-      months: 12,
+      months: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 12 : 1,
       settings: {
           lang: 'pt-br',
           visibility: {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
           },
           selected: {
               year: document.querySelector("h1").dataset.ano,
-              month: 0,
+              month: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 0 : pegaNumeroMes(document.querySelector("h1").dataset.mes),
           },
       },
       popups: popups,
@@ -648,6 +648,17 @@ function carregaComentariosAvaliacoes(config) {
   
   }
   /* FUNÇÃO PARA CRIAR SECTION E CARREGAR O CONTEÚDO EM DESTAQUE */
+
+  function pegaNumeroMes(nomeDoMes) {
+    const nomeDoMeses = [
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+    ];
+    const lowerCaseMonthName = nomeDoMes.toLowerCase();
+    const monthIndex = nomeDoMeses.indexOf(lowerCaseMonthName);
+    return monthIndex;
+}
+
 
   window.addEventListener("DOMContentLoaded", function () {
 
