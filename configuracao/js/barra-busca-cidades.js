@@ -1,6 +1,6 @@
 /* BARRA BUSCA FERIADOS MUNICIPAIS - ESTADO | CIDADE */
 document.addEventListener('DOMContentLoaded', function () {
-    let dados; // Declare a variável dados no escopo mais amplo
+    let dados;
 
     //CARREGA OS ESTADOS
     fetch('/configuracao/json/estados-e-cidades.json')
