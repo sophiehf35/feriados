@@ -186,8 +186,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
       var text = heading.textContent.trim();
       return (
         (tag === "h3" && text !== "IMAGEM DE CAPA" && text !== "ANÚNCIO" && text !== "LEGENDA CALENDÁRIO" && text !== "SUMÁRIO" && text !== "ESTADOS" && text !== "MESES" && text !== "VER NO MAPA" && text !== "LINKS ÚTEIS" && text !== "DEIXE UM COMENTÁRIO" && text !== "COMENTÁRIOS") ||
-        (tag === "h2" || tag === "h4" || tag === "h5") ||
-        text.includes("CIDADES")
+        (tag === "h2" || tag === "h4" || tag === "h5" || text.includes("CIDADES"))
       );
     });
   
