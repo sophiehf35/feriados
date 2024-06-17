@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Adicione o evento de mudança de estado
                 document.getElementById('cmbEstado').addEventListener('change', function (e) {
                     var uf = document.getElementById('cmbEstado').value;
-                    if (uf) {
+                    if (ano && uf) {
                         var cidades = dados[uf].cidades;
                         var option = '<option hidden="true" value="">Selecione a Cidade</option>';
                         cidades.forEach(cidade => {
