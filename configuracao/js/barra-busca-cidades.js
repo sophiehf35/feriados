@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('cmbEstado').style.display = 'block';
 
                         document.getElementById('cmbCidade').innerHTML = '<option hidden="true" value="">Selecione a Cidade</option>';
-                        document.getElementById('cmbCidade').style.display = 'none';
 
                         document.getElementById('botaoBuscar').disabled = false;
                         document.getElementById('cmbAno').style.border = '';
