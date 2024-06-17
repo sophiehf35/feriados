@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
               year: false,
           },
           selected: {
-              year: 2025,
+              year: document.querySelector("h1").dataset.ano,
               month: 0,
           },
       },
