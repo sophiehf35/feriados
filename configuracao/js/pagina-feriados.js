@@ -824,8 +824,8 @@ function carregaComentariosAvaliacoes(config) {
           },
           pagination: {
             limit: 10,
-            summary: visualizacaoMobile ? false : true,
-            buttonsCount: 2
+            summary: false,
+            buttonsCount: 1
           },
           resizable: true,
           sort: true,
