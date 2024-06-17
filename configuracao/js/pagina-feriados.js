@@ -79,9 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
           };
       }
   }
-
+  
   const calendar = new VanillaCalendar('#calendario-de-feriados', {
-      type: 'multiple',
+      type: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 'multiple' : 'default',
       months: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 12 : 1,
       settings: {
           lang: 'pt-br',
