@@ -1,10 +1,10 @@
 /*AJUSTES NO CALENDÁRIO */
 .bg-feriado-nacional {
-    background-color: red!important;
+    background-color: chocolate!important;
     color: #fff!important;
 }
 .bg-feriado-estadual {
-    background-color: orangered!important;
+    background-color: purple!important;
     color: #fff!important;
 }
 .bg-feriado-municipal {
@@ -12,7 +12,7 @@
     color: #fff!important;
 }
 .bg-ponto-facultativo {
-    background-color: blue!important;
+    background-color: navy!important;
     color: #fff!important;
 }
 
@@ -131,18 +131,6 @@ height: 20px;
 display: inline-block;
 margin-right: 0.5rem;
 border-radius: 3px;
-}
-.bg-red {
-background-color: red;
-}
-.bg-blue {
-background-color: blue;
-}
-.bg-green {
-background-color: green;
-}
-.bg-yellow {
-background-color: yellow;
 }
 @media (max-width: 1024px) {
 .legend-grid {
