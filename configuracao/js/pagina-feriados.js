@@ -156,23 +156,25 @@ document.addEventListener('click', function(event) {
 
 //FUNÇÃO PARA IMPRIMIR TABELA DE FERIADOS
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('imprimirTableFeriados').addEventListener("click", function (event) {
-      const tituloDocumento = document.querySelector('#pagina-feriados h2').textContent;
-      const printWindow = window.open();
-      if (printWindow) {
-        printWindow.document.write(`<html><head><title>${tituloDocumento} (fonte: www.feriadosweb.com.br)</title>`);
-        printWindow.document.write('<style type="text/css">body{-webkit-print-color-adjust:exact}@page{size: landscape;}.tabela-customizada.feriados{border-collapse: collapse;margin-top: 15px;margin-bottom: 15px;font-family: sans-serif;width: 100%;box-shadow: 0 0 20px rgb(0 0 0 / 15%);}.tabela-customizada tbody tr {border-bottom: 1px solid #ddd;}.tabela-customizada tbody tr td.th {background: #005c82;color: #fff;text-transform: uppercase;}.tabela-customizada td, .tabela-customizada th {padding: 5px 15px; margin-top: 0px;margin-bottom: 0px;}</style>');
-        printWindow.document.write('</head><body>');
-        const tabela = document.getElementsByClassName("tabela-customizada feriados")[0].innerHTML;
-        printWindow.document.write('<table class="tabela-customizada feriados">' + tabela.replace(/<\/?[a][a-z0-9]*[^<>]*>|<!--.*?-->/g, "") + '</table>');
-        printWindow.document.write('</body>');
-        printWindow.document.write('</html>');
-        printWindow.document.close();
-        printWindow.print();
-      } else {
-        console.error('Erro ao abrir a visualização de impressão.');
-      }
-  });
+  if(document.querySelector("h1").dataset.tipoPagina !== 'mes') {
+    document.getElementById('imprimirTableFeriados').addEventListener("click", function (event) {
+        const tituloDocumento = document.querySelector('#pagina-feriados h2').textContent;
+        const printWindow = window.open();
+        if (printWindow) {
+          printWindow.document.write(`<html><head><title>${tituloDocumento} (fonte: www.feriadosweb.com.br)</title>`);
+          printWindow.document.write('<style type="text/css">body{-webkit-print-color-adjust:exact}@page{size: landscape;}.tabela-customizada.feriados{border-collapse: collapse;margin-top: 15px;margin-bottom: 15px;font-family: sans-serif;width: 100%;box-shadow: 0 0 20px rgb(0 0 0 / 15%);}.tabela-customizada tbody tr {border-bottom: 1px solid #ddd;}.tabela-customizada tbody tr td.th {background: #005c82;color: #fff;text-transform: uppercase;}.tabela-customizada td, .tabela-customizada th {padding: 5px 15px; margin-top: 0px;margin-bottom: 0px;}</style>');
+          printWindow.document.write('</head><body>');
+          const tabela = document.getElementsByClassName("tabela-customizada feriados")[0].innerHTML;
+          printWindow.document.write('<table class="tabela-customizada feriados">' + tabela.replace(/<\/?[a][a-z0-9]*[^<>]*>|<!--.*?-->/g, "") + '</table>');
+          printWindow.document.write('</body>');
+          printWindow.document.write('</html>');
+          printWindow.document.close();
+          printWindow.print();
+        } else {
+          console.error('Erro ao abrir a visualização de impressão.');
+        }
+    });
+  }
 });
 
 
