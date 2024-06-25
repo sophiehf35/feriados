@@ -1,9 +1,9 @@
 {
   "id":345417679477152,
-  "nome_do_site":"Feriados 20",
-  "nome_do_logo":"logo-feriados-20",
-  "autor_padrao":"Feriados 20",
-  "dominio":"https://www.feriados20.com.br",
+  "nome_do_site":"Feriados Web",
+  "nome_do_logo":"logo-feriados-web",
+  "autor_padrao":"Feriados Web",
+  "dominio":"https://www.feriadosweb.com.br",
   "numero_artigos_pagina_home":25,
   "numero_artigos_pagina_categoria":10,
   "numero_ferramentas_pagina_categoria" : 10,
@@ -24,7 +24,7 @@
   "possui_google_adsense":0,
   "codigo_google_adsense":"",
   "possui_clarity":0,
-  "codigo_clarity":"c6por4ipyr",
+  "codigo_clarity":"0",
   "header":{
      "fixo_em_todas_paginas":1,
      "fixo_em_algumas_paginas":0
@@ -41,7 +41,7 @@
         "quem-somos"
      ],
      "meta_titulo_padrao":"| feriados nacionais estaduais municipais",
-     "meta_descricao_padrao":"Feriados nacionais 2024 ✔️ feriados estaduais ✔️ feriados municipais ✔️ feriados 2024 ✔️ buscar feriados ✔️ feriados da cidade ✔️ feriados do Brasil"
+     "meta_descricao_padrao":"| Feriados nacionais 2024 ✔️ feriados estaduais ✔️ feriados municipais ✔️ feriados 2024 ✔️ buscar feriados ✔️ feriados da cidade ✔️ feriados do Brasil"
   },
   "paginas_categorias":{
      "slugs":[]

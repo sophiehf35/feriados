@@ -2,4 +2,4 @@ User-Agent: *
 Allow: /*
 Disallow: /cdn-cgi/
 
-Sitemap: https://www.feriados20.com.br/sitemap.xml
+Sitemap: https://www.feriadosweb.com.br/sitemap.xml
