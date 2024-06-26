@@ -288,7 +288,9 @@ window.addEventListener("DOMContentLoaded", function (event) {
   const formComentario = document.querySelector("#formularioDeComentario");
   const id_comentario = formComentario.querySelector("#id").value;
   const tipo_pagina = document.querySelector("h1").dataset.tipoPagina;
+  const ano = document.querySelector("h1").dataset.ano;
   const id_pagina = document.querySelector("h1").dataset.id;
+
   
   const inputNomeComentario = formComentario.querySelector("#nome");
   const inputEmailComentario = formComentario.querySelector("#email");
@@ -334,6 +336,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
             const campos = {
                 "id": id_comentario,
                 "tipo_pagina": tipo_pagina,
+                "ano": ano,
                 "nome": inputNomeComentario.value,
                 "email": inputEmailComentario.value,
                 "sexo": inputSexoComentario.value,
