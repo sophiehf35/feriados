@@ -427,7 +427,7 @@ window.addEventListener("DOMContentLoaded", function (event) {
                                   <div class="row">
                                       ${cidadesRelacionadas.map(relacionada => `
                                           <div class="col-lg-6 col-sm-6 mb-3">
-                                              <a href="/${ano}/${uf}/${relacionada.slug}">
+                                              <a href="/${ano}/${uf}/${relacionada.slug}/">
                                                   <div class="card border-0 rounded-0 text-white overflow zoom position-relative mb-0">
                                                       <div class="ratio_right-cover-2 image-wrapper">
                                                           <img
