@@ -29,12 +29,12 @@ window.addEventListener("DOMContentLoaded", function() {
         </div>`;
         const tempDiv2 = document.createElement('div');
         tempDiv2.innerHTML = anuncio2;
-        document.getElementById('rastrear_objeto').insertAdjacentElement('afterend', tempDiv2.firstChild);
+        document.getElementById('calendario-de-feriados').insertAdjacentElement('afterend', tempDiv2.firstChild);
 
         //ANUNCIO 3
         const anuncio3 = `<div class="box_detail widget">
             <div class="titulo_secao">
-                <h3 class="titulo">ANÃšNCIO</h3>
+                <h3 class="titulo">ANÛNCIO</h3>
             </div>
             <div class="conteudo_secao_sidebar">
                 <div class="text-center">
