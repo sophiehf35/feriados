@@ -1,6 +1,6 @@
 window.addEventListener("DOMContentLoaded", function() {
 
-    if (document.querySelector('h1').dataset.nomePagina === 'home') {
+    if (document.querySelector('h1').dataset.slug === 'home') {
 
         //INSERE ANUNCIOS NA PAGINA HOME
 
