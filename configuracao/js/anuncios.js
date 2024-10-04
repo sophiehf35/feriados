@@ -46,7 +46,7 @@ window.addEventListener("DOMContentLoaded", function() {
         tempDiv3.innerHTML = anuncio3;
         document.querySelector('aside').insertBefore(tempDiv3.firstChild, document.querySelector('aside').firstChild);
 
-        //INSERE ANUNCIOS NAS PAGINAS DE UNIDADES (ESTADO, CIDADE, BAIRRO, AGENCIA E LOCKER)
+        //INSERE ANUNCIOS NAS PAGINAS DE UNIDADES (ANO, ESTADO, CIDADE E MESES)
 
         inserirAnuncio('anuncioDiv1_desktop', '3e9f61e063c5fc84a5dd322cbb2735a4', 60, 468, '//www.topcreativeformat.com/3e9f61e063c5fc84a5dd322cbb2735a4/invoke.js');
         inserirAnuncio('anuncioDiv1_mobile', 'b1000047c9b6c6b178480d7dc2f38cd6', 250, 300, '//www.topcreativeformat.com/b1000047c9b6c6b178480d7dc2f38cd6/invoke.js');
