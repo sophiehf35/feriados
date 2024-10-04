@@ -24,7 +24,7 @@ window.addEventListener("DOMContentLoaded", function() {
         document.querySelector('section').insertAdjacentElement('beforeend', tempDiv1.firstChild);
 
         //ANUNCIO 2
-        const anuncio2 = `<div class="text-center">
+        const anuncio2 = `<div style="box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 10%); background-color: #fff; margin-top: 25px; border-radius: 3px;" class="box_account text-center">
             <div class="col-12 d-none d-md-block d-lg-block" id="anuncioDiv2"></div>
         </div>`;
         const tempDiv2 = document.createElement('div');
