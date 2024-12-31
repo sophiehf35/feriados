@@ -21,8 +21,8 @@
   "exibe_categorias_de_artigos":0,
   "possui_google_analytics":1,
   "codigo_google_analytics":"G-R6YLLZQXB7",
-  "possui_google_adsense":0,
-  "codigo_google_adsense":"",
+  "possui_google_adsense":1,
+  "codigo_google_adsense":"ca-pub-4711756111238771",
   "possui_clarity":0,
   "codigo_clarity":"0",
   "header":{
