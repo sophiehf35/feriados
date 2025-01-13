@@ -4,6 +4,7 @@
   "nome_do_logo":"logo-feriados-web",
   "autor_padrao":"Feriados Web",
   "dominio":"https://www.feriadosweb.com.br",
+  "diretorio_blog": "home",
   "numero_artigos_pagina_home":25,
   "numero_artigos_pagina_categoria":10,
   "numero_ferramentas_pagina_categoria" : 10,
