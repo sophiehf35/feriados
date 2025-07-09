@@ -1,165 +1,52 @@
-document.addEventListener('DOMContentLoaded', function() {
-
+document.addEventListener('DOMContentLoaded', function () {
   var acessoMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  //FUNÇÃO PARA ABREVIAR NOMES DOS MESES
+  // ABREVIAR NOMES DOS MESES (MOBILE)
   if (acessoMobile) {
-      // Abreviar nomes dos meses
-      const linhasData = document.querySelectorAll("table.tabela-customizada.feriados > tbody > tr > td.th");
-      if (linhasData !== null) {
-          for (const linha of linhasData) {
-              const mes = linha.textContent.split(" ").splice(-1)[0];
-              const mesAbreviado = mes.substring(0, 3);
-              linha.textContent = linha.textContent.replace(mes, mesAbreviado);
-          }
+    const linhasData = document.querySelectorAll("table.tabela-customizada.feriados > tbody > tr > td.th");
+    for (const linha of linhasData) {
+      const mes = linha.textContent.split(" ").splice(-1)[0];
+      const mesAbreviado = mes.substring(0, 3);
+      linha.textContent = linha.textContent.replace(mes, mesAbreviado);
+    }
+
+    const linhasDescricao = document.querySelectorAll("table.tabela-customizada.feriados > tbody > tr > td:nth-child(2)");
+    for (const linha of linhasDescricao) {
+      const possuiDescricao = linha.textContent.match(/\(([^)]+)\)/);
+      if (possuiDescricao !== null) {
+        if (linha.textContent.indexOf('Feriado Municipal') !== -1) {
+          const texto = linha.textContent.replace(possuiDescricao[1], "").replace("()", "");
+          linha.textContent = '';
+          linha.insertAdjacentHTML('afterbegin', '<b>' + texto + '</b>');
+          linha.insertAdjacentHTML('beforeend', '<button style="padding: 5px 5px; line-height: 10px; float: right; text-transform: lowercase;" class="btn btn-success botaoDescricao fechado" type="button">ver</button>');
+        } else {
+          linha.textContent = linha.textContent.replace(possuiDescricao[1], "").replace("()", "");
+          linha.insertAdjacentHTML('beforeend', '<button style="padding: 5px 5px; line-height: 10px; float: right; text-transform: lowercase;" class="btn btn-success botaoDescricao fechado" type="button">ver</button>');
+        }
+
+        const botao = linha.querySelector('.botaoDescricao');
+        if (botao) {
+          botao.dataset.descricao = possuiDescricao[1];
+        }
       }
-
-      // Adicionar botão e processar descrições
-      const linhasDescricao = document.querySelectorAll("table.tabela-customizada.feriados > tbody > tr > td:nth-child(2)");
-      if (linhasDescricao !== null) {
-          for (const linha of linhasDescricao) {
-              const possuiDescricao = linha.textContent.match(/\(([^)]+)\)/);
-              if (possuiDescricao !== null) {
-                  if (linha.textContent.indexOf('Feriado Municipal') !== -1) {
-                      const texto = linha.textContent.replace(possuiDescricao[1], "").replace("()", "");
-                      linha.textContent = '';
-                      linha.insertAdjacentHTML('afterbegin', '<b>' + texto + '</b>');
-                      linha.insertAdjacentHTML('beforeend', '<button style="padding: 5px 5px; line-height: 10px; float: right; text-transform: lowercase;" class="btn btn-success botaoDescricao fechado" type="button">ver</button>');
-
-                      // Adicionar o botão para exibir descrição
-                      const botao = linha.children[1];
-                      botao.dataset.descricao = possuiDescricao[1];
-
-                  } else {
-                      linha.textContent = linha.textContent.replace(possuiDescricao[1], "").replace("()", "");
-                      linha.insertAdjacentHTML('beforeend', '<button style="padding: 5px 5px; line-height: 10px; float: right; text-transform: lowercase;" class="btn btn-success botaoDescricao fechado" type="button">ver</button>');
-
-                      // Adicionar o botão para exibir descrição
-                      const botao = linha.querySelector('.botaoDescricao');
-                      if (botao) {
-                        botao.dataset.descricao = possuiDescricao[1];
-                      }
-                  }
-              }
-          }
-      }
+    }
   }
 
-  //FUNÇÃO PARA INSERIR BOTÃO DE IMPRIMIR TABELA ABAIXO DE TODAS AS TABELAS DE FERIADO
+  // INSERIR BOTÃO DE IMPRIMIR (DESKTOP)
   if (!acessoMobile) {
-      const tabela = document.querySelector('table.tabela-customizada.feriados');
-      if (tabela !== null) {
-          const button = document.createElement('button');
-          button.id = 'imprimirTableFeriados';
-          button.style.width = '100%';
-          button.style.marginTop = '10px';
-          button.className = 'btn_1 full-width fe-pulse';
-          button.type = 'button';
-          button.textContent = 'IMPRIMIR OU SALVAR TABELA';
-          tabela.insertAdjacentElement('afterend', button);
-      }
-  }
+    const tabela = document.querySelector('table.tabela-customizada.feriados');
+    if (tabela !== null) {
+      const button = document.createElement('button');
+      button.id = 'imprimirTableFeriados';
+      button.style.width = '100%';
+      button.style.marginTop = '10px';
+      button.className = 'btn_1 full-width fe-pulse';
+      button.type = 'button';
+      button.textContent = 'IMPRIMIR OU SALVAR TABELA';
+      tabela.insertAdjacentElement('afterend', button);
 
-  //FUNÇÃO PARA CARREGAR CALENDÁRIO (POPOVERS E DADOS)
-  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-  var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-      return new bootstrap.Popover(popoverTriggerEl)
-  })
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-  })
-
-  const hoje = new Date().toISOString().split('T')[0];
-
-  const popups = {};
-  for (const data in feriados) {
-      if (feriados.hasOwnProperty(data)) {
-          const feriado = feriados[data];
-          popups[data] = {
-              modifier: feriado.classe,
-          };
-      }
-  }
-  
-  const calendar = new VanillaCalendar('#calendario-de-feriados', {
-      type: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 'multiple' : 'default',
-      months: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 12 : 1,
-      settings: {
-          lang: 'pt-br',
-          visibility: {
-              theme: 'light',
-              weekend: false,
-              daysOutside: false,
-          },
-          selection: {
-              day: false,
-              month: false,
-              year: false,
-          },
-          selected: {
-              year: document.querySelector("h1").dataset.ano,
-              month: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 0 : pegaNumeroMes(document.querySelector("h1").dataset.mes),
-          },
-      },
-      popups: popups,
-  });
-  calendar.init();
-
-  var isMobile = ('ontouchstart' in window);
-  var popoverElements = document.getElementById('calendario-de-feriados').querySelectorAll('.bg-feriado-nacional, .bg-feriado-estadual, .bg-feriado-municipal, .bg-ponto-facultativo');
-
-  popoverElements.forEach(function(popoverElement) {
-      const data = popoverElement.dataset.calendarDay;
-      const feriado = feriados[data];
-      new bootstrap.Popover(popoverElement, {
-          trigger: isMobile ? 'focus' : 'hover',
-          placement: 'top',
-          title: feriado.tipo,
-          content: feriado.nome + (feriado.descricao !== '' ? ' (' + feriado.descricao + ')' : ''),
-          html: true
-      });
-  });
-
-});
-
-
-//FUNÇÃO PARA EXIBIR E OCULTAR DESCRIÇÃO DO DIA
-document.addEventListener('click', function(event) {
-  const target = event.target;
-
-  if (target.classList.contains('botaoDescricao')) {
-      if (target.classList.contains('aberto')) {
-          target.classList.remove('aberto');
-          target.classList.add('fechado');
-          target.classList.remove('btn-secondary');
-          target.classList.add('btn-success');
-          target.innerHTML = 'ver';
-          const parent = target.parentElement;
-          const divElement = parent.querySelector('div');
-          if (divElement) {
-              parent.removeChild(divElement);
-          }
-      } else if (target.classList.contains('fechado')) {
-          target.classList.remove('fechado');
-          target.classList.add('aberto');
-          target.classList.remove('btn-success');
-          target.classList.add('btn-secondary');
-          target.innerHTML = 'ocultar';
-          const parent = target.parentElement;
-          const descricaoDiv = document.createElement('div');
-          descricaoDiv.className = 'descricao';
-          descricaoDiv.style.marginTop = '10px';
-          descricaoDiv.innerHTML = '<span>' + target.dataset.descricao + '</span>';
-          parent.appendChild(descricaoDiv);
-      }
-  }
-});
-
-//FUNÇÃO PARA IMPRIMIR TABELA DE FERIADOS
-document.addEventListener('DOMContentLoaded', function () {
-  if(document.querySelector("h1").dataset.tipoPagina !== 'mes') {
-    document.getElementById('imprimirTableFeriados').addEventListener("click", function (event) {
+      // ADICIONA EVENTO AO BOTÃO DE IMPRIMIR
+      button.addEventListener("click", function () {
         const tituloDocumento = document.querySelector('#pagina-feriados h2').textContent;
         const printWindow = window.open();
         if (printWindow) {
@@ -168,16 +55,107 @@ document.addEventListener('DOMContentLoaded', function () {
           printWindow.document.write('</head><body>');
           const tabela = document.getElementsByClassName("tabela-customizada feriados")[0].innerHTML;
           printWindow.document.write('<table class="tabela-customizada feriados">' + tabela.replace(/<\/?[a][a-z0-9]*[^<>]*>|<!--.*?-->/g, "") + '</table>');
-          printWindow.document.write('</body>');
-          printWindow.document.write('</html>');
+          printWindow.document.write('</body></html>');
           printWindow.document.close();
           printWindow.print();
         } else {
           console.error('Erro ao abrir a visualização de impressão.');
         }
+      });
+    }
+  }
+
+  // INICIALIZA BOOTSTRAP POPOVERS E TOOLTIP
+  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+  popoverTriggerList.map(function (el) {
+    return new bootstrap.Popover(el);
+  });
+
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (el) {
+    return new bootstrap.Tooltip(el);
+  });
+
+  // CALENDÁRIO
+  const hoje = new Date().toISOString().split('T')[0];
+  const popups = {};
+  for (const data in feriados) {
+    if (feriados.hasOwnProperty(data)) {
+      popups[data] = {
+        modifier: feriados[data].classe,
+      };
+    }
+  }
+
+  const calendar = new VanillaCalendar('#calendario-de-feriados', {
+    type: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 'multiple' : 'default',
+    months: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 12 : 1,
+    settings: {
+      lang: 'pt-br',
+      visibility: {
+        theme: 'light',
+        weekend: false,
+        daysOutside: false,
+      },
+      selection: {
+        day: false,
+        month: false,
+        year: false,
+      },
+      selected: {
+        year: document.querySelector("h1").dataset.ano,
+        month: document.querySelector("h1").dataset.tipoPagina !== 'mes' ? 0 : pegaNumeroMes(document.querySelector("h1").dataset.mes),
+      },
+    },
+    popups: popups,
+  });
+
+  calendar.init();
+
+  const isMobile = ('ontouchstart' in window);
+  const popoverElements = document.getElementById('calendario-de-feriados')
+    .querySelectorAll('.bg-feriado-nacional, .bg-feriado-estadual, .bg-feriado-municipal, .bg-ponto-facultativo');
+
+  popoverElements.forEach(function (el) {
+    const data = el.dataset.calendarDay;
+    const feriado = feriados[data];
+    new bootstrap.Popover(el, {
+      trigger: isMobile ? 'focus' : 'hover',
+      placement: 'top',
+      title: feriado.tipo,
+      content: feriado.nome + (feriado.descricao !== '' ? ' (' + feriado.descricao + ')' : ''),
+      html: true
     });
+  });
+});
+
+// EVENTO DE CLIQUE PARA EXIBIR E OCULTAR DESCRIÇÃO
+document.addEventListener('click', function (event) {
+  const target = event.target;
+  if (target.classList.contains('botaoDescricao')) {
+    const parent = target.parentElement;
+
+    if (target.classList.contains('aberto')) {
+      target.classList.remove('aberto', 'btn-secondary');
+      target.classList.add('fechado', 'btn-success');
+      target.textContent = 'ver';
+
+      const desc = parent.querySelector('.descricao');
+      if (desc) parent.removeChild(desc);
+    } else {
+      target.classList.remove('fechado', 'btn-success');
+      target.classList.add('aberto', 'btn-secondary');
+      target.textContent = 'ocultar';
+
+      const descricaoDiv = document.createElement('div');
+      descricaoDiv.className = 'descricao';
+      descricaoDiv.style.marginTop = '10px';
+      descricaoDiv.innerHTML = '<span>' + target.dataset.descricao + '</span>';
+      parent.appendChild(descricaoDiv);
+    }
   }
 });
+
 
 
 /* FUNÇÃO EXIBIR SUMÁRIO */
