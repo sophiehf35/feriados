@@ -157,7 +157,6 @@ document.addEventListener('click', function (event) {
 });
 
 
-
 /* FUNÇÃO EXIBIR SUMÁRIO */
 window.addEventListener("DOMContentLoaded", function (event) {
     var contentContainer = document.getElementById("pagina-feriados");
