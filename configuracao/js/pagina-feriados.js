@@ -35,8 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
                       linha.insertAdjacentHTML('beforeend', '<button style="padding: 5px 5px; line-height: 10px; float: right; text-transform: lowercase;" class="btn btn-success botaoDescricao fechado" type="button">ver</button>');
 
                       // Adicionar o botão para exibir descrição
-                      const botao = linha.children[0];
-                      botao.dataset.descricao = possuiDescricao[1];
+                      const botao = linha.querySelector('.botaoDescricao');
+                      if (botao) {
+                        botao.dataset.descricao = possuiDescricao[1];
+                      }
                   }
               }
           }
