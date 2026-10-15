@@ -1,0 +1,36 @@
+{
+  "name": "feriados-web",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "instalar-plataforma-base": "node scripts/instalar-plataforma-base.js",
+    "gerar-indices": "node scripts/gerar-indice-renderizadores.js",
+    "gerar-indices:watch": "node scripts/gerar-indice-renderizadores.js --watch",
+    "predev:pages": "npm run gerar-indices",
+    "prebuild": "npm run gerar-indices",
+    "dev": "npm run predev:pages && concurrently \"npm run dev:js\" \"npm run dev:pages\" \"npm run gerar-indices:watch\"",
+    "dev:js": "vite build --watch",
+    "dev:pages": "wrangler pages dev ./dist --live-reload",
+    "build": "npm run gerar-indices && vite build",
+    "preview": "wrangler pages dev ./dist",
+    "deploy": "wrangler pages deploy ./dist"
+  },
+  "dependencies": {
+    "@sophiehf35/plataforma-base": "^1.0.320",
+    "bootstrap": "^5.3.3",
+    "flowbite": "^4.0.2",
+    "swiper": "^11.0.0",
+    "vanilla-calendar-pro": "^3.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.1.18",
+    "chokidar": "^4.0.0",
+    "concurrently": "^8.0.0",
+    "glob": "^11.0.0",
+    "tailwindcss": "^4.1.18",
+    "vite": "^5.4.0",
+    "vite-plugin-javascript-obfuscator": "^3.1.0",
+    "wrangler": "^3.114.0"
+  }
+}
