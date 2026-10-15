@@ -16,7 +16,7 @@
     "deploy": "wrangler pages deploy ./dist"
   },
   "dependencies": {
-    "@sophiehf35/plataforma-base": "^1.0.320",
+    "@sophiehf35/plataforma-base": "^1.0.321",
     "bootstrap": "^5.3.3",
     "flowbite": "^4.0.2",
     "swiper": "^11.0.0",

@@ -1,0 +1,25 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+.wrangler/
+
+# Índices gerados automaticamente
+src/renderizadores/paginas/_indice.js
+src/renderizadores/paginas/_manifest.json
+src/renderizadores/ferramentas/_indice.js
+src/renderizadores/ferramentas/_manifest.json
+src/renderizadores/unidades/_indice.js
+src/renderizadores/unidades/_manifest.json
+src/rotas/_indice.js
+src/rotas/_manifest.json
+
+# Ambiente
+.env
+.env.local
+.dev.vars
+
+# Sistema
+.DS_Store
+Thumbs.db
