@@ -11,7 +11,6 @@ import {
     renderSumarioHtml,
     renderFaqHtml,
     renderLinksUteisHtml,
-    renderAnuncio,
     renderScriptsFeriados,
 } from './_utils.js';
 import {
@@ -98,22 +97,18 @@ export function render(config, data, contexto = {}) {
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                ${renderAnuncio('pagina_conteudo_mobile')}
-
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> confira abaixo todos os feriados ${mes} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${mes} ${ano}.</p>
                 </div>
 
                 <div id="calendario">${renderCalendarioHtml()}</div>
 
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
                     <p class="text-gray-700 text-justify">É importante ressaltar que os feriados listados no calendário acima são feriados nacionais de ${mes} ${ano}, se você deseja visualizar estaduais ou municipais é preciso escolher o estado / cidade no filtro.</p>
                 </div>
 
-                ${renderAnuncio('pagina_conteudo_desktop')}
-
-                <div id="faq" class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados em ${mes} ${ano}</h2>
                     <p class="text-center text-gray-600 mt-1">Confira abaixo algumas perguntas e respostas sobre os feriados em ${mes} ${ano}.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -125,28 +120,19 @@ export function render(config, data, contexto = {}) {
                     </div>
                 </div>
 
-                ${renderAnuncio('pagina_conteudo2_mobile')}
-
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold" id="comentarios-${ano}-${slugMes}">Avaliações da página ${mes}</h2>
                     <p class="text-gray-700 text-justify mt-2">Já consultou os feriados de ${mes} ${ano}? Compartilhe sua experiência avaliando a precisão das datas e a utilidade das informações.</p>
                 </div>
 
                 ${renderizarAvaliacoes(data.comentarios || [])}
 
-                ${renderAnuncio('pagina_conteudo3_mobile')}
-                ${renderAnuncio('pagina_conteudo2_desktop')}
-
                 ${renderFormularioComentario(config)}
             </div>
 
             <aside class="flex flex-col gap-6">
-                ${renderAnuncio('pagina_lateral_desktop')}
-
                 ${sumarioHtml}
-
                 ${renderLegendaHtml(['nacional', 'facultativo'])}
-
                 ${renderLinksUteisHtml()}
             </aside>
         </div>

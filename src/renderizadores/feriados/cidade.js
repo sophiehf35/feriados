@@ -13,7 +13,6 @@ import {
     renderSumarioHtml,
     renderFaqHtml,
     renderLinksUteisHtml,
-    renderAnuncio,
     renderScriptsFeriados,
 } from './_utils.js';
 import {
@@ -105,31 +104,30 @@ export function render(config, data, contexto = {}) {
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                ${renderAnuncio('pagina_conteudo_mobile')}
-
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <p class="text-gray-700 text-justify"><b>Feriados ${cidade} ${ano}:</b> confira abaixo todos os feriados ${cidade} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${cidade} ${uf} ${ano}.</p>
                 </div>
 
                 <div id="calendario">${renderCalendarioHtml()}</div>
 
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify">É importante ressaltar que os feriados da cidade de ${cidade} ${ano} podem sofrer alterações a qualquer momento, isso porque as cidades possuem autonomia para criar e alterar novos feriados.</p>
                 </div>
 
-                ${renderAnuncio('pagina_conteudo_desktop')}
+                <div class="bg-white rounded-md border border-gray-200 p-4">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                        <h2 class="text-lg md:text-xl font-semibold">Lista de feriados ${cidade} ${ano}</h2>
+                    </div>
+                    <div id="feriados">${tabelaFeriados}</div>
+                </div>
 
-                <div id="feriados">${tabelaFeriados}</div>
-
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Caso tenha alguma sugestão a respeito de algum feriado ${cidade} ${ano} fique à vontade para enviar um comentário no formulário abaixo.</p>
                 </div>
 
-                ${renderAnuncio('pagina_conteudo2_mobile')}
-
-                <div id="faq" class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados em ${cidade} ${ano}</h2>
                     <p class="text-center text-gray-600 mt-1">Confira abaixo algumas perguntas e respostas sobre os feriados ${cidade} ${ano}.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -141,26 +139,19 @@ export function render(config, data, contexto = {}) {
                     </div>
                 </div>
 
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold" id="comentarios-${ano}-${uf}-${slug}">Avaliações da página ${cidade}</h2>
                     <p class="text-gray-700 text-justify mt-2">Já consultou os feriados de ${cidade} ${ano}? Compartilhe sua experiência avaliando a precisão das datas e a utilidade das informações.</p>
                 </div>
 
                 ${renderizarAvaliacoes(data.comentarios || [])}
 
-                ${renderAnuncio('pagina_conteudo3_mobile')}
-                ${renderAnuncio('pagina_conteudo2_desktop')}
-
                 ${renderFormularioComentario(config)}
             </div>
 
             <aside class="flex flex-col gap-6">
-                ${renderAnuncio('pagina_lateral_desktop')}
-
                 ${sumarioHtml}
-
                 ${renderLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
-
                 ${renderLinksUteisHtml()}
             </aside>
         </div>

@@ -20,7 +20,7 @@
     "bootstrap": "^5.3.3",
     "flowbite": "^4.0.2",
     "swiper": "^11.0.0",
-    "vanilla-calendar-pro": "^3.0.0"
+    "vanilla-calendar-pro": "^2.9.10"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",

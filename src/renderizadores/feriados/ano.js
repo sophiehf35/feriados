@@ -13,7 +13,6 @@ import {
     renderSumarioHtml,
     renderFaqHtml,
     renderLinksUteisHtml,
-    renderAnuncio,
     renderScriptsFeriados,
 } from './_utils.js';
 import {
@@ -101,38 +100,34 @@ export function render(config, data, contexto = {}) {
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                ${renderAnuncio('pagina_conteudo_mobile')}
-
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> Confira todos os feriados ${ano} e programe sua agenda, seja para descansar ou fazer aquela tão sonhada viagem, os feriados ${ano} são um alívio para o stress.</p>
                 </div>
 
                 <div id="calendario">${renderCalendarioHtml()}</div>
 
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-3">${data.paragrafo1 || ''}</p>
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados de ${ano}</h2>
                     <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados de ${ano} em forma de lista, desde os pontos facultativos até os feriados nacionais ${ano}. Caso deseje é possível imprimir ou salvar a lista de feriados ${ano}, basta clicar no botão.</p>
                 </div>
 
-                ${renderAnuncio('pagina_conteudo_desktop')}
+                <div class="bg-white rounded-md border border-gray-200 p-4">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                        <h2 class="text-lg md:text-xl font-semibold">Lista de feriados ${ano}</h2>
+                    </div>
+                    <div id="feriados">${tabelaFeriados}</div>
+                </div>
 
-                <div id="feriados">${tabelaFeriados}</div>
-
-                ${renderAnuncio('pagina_conteudo2_mobile')}
-
-                <div id="feriados-nacionais" class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div id="feriados-nacionais" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados Nacionais ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-3">${data.paragrafo2 || ''}</p>
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados em ${ano}</h2>
                     <p class="text-gray-700 text-justify">${data.paragrafo3 || ''}</p>
                 </div>
 
-                ${renderAnuncio('pagina_conteudo3_mobile')}
-                ${renderAnuncio('pagina_conteudo2_desktop')}
-
-                <div id="faq" class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados nacionais ${ano}</h2>
                     <p class="text-center text-gray-600 mt-1">Confira abaixo algumas perguntas e respostas sobre as datas comemorativas de ${ano}.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -144,7 +139,7 @@ export function render(config, data, contexto = {}) {
                     </div>
                 </div>
 
-                <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md p-4">
+                <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold" id="comentarios-${ano}">Avaliações da página Feriados ${ano}</h2>
                     <p class="text-gray-700 text-justify mt-2">Já consultou os feriados de ${ano}? Compartilhe sua opinião avaliando a precisão das datas e a utilidade das informações.</p>
                 </div>
@@ -155,12 +150,8 @@ export function render(config, data, contexto = {}) {
             </div>
 
             <aside class="flex flex-col gap-6">
-                ${renderAnuncio('pagina_lateral_desktop')}
-
                 ${sumarioHtml}
-
                 ${renderLegendaHtml(['nacional', 'facultativo'])}
-
                 ${renderLinksUteisHtml()}
             </aside>
         </div>

@@ -2,13 +2,6 @@
 
 import { escapeHtml, capitalizar, slugify } from '../../js/utils.js';
 
-export function renderAnuncio(posicao) {
-    return `
-    <div class="anuncio-wrapper hidden flex justify-center items-center w-full" data-posicao="${posicao}">
-        <div class="hidden md:flex justify-center items-center w-full" id="anuncio_${posicao}"></div>
-    </div>`;
-}
-
 export function organizaFeriados(ano, dadosArray) {
     const dados = (dadosArray || []).map(f => String(f).trim()).filter(Boolean);
     const feriados = {};
@@ -141,13 +134,11 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
 
 export function renderCalendarioHtml() {
     return `
-    <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
-        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
-            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">CALENDÁRIO</h3>
+    <div class="bg-white rounded-md border border-gray-200 p-4">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+            <h2 class="text-lg md:text-xl font-semibold">Calendário</h2>
         </div>
-        <div class="p-4">
-            <div id="calendario-de-feriados"></div>
-        </div>
+        <div id="calendario-de-feriados"></div>
     </div>`;
 }
 
@@ -169,9 +160,9 @@ export function renderLegendaHtml(tipos) {
         .join('');
 
     return `
-    <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
         <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
-            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">LEGENDA CALENDÁRIO</h3>
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">LEGENDA</h3>
         </div>
         <div class="p-4">
             <div class="legend-grid grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -211,9 +202,9 @@ export function renderSumarioHtml(itens) {
     }).join('');
 
     return `
-    <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
-        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md flex items-center gap-2">
-            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Sumário</h3>
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">SUMÁRIO</h3>
         </div>
         <div class="p-4">
             <ul class="space-y-3 text-sm">
@@ -238,7 +229,7 @@ export function renderFaqHtml(faqQuestions) {
 
 export function renderLinksUteisHtml() {
     return `
-    <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
         <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
             <h3 class="text-sm font-semibold text-white uppercase tracking-wider">LINKS ÚTEIS</h3>
         </div>

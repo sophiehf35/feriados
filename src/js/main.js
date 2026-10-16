@@ -2,8 +2,8 @@
 
 import '../css/input.css';
 import { initFlowbite } from 'flowbite';
-import { Calendar, annotations } from 'vanilla-calendar-pro';
-import 'vanilla-calendar-pro/styles/index.css';
+import VanillaCalendar from 'vanilla-calendar-pro';
+import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
 import * as bootstrap from 'bootstrap';
 import {
     inicializarCarregamentoImagens,
@@ -64,7 +64,7 @@ function inicializarCalendario() {
 
     const feriados = window.__FERIADOS__ || {};
     const tipoPagina = h1.dataset.tipoPagina;
-    const ano = parseInt(h1.dataset.ano || new Date().getFullYear(), 10);
+    const ano = h1.dataset.ano || new Date().getFullYear();
 
     const popups = {};
     for (const data in feriados) {
@@ -76,18 +76,15 @@ function inicializarCalendario() {
     const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
     const mesAtual = h1.dataset.mes ? meses.indexOf(h1.dataset.mes.toLowerCase()) : 0;
 
-    const mesInicial = tipoPagina !== 'mes' ? 1 : (mesAtual >= 0 ? mesAtual + 1 : 1);
-
-    const calendar = new Calendar(el, {
+    const calendar = new VanillaCalendar(el, {
         type: tipoPagina !== 'mes' ? 'multiple' : 'default',
         months: tipoPagina !== 'mes' ? 12 : 1,
-        locale: 'pt-br',
+        lang: 'pt-br',
         selected: {
-            year: ano,
-            month: mesInicial,
+            year: parseInt(ano, 10),
+            month: tipoPagina !== 'mes' ? 0 : (mesAtual >= 0 ? mesAtual : 0),
         },
         popups,
-        extensions: [annotations],
     });
 
     calendar.init();
