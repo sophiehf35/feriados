@@ -8,9 +8,7 @@
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
-@import "bootstrap/dist/css/bootstrap.min.css";
 @import "vanilla-calendar-pro/build/vanilla-calendar.min.css";
-@import "./feriados.css";
 
 @source "../../src";
 @source "../../functions";
@@ -18,7 +16,6 @@
 @source "../../node_modules/@sophiehf35/plataforma-base/src";
 @source "../../node_modules/flowbite";
 @source "../../node_modules/swiper";
-
 
 
 /* ============================================================
@@ -33,10 +30,8 @@
 }
 
 /* ============================================================
-   TEMA — aplicação das variáveis
+   TEMA
    ============================================================ */
-
-/* Primary */
 .bg-primary                  { background-color: var(--tema-cor-primaria) !important; }
 .text-primary                { color:            var(--tema-cor-primaria) !important; }
 .border-primary              { border-color:     var(--tema-cor-primaria) !important; }
@@ -45,13 +40,11 @@
 .focus\:border-primary:focus { border-color: var(--tema-cor-primaria) !important; }
 .focus\:ring-primary:focus   { --tw-ring-color: var(--tema-cor-primaria) !important; }
 
-/* Secondary */
 .bg-secondary     { background-color: var(--tema-cor-secundaria) !important; }
 .text-secondary   { color:            var(--tema-cor-secundaria) !important; }
 .border-secondary { border-color:     var(--tema-cor-secundaria) !important; }
 .bg-botao-acao    { background-color: var(--tema-cor-secundaria) !important; }
 
-/* Header / menu */
 .navbar-desktop {
   background-color: var(--tema-cor-fundo-header) !important;
 }
@@ -63,7 +56,6 @@
   color: var(--tema-cor-fonte-header) !important;
 }
 
-/* Rodapé */
 .site-footer {
   background-color: var(--tema-cor-fundo-rodape) !important;
 }
@@ -75,7 +67,6 @@
   color: var(--tema-cor-fonte-rodape) !important;
 }
 
-/* Subheader (faixa do título + breadcrumb) */
 .sub_header_in {
   background-color: var(--tema-cor-fundo-breadcrumb) !important;
 }
@@ -88,9 +79,8 @@
 
 
 /* ============================================================
-   REGRAS ESPECÍFICAS DESTE PORTAL
+   TABELA DE FERIADOS
    ============================================================ */
-
 .tabela-customizada {
   border-collapse: collapse;
   margin: 15px 0;
@@ -118,6 +108,10 @@
   color: #333;
 }
 
+
+/* ============================================================
+   PROSE
+   ============================================================ */
 .prose h2,
 .prose h3,
 .prose h4,

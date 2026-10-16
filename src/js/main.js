@@ -4,7 +4,6 @@ import '../css/input.css';
 import { initFlowbite } from 'flowbite';
 import VanillaCalendar from 'vanilla-calendar-pro';
 import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
-import * as bootstrap from 'bootstrap';
 import {
     inicializarCarregamentoImagens,
     configurarValidacaoContato,
@@ -15,7 +14,6 @@ import {
 } from '@sophiehf35/plataforma-base/client';
 
 window.configurarValidacaoComentario = configurarValidacaoComentario;
-window.bootstrap = bootstrap;
 
 const config = window.PORTAL_CONFIG || {};
 
@@ -103,22 +101,6 @@ function inicializarCalendario() {
     });
 
     calendar.init();
-
-    const isMobile = ('ontouchstart' in window);
-    const popoverEls = el.querySelectorAll('.bg-feriado-nacional, .bg-feriado-estadual, .bg-feriado-municipal, .bg-ponto-facultativo');
-
-    popoverEls.forEach(function (element) {
-        const data = element.dataset.calendarDay;
-        const feriado = feriados[data];
-        if (!feriado) return;
-        new bootstrap.Popover(element, {
-            trigger: isMobile ? 'focus' : 'hover',
-            placement: 'top',
-            title: feriado.tipo,
-            content: feriado.nome + (feriado.descricao ? ' (' + feriado.descricao + ')' : ''),
-            html: true
-        });
-    });
 }
 
 function inicializarTabelaFeriados() {
@@ -144,7 +126,7 @@ function inicializarTabelaFeriados() {
 
                 const btn = document.createElement('button');
                 btn.style.cssText = 'padding:5px;line-height:10px;float:right;text-transform:lowercase;';
-                btn.className = 'btn btn-success botaoDescricao fechado';
+                btn.className = 'botaoDescricao fechado';
                 btn.type = 'button';
                 btn.textContent = 'ver';
                 btn.dataset.descricao = descricao;
@@ -157,18 +139,18 @@ function inicializarTabelaFeriados() {
     const button = document.createElement('button');
     button.id = 'imprimirTableFeriados';
     button.style.cssText = 'width:100%;margin-top:10px;';
-    button.className = 'btn_1 full-width fe-pulse';
+    button.className = 'fe-pulse';
     button.type = 'button';
     button.textContent = 'IMPRIMIR OU SALVAR TABELA';
     tabela.insertAdjacentElement('afterend', button);
 
     button.addEventListener('click', function () {
-        const titulo = document.querySelector('#feriados')?.previousElementSibling?.querySelector('h2')?.textContent || 'Feriados';
+        const titulo = document.querySelector('#feriados')?.previousElementSibling?.textContent || 'Feriados';
         const w = window.open();
         if (!w) return;
 
         w.document.write(`<html><head><title>${titulo}</title>`);
-        w.document.write('<style>body{-webkit-print-color-adjust:exact}@page{size:landscape}.tabela-customizada.feriados{border-collapse:collapse;margin:15px 0;font-family:sans-serif;width:100%;box-shadow:0 0 20px rgb(0 0 0 / 15%)}.tabela-customizada tbody tr{border-bottom:1px solid #ddd}.tabela-customizada tbody tr td.th{background:#005c82;color:#fff;text-transform:uppercase}.tabela-customizada td{padding:5px 15px}</style>');
+        w.document.write('<style>body{-webkit-print-color-adjust:exact}@page{size:landscape}.tabela-customizada.feriados{border-collapse:collapse;margin:15px 0;font-family:sans-serif;width:100%}.tabela-customizada tbody tr{border-bottom:1px solid #ddd}.tabela-customizada tbody tr td.th{background:#005c82;color:#fff;text-transform:uppercase}.tabela-customizada td{padding:5px 15px}</style>');
         w.document.write('</head><body>');
         const t = document.getElementsByClassName('tabela-customizada feriados')[0].innerHTML;
         w.document.write('<table class="tabela-customizada feriados">' + t.replace(/<\/?[a][a-z0-9]*[^<>]*>|<!--.*?-->/g, '') + '</table>');
@@ -186,14 +168,14 @@ function inicializarBotoesDescricao() {
         const parent = target.parentElement;
 
         if (target.classList.contains('aberto')) {
-            target.classList.remove('aberto', 'btn-secondary');
-            target.classList.add('fechado', 'btn-success');
+            target.classList.remove('aberto');
+            target.classList.add('fechado');
             target.textContent = 'ver';
             const desc = parent.querySelector('.descricao');
             if (desc) parent.removeChild(desc);
         } else {
-            target.classList.remove('fechado', 'btn-success');
-            target.classList.add('aberto', 'btn-secondary');
+            target.classList.remove('fechado');
+            target.classList.add('aberto');
             target.textContent = 'ocultar';
 
             const div = document.createElement('div');
