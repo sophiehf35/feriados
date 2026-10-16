@@ -3,7 +3,7 @@
 import { renderizarBase, gerarMetaTags } from '@sophiehf35/plataforma-base';
 import { escapeHtml, capitalizar } from '../../js/utils.js';
 import {
-    renderBarra, renderLegenda, renderLinksUteisHtml,
+    renderBarra, renderLegendaHtml, renderLinksUteisHtml,
     renderSumarioHtml, renderFaqHtml,
 } from '../feriados/_utils.js';
 
@@ -117,7 +117,7 @@ export async function render(config, pagina, dados = {}) {
 
           <aside class="flex flex-col gap-6">
             ${sumarioHtml}
-            ${renderLegenda(['nacional', 'estadual', 'municipal', 'facultativo'])}
+            ${renderLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
             ${renderLinksUteisHtml()}
           </aside>
         </div>

@@ -115,27 +115,22 @@ ${urls.map(u => `
 </urlset>`;
 }
 
-export async function existeRegistroAtivo(supabase, tabela) {
-  try {
-    const { count, error } = await supabase
-      .from(tabela)
-      .select('id', { count: 'exact', head: true });
-    if (error) return false;
-    return (count ?? 0) > 0;
-  } catch (_) {
-    return false;
-  }
-}
-
-async function buscarTodos(supabase, tabela, colunas, filtroStatus = null) {
+// Busca paginada. Aceita filtro no formato { coluna, valor }.
+// Ordena sempre pela primeira coluna do select para a paginação ser estável.
+async function buscarTodos(supabase, tabela, colunas, filtro = null) {
   const pageSize = 1000;
   let todos = [];
   let from = 0;
   let to = pageSize - 1;
 
+  const primeiraColuna = String(colunas).split(',')[0].trim();
+
   while (true) {
-    let query = supabase.from(tabela).select(colunas).order('slug');
-    if (filtroStatus) query = query.eq('status', filtroStatus);
+    let query = supabase.from(tabela).select(colunas);
+    if (filtro && filtro.coluna) {
+      query = query.eq(filtro.coluna, filtro.valor);
+    }
+    query = query.order(primeiraColuna);
     const { data, error } = await query.range(from, to);
     if (error) throw error;
     if (!data || data.length === 0) break;
@@ -146,35 +141,111 @@ async function buscarTodos(supabase, tabela, colunas, filtroStatus = null) {
   return todos;
 }
 
-export async function gerarSitemapDeTabela(supabase, config, tabela, urlBuilder, changefreq, priority, filtroStatus = null) {
-  const baseUrl = config.dominio;
-  let data;
+async function contarComFiltro(supabase, tabela, colunaSelect, filtro = null) {
   try {
-    data = await buscarTodos(supabase, tabela, 'slug, data_hora_atualizacao', filtroStatus);
-  } catch (error) {
-    console.error(`Erro ao buscar ${tabela}:`, error);
-    return new Response('Erro interno', { status: 500 });
+    let query = supabase.from(tabela).select(colunaSelect, { count: 'exact', head: true });
+    if (filtro && filtro.coluna) {
+      query = query.eq(filtro.coluna, filtro.valor);
+    }
+    const { count, error } = await query;
+    if (error) return 0;
+    return count ?? 0;
+  } catch (_) {
+    return 0;
   }
-
-  const urls = (data || []).map(item => ({
-    loc: urlBuilder(item.slug),
-    lastmod: item.data_hora_atualizacao || new Date().toISOString(),
-    changefreq,
-    priority
-  }));
-
-  const xml = gerarXMLUrls(baseUrl, urls);
-  return new Response(xml, {
-    status: 200,
-    headers: gerarHeadersCache(config, 'application/xml; charset=utf-8')
-  });
 }
 
-export function criarSitemapTabela({ loc, tabela, urlBuilder, changefreq, priority, filtroStatus = null }) {
+export async function existeRegistroAtivo(supabase, tabela) {
+  return (await contarComFiltro(supabase, tabela, 'id')) > 0;
+}
+
+// Sitemap simples de uma tabela: uma linha por registro.
+// `colunaSlug` é a coluna que alimenta o urlBuilder.
+// `filtro` é opcional: { coluna, valor }.
+export function criarSitemapTabela({
+  loc,
+  tabela,
+  colunaSlug = 'slug',
+  filtro = null,
+  urlBuilder,
+  changefreq,
+  priority
+}) {
   return {
     loc,
-    deveIncluir: (supabase) => existeRegistroAtivo(supabase, tabela),
-    gerar: (supabase, config) => gerarSitemapDeTabela(supabase, config, tabela, urlBuilder, changefreq, priority, filtroStatus)
+    deveIncluir: async (supabase) =>
+      (await contarComFiltro(supabase, tabela, colunaSlug, filtro)) > 0,
+    gerar: async (supabase, config) => {
+      const baseUrl = config.dominio;
+      let data;
+      try {
+        data = await buscarTodos(
+          supabase,
+          tabela,
+          `${colunaSlug}, data_hora_atualizacao`,
+          filtro
+        );
+      } catch (error) {
+        console.error(`Erro ao buscar ${tabela}:`, error);
+        return new Response('Erro interno', { status: 500 });
+      }
+
+      const urls = (data || []).map(item => ({
+        loc: urlBuilder(item[colunaSlug]),
+        lastmod: item.data_hora_atualizacao || new Date().toISOString(),
+        changefreq,
+        priority
+      }));
+
+      const xml = gerarXMLUrls(baseUrl, urls);
+      return new Response(xml, {
+        status: 200,
+        headers: gerarHeadersCache(config, 'application/xml; charset=utf-8')
+      });
+    }
+  };
+}
+
+// Sitemap cruzado: combina N queries independentes e delega no urlBuilder
+// a geração da lista final de URLs.
+// `queries`: [{ chave, tabela, select, filtro }]
+// `urlBuilder`: (...resultados) => array de strings de URL (com barra inicial)
+export function criarSitemapCruzado({ loc, changefreq, priority, queries, urlBuilder }) {
+  return {
+    loc,
+    deveIncluir: async (supabase) => {
+      try {
+        for (const q of queries) {
+          const n = await contarComFiltro(supabase, q.tabela, q.select, q.filtro || null);
+          if (!n) return false;
+        }
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+    gerar: async (supabase, config) => {
+      const baseUrl = config.dominio;
+      try {
+        const resultados = await Promise.all(
+          queries.map(q => buscarTodos(supabase, q.tabela, q.select, q.filtro || null))
+        );
+        const listaUrls = urlBuilder(...resultados);
+        const urls = (listaUrls || []).map(u => ({
+          loc: u,
+          changefreq,
+          priority
+        }));
+        const xml = gerarXMLUrls(baseUrl, urls);
+        return new Response(xml, {
+          status: 200,
+          headers: gerarHeadersCache(config, 'application/xml; charset=utf-8')
+        });
+      } catch (error) {
+        console.error(`Erro ao gerar sitemap cruzado ${loc}:`, error);
+        return new Response('Erro interno', { status: 500 });
+      }
+    }
   };
 }
 
