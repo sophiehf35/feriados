@@ -9,7 +9,7 @@ export const sitemaps = [
     tabela: 'paginas_ano',
     colunaSlug: 'ano',
     filtro: { coluna: 'excluido', valor: 0 },
-    urlBuilder: (slug) => `/${slug}/`,
+    urlBuilder: (slug) => `/feriados/${slug}/`,
     changefreq: 'yearly',
     priority: '1.0'
   }),
@@ -27,7 +27,7 @@ export const sitemaps = [
       const urls = [];
       anos.forEach(a => {
         meses.forEach(m => {
-          urls.push(`/${a.ano}/${m.slug}/`);
+          urls.push(`/feriados/${a.ano}/${m.slug}/`);
         });
       });
       return urls;
@@ -47,7 +47,7 @@ export const sitemaps = [
       const urls = [];
       anos.forEach(a => {
         estados.forEach(e => {
-          urls.push(`/${a.ano}/${e.uf}/`);
+          urls.push(`/feriados/${a.ano}/${e.uf}/`);
         });
       });
       return urls;
@@ -67,7 +67,7 @@ export const sitemaps = [
       const urls = [];
       anos.forEach(a => {
         cidades.forEach(c => {
-          urls.push(`/${a.ano}/${c.uf}/${c.slug}/`);
+          urls.push(`/feriados/${a.ano}/${c.uf}/${c.slug}/`);
         });
       });
       return urls;

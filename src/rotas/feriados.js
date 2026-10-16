@@ -3,13 +3,16 @@
 import { mapa as renderizadores } from '../renderizadores/feriados/_indice.js';
 
 export async function resolver({ supabase, slugParts, config, scriptsAdicionaisBase, url }) {
-    if (slugParts.length === 0) return null;
+    if (slugParts[0] !== 'feriados') return null;
 
-    const ano = slugParts[0];
+    const parts = slugParts.slice(1);
+    if (parts.length === 0) return null;
+
+    const ano = parts[0];
     if (!/^\d{4}$/.test(ano)) return null;
 
-    // === /2025/ ===
-    if (slugParts.length === 1) {
+    // /feriados/2025/
+    if (parts.length === 1) {
         const mod = renderizadores['ano'];
         if (!mod || typeof mod.render !== 'function') return null;
 
@@ -23,9 +26,9 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
         return { html, status: 200 };
     }
 
-    // === /2025/sp/ ou /2025/janeiro/ ===
-    if (slugParts.length === 2) {
-        const slug = slugParts[1];
+    // /feriados/2025/sp/  ou  /feriados/2025/janeiro/
+    if (parts.length === 2) {
+        const slug = parts[1];
 
         if (slug.length === 2) {
             const mod = renderizadores['estado'];
@@ -54,9 +57,9 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
         return { html, status: 200 };
     }
 
-    // === /2025/sp/saopaulo/ ===
-    if (slugParts.length === 3) {
-        const cidadeSlug = slugParts[2];
+    // /feriados/2025/sp/saopaulo/
+    if (parts.length === 3) {
+        const cidadeSlug = parts[2];
 
         const mod = renderizadores['cidade'];
         if (!mod || typeof mod.render !== 'function') return null;
