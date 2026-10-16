@@ -55,6 +55,12 @@ function inicializarAnalyticsPortal() {
     }
 }
 
+function pegaNumeroMes(nomeDoMes) {
+    const nomes = ['janeiro','fevereiro','março','abril','maio','junho',
+                   'julho','agosto','setembro','outubro','novembro','dezembro'];
+    return nomes.indexOf((nomeDoMes || '').toLowerCase());
+}
+
 function inicializarCalendario() {
     const el = document.getElementById('calendario-de-feriados');
     if (!el) return;
@@ -68,23 +74,32 @@ function inicializarCalendario() {
 
     const popups = {};
     for (const data in feriados) {
-        if (feriados.hasOwnProperty(data)) {
+        if (Object.prototype.hasOwnProperty.call(feriados, data)) {
             popups[data] = { modifier: feriados[data].classe };
         }
     }
 
-    const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-    const mesAtual = h1.dataset.mes ? meses.indexOf(h1.dataset.mes.toLowerCase()) : 0;
-
     const calendar = new VanillaCalendar(el, {
         type: tipoPagina !== 'mes' ? 'multiple' : 'default',
         months: tipoPagina !== 'mes' ? 12 : 1,
-        lang: 'pt-br',
-        selected: {
-            year: parseInt(ano, 10),
-            month: tipoPagina !== 'mes' ? 0 : (mesAtual >= 0 ? mesAtual : 0),
+        settings: {
+            lang: 'pt-br',
+            visibility: {
+                theme: 'light',
+                weekend: false,
+                daysOutside: false,
+            },
+            selection: {
+                day: false,
+                month: false,
+                year: false,
+            },
+            selected: {
+                year: parseInt(ano, 10),
+                month: tipoPagina !== 'mes' ? 0 : pegaNumeroMes(h1.dataset.mes),
+            },
         },
-        popups,
+        popups: popups,
     });
 
     calendar.init();
@@ -190,62 +205,6 @@ function inicializarBotoesDescricao() {
     });
 }
 
-function inicializarSumario() {
-    const contentContainer = document.querySelector('main');
-    if (!contentContainer) return;
-    const tocContainer = document.getElementById('toc');
-    if (!tocContainer) return;
-
-    const headings = Array.from(contentContainer.querySelectorAll('h2, h3, h4, h5'))
-        .filter(h => {
-            const tag = h.tagName.toLowerCase();
-            const text = h.textContent.trim();
-            if (tag === 'h2' || tag === 'h4' || tag === 'h5') return true;
-            if (tag === 'h3') {
-                const excluir = ['IMAGEM DE CAPA','ANÚNCIO','LEGENDA CALENDÁRIO','SUMÁRIO','ESTADOS','MESES','VER NO MAPA','LINKS ÚTEIS','DEIXE UM COMENTÁRIO','COMENTÁRIOS'];
-                return !excluir.includes(text) && !text.includes('CIDADES');
-            }
-            return false;
-        });
-
-    const ul = document.createElement('ul');
-    ul.id = 'tocList';
-    ul.className = 'sidenav';
-
-    headings.forEach(h => {
-        const id = h.innerHTML.toLowerCase()
-            .replace(/,/g, '').replace(/!/g, '').replace(/\./g, '').replace(/ /g, '-');
-        h.setAttribute('id', id);
-        const level = h.localName.replace('h', '');
-
-        const li = document.createElement('li');
-        li.className = 'sidenav__item';
-        if (level === '3') li.style.paddingLeft = '1rem';
-        else if (level === '4') li.style.paddingLeft = '2rem';
-        else if (level === '5') li.style.paddingLeft = '3rem';
-
-        const a = document.createElement('a');
-        a.href = '#' + id;
-        a.textContent = h.textContent;
-        li.appendChild(a);
-        ul.appendChild(li);
-    });
-
-    tocContainer.innerHTML = '';
-    tocContainer.appendChild(ul);
-
-    const links = ul.getElementsByClassName('sidenav__item');
-    if (links[0]) links[0].classList.add('current');
-
-    for (let i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', function () {
-            const current = ul.getElementsByClassName('current');
-            if (current[0]) current[0].className = current[0].className.replace(' current', '');
-            this.className += ' current';
-        });
-    }
-}
-
 async function inicializarAnuncios() {
     if (!config.possui_adsterra) return;
     try {
@@ -268,7 +227,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarCalendario();
     inicializarTabelaFeriados();
     inicializarBotoesDescricao();
-    inicializarSumario();
 
     if (document.querySelector('[data-barra-feriados]')) {
         const { inicializarBarraFeriados } = await import('./barra-feriados.js');
