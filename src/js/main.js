@@ -73,7 +73,11 @@ function inicializarCalendario() {
     const popups = {};
     for (const data in feriados) {
         if (Object.prototype.hasOwnProperty.call(feriados, data)) {
-            popups[data] = { modifier: feriados[data].classe };
+            const f = feriados[data];
+            popups[data] = {
+                modifier: f.classe,
+                html: `<div class="popup-feriado"><strong>${f.tipo}</strong><br>${f.nome}${f.descricao ? ' (' + f.descricao + ')' : ''}</div>`,
+            };
         }
     }
 
