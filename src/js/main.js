@@ -12,6 +12,7 @@ import {
     inicializarMenuMobile,
     inicializarMenuDesktop
 } from '@sophiehf35/plataforma-base/client';
+import { inicializarBarraFeriados } from './barra-feriados.js';
 
 window.configurarValidacaoComentario = configurarValidacaoComentario;
 
@@ -191,16 +192,6 @@ function inicializarBotoesDescricao() {
     });
 }
 
-async function inicializarBarra() {
-    if (!document.querySelector('[data-barra-feriados]')) return;
-    try {
-        const { inicializarBarraFeriados } = await import('./barra-feriados.js');
-        inicializarBarraFeriados();
-    } catch (e) {
-        console.error('[main] erro ao carregar barra-feriados:', e);
-    }
-}
-
 async function inicializarAnuncios() {
     if (!config.possui_adsterra) return;
     try {
@@ -224,6 +215,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarTabelaFeriados();
     inicializarBotoesDescricao();
 
-    await inicializarBarra();
+    if (document.querySelector('[data-barra-feriados]')) {
+        inicializarBarraFeriados();
+    }
+
     await inicializarAnuncios();
 });

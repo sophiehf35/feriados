@@ -8,29 +8,16 @@ export function inicializarBarraFeriados() {
     const selCidade = document.getElementById('cmbCidade');
     const botao = document.getElementById('botaoBuscar');
 
-    if (!selAno || !selEstado || !selCidade || !botao) {
-        console.warn('[barra-feriados] faltam elementos:', {
-            cmbAno: !!selAno, cmbEstado: !!selEstado,
-            cmbCidade: !!selCidade, botaoBuscar: !!botao,
-        });
-        return;
-    }
+    if (!selAno || !selEstado || !selCidade || !botao) return;
 
     const elCidades = document.getElementById('dados-barra-cidades');
     let cidadesRaw = null;
     if (elCidades) {
         try {
             const texto = elCidades.textContent.trim();
-            if (texto && texto !== 'undefined' && texto !== 'null' && texto !== '[]') {
-                cidadesRaw = JSON.parse(texto);
-            }
-        } catch (e) {
-            console.warn('[barra-feriados] JSON inválido:', e);
-        }
+            if (texto) cidadesRaw = JSON.parse(texto);
+        } catch (_) {}
     }
-
-    const estadoInicial = selEstado.value;
-    const cidadeInicial = selCidade.value;
 
     function listaCidades(uf) {
         if (!uf) return [];
@@ -43,34 +30,26 @@ export function inicializarBarraFeriados() {
 
     function preencherCidades(uf, selecionarSlug) {
         selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
-
         listaCidades(uf).forEach(c => {
             const opt = document.createElement('option');
             opt.value = c.slug;
             opt.textContent = capitalizar(c.cidade);
             selCidade.appendChild(opt);
         });
-
         if (selecionarSlug) {
             selCidade.value = selecionarSlug;
             if (selCidade.value !== selecionarSlug) selCidade.value = '';
         }
     }
 
-    // Auto-carregar as cidades se a página já veio com um estado selecionado
-    if (estadoInicial) {
-        preencherCidades(estadoInicial, cidadeInicial);
+    // Se a página já veio com estado definido (ex.: /feriados/2025/sp/),
+    // carrega as cidades desse estado com o slug atual marcado.
+    if (selEstado.value) {
+        preencherCidades(selEstado.value, selCidade.value);
     }
 
     selEstado.addEventListener('change', function () {
         preencherCidades(this.value, '');
-    });
-
-    selAno.addEventListener('change', function () {
-        if (this.value) {
-            this.style.border = '';
-            this.style.background = '';
-        }
     });
 
     botao.addEventListener('click', function (e) {
@@ -81,18 +60,14 @@ export function inicializarBarraFeriados() {
         const cidade = selCidade.value;
 
         if (!ano) {
-            selAno.style.border = '1px solid #f5c6cb';
-            selAno.style.background = '#f8d7da';
             selAno.focus();
             return;
         }
 
         let destino = `/feriados/${ano}/`;
-        if (cidade && uf) destino = `/feriados/${ano}/${uf}/${cidade}/`;
+        if (uf && cidade) destino = `/feriados/${ano}/${uf}/${cidade}/`;
         else if (uf) destino = `/feriados/${ano}/${uf}/`;
 
         window.location.href = destino;
     });
-
-    console.log('[barra-feriados] pronto. estadoInicial:', estadoInicial, 'cidadeInicial:', cidadeInicial);
 }
