@@ -2,23 +2,53 @@ npm run instalar-plataforma-base
 npm list @sophiehf35/plataforma-base
 
 ```
-correiosagencia.com.br
+feriados
 ├─ .npmrc
 ├─ README.md
+├─ configuracao
+│  ├─ css
+│  │  ├─ calendario-feriados.css
+│  │  ├─ cor-padrao.css
+│  │  ├─ mermaid.min.css
+│  │  └─ style.css
+│  ├─ js
+│  │  ├─ anuncios.js
+│  │  ├─ barra-busca-cidades.js
+│  │  ├─ gridjs.umd.js
+│  │  ├─ pagina-feriados-estaduais.js
+│  │  ├─ pagina-feriados-municipais.js
+│  │  ├─ pagina-feriados-nacionais.js
+│  │  ├─ pagina-feriados.js
+│  │  └─ slides-estados.js
+│  └─ json
+│     ├─ artigos.json
+│     ├─ cards-diferenciais.json
+│     ├─ cidades-relacionadas.json
+│     ├─ comentarios.json
+│     ├─ conteudo-destaque.json
+│     ├─ conteudo-quem-somos.json
+│     ├─ estados-e-cidades.json
+│     ├─ estados-slides.json
+│     ├─ feriados-nacionais.json
+│     ├─ menu-superior-principal.json
+│     ├─ rodape.json
+│     └─ universal.json
 ├─ functions
 │  ├─ [[path]].js
 │  ├─ api
 │  │  ├─ comentario-artigo.ts
 │  │  ├─ comentario-unidades.ts
-│  │  ├─ dados-barra.ts
 │  │  └─ fale-conosco.ts
 │  └─ utils
 │     └─ central.js
+├─ index.html
 ├─ package-lock.json
 ├─ package.json
+├─ perguntas-frequentes.html
 ├─ public
 │  ├─ _headers
 │  ├─ _routes.json
+│  ├─ ads.txt
 │  ├─ android-icon-144x144.png
 │  ├─ android-icon-192x192.png
 │  ├─ android-icon-36x36.png
@@ -51,38 +81,48 @@ correiosagencia.com.br
 │  ├─ crypto.js
 │  ├─ gerar-indice-renderizadores.js
 │  └─ instalar-plataforma-base.js
+├─ sitemap
+│  ├─ sitemap-feriados-ano.xml
+│  ├─ sitemap-feriados-cidade-2024.xml
+│  ├─ sitemap-feriados-cidade-2025.xml
+│  ├─ sitemap-feriados-cidade-2026.xml
+│  ├─ sitemap-feriados-estado-2024.xml
+│  ├─ sitemap-feriados-estado-2025.xml
+│  ├─ sitemap-feriados-estado-2026.xml
+│  ├─ sitemap-feriados-mes-2024.xml
+│  ├─ sitemap-feriados-mes-2025.xml
+│  ├─ sitemap-feriados-mes-2026.xml
+│  └─ sitemap-geral.xml
 ├─ src
 │  ├─ css
+│  │  ├─ feriados.css
 │  │  └─ input.css
 │  ├─ js
 │  │  ├─ anuncios-adsterra.js
-│  │  ├─ barra-localizacao-unidades.js
+│  │  ├─ barra-feriados.js
 │  │  ├─ main.js
-│  │  ├─ rastreamento.js
 │  │  ├─ swiper-init.js
 │  │  ├─ tabela.js
 │  │  ├─ utils.js
-│  │  └─ validador-comentario-unidades.js
+│  │  └─ validador-comentario-feriados.js
 │  ├─ renderizadores
+│  │  ├─ feriados
+│  │  │  ├─ _avaliacoes.js
+│  │  │  ├─ _utils.js
+│  │  │  ├─ ano.js
+│  │  │  ├─ cidade.js
+│  │  │  ├─ estado.js
+│  │  │  └─ mes.js
 │  │  ├─ paginas
 │  │  │  ├─ fale-conosco.js
 │  │  │  ├─ home.js
-│  │  │  ├─ perguntas-frequentes.js
 │  │  │  └─ quem-somos.js
-│  │  ├─ sitemaps
-│  │  │  ├─ _utils.js
-│  │  │  ├─ base.js
-│  │  │  └─ unidades.js
-│  │  └─ unidades
-│  │     ├─ _avaliacoes.js
+│  │  └─ sitemaps
 │  │     ├─ _utils.js
-│  │     ├─ agencia.js
-│  │     ├─ bairro.js
-│  │     ├─ cidade.js
-│  │     ├─ estado.js
-│  │     └─ locker.js
+│  │     ├─ base.js
+│  │     └─ feriados.js
 │  └─ rotas
-│     └─ unidades.js
+│     └─ feriados.js
 └─ vite.config.js
 
 ```

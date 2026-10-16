@@ -2,7 +2,8 @@
 
 import '../css/input.css';
 import { initFlowbite } from 'flowbite';
-import VanillaCalendar from 'vanilla-calendar-pro';
+import { Calendar, annotations } from 'vanilla-calendar-pro';
+import 'vanilla-calendar-pro/styles/index.css';
 import * as bootstrap from 'bootstrap';
 import {
     inicializarCarregamentoImagens,
@@ -18,17 +19,9 @@ window.bootstrap = bootstrap;
 
 const config = window.PORTAL_CONFIG || {};
 
-/* ------------------------------------------------------------------ */
-/* FLOWBITE                                                            */
-/* ------------------------------------------------------------------ */
-
 function inicializarFlowbite() {
     try { initFlowbite(); } catch (_) {}
 }
-
-/* ------------------------------------------------------------------ */
-/* FORMULÁRIO DE COMENTÁRIO                                            */
-/* ------------------------------------------------------------------ */
 
 function inicializarFormularioComentario() {
     const form = document.querySelector('#formularioDeComentario');
@@ -37,10 +30,6 @@ function inicializarFormularioComentario() {
         configurarValidacaoComentario(form, form.dataset.endpoint || '/api/comentario-feriados');
     }
 }
-
-/* ------------------------------------------------------------------ */
-/* FORMULÁRIO DE CONTATO                                               */
-/* ------------------------------------------------------------------ */
 
 function inicializarFormularioContato() {
     const form = document.getElementById('formulario_de_contato');
@@ -60,19 +49,11 @@ function inicializarFormularioContato() {
     configurarValidacaoContato('#formulario_de_contato', camposObrigatorios, '/api/fale-conosco');
 }
 
-/* ------------------------------------------------------------------ */
-/* ANALYTICS                                                           */
-/* ------------------------------------------------------------------ */
-
 function inicializarAnalyticsPortal() {
     if (config.possui_google_analytics) {
         iniciarAnalytics(config);
     }
 }
-
-/* ------------------------------------------------------------------ */
-/* CALENDÁRIO DE FERIADOS                                              */
-/* ------------------------------------------------------------------ */
 
 function inicializarCalendario() {
     const el = document.getElementById('calendario-de-feriados');
@@ -83,7 +64,7 @@ function inicializarCalendario() {
 
     const feriados = window.__FERIADOS__ || {};
     const tipoPagina = h1.dataset.tipoPagina;
-    const ano = h1.dataset.ano || new Date().getFullYear();
+    const ano = parseInt(h1.dataset.ano || new Date().getFullYear(), 10);
 
     const popups = {};
     for (const data in feriados) {
@@ -95,27 +76,18 @@ function inicializarCalendario() {
     const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
     const mesAtual = h1.dataset.mes ? meses.indexOf(h1.dataset.mes.toLowerCase()) : 0;
 
-    const calendar = new VanillaCalendar('#calendario-de-feriados', {
+    const mesInicial = tipoPagina !== 'mes' ? 1 : (mesAtual >= 0 ? mesAtual + 1 : 1);
+
+    const calendar = new Calendar(el, {
         type: tipoPagina !== 'mes' ? 'multiple' : 'default',
         months: tipoPagina !== 'mes' ? 12 : 1,
-        settings: {
-            lang: 'pt-br',
-            visibility: {
-                theme: 'light',
-                weekend: false,
-                daysOutside: false,
-            },
-            selection: {
-                day: false,
-                month: false,
-                year: false,
-            },
-            selected: {
-                year: parseInt(ano, 10),
-                month: tipoPagina !== 'mes' ? 0 : (mesAtual >= 0 ? mesAtual : 0),
-            },
+        locale: 'pt-br',
+        selected: {
+            year: ano,
+            month: mesInicial,
         },
         popups,
+        extensions: [annotations],
     });
 
     calendar.init();
@@ -136,10 +108,6 @@ function inicializarCalendario() {
         });
     });
 }
-
-/* ------------------------------------------------------------------ */
-/* TABELA DE FERIADOS                                                  */
-/* ------------------------------------------------------------------ */
 
 function inicializarTabelaFeriados() {
     const tabela = document.querySelector('table.tabela-customizada.feriados');
@@ -198,10 +166,6 @@ function inicializarTabelaFeriados() {
     });
 }
 
-/* ------------------------------------------------------------------ */
-/* BOTÃO "VER" DESCRIÇÃO (mobile)                                      */
-/* ------------------------------------------------------------------ */
-
 function inicializarBotoesDescricao() {
     document.addEventListener('click', function (event) {
         const target = event.target;
@@ -228,10 +192,6 @@ function inicializarBotoesDescricao() {
         }
     });
 }
-
-/* ------------------------------------------------------------------ */
-/* SUMÁRIO (TOC)                                                       */
-/* ------------------------------------------------------------------ */
 
 function inicializarSumario() {
     const contentContainer = document.querySelector('main');
@@ -289,10 +249,6 @@ function inicializarSumario() {
     }
 }
 
-/* ------------------------------------------------------------------ */
-/* ANÚNCIOS                                                            */
-/* ------------------------------------------------------------------ */
-
 async function inicializarAnuncios() {
     if (!config.possui_adsterra) return;
     try {
@@ -302,10 +258,6 @@ async function inicializarAnuncios() {
         console.warn('Erro ao carregar módulo de anúncios:', e);
     }
 }
-
-/* ------------------------------------------------------------------ */
-/* BOOTSTRAP                                                           */
-/* ------------------------------------------------------------------ */
 
 document.addEventListener('DOMContentLoaded', async () => {
     inicializarCarregamentoImagens();
