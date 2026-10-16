@@ -12,18 +12,33 @@ export function inicializarBarraFeriados() {
     const elCidades = document.getElementById('dados-barra-cidades');
     let cidades = [];
     if (elCidades) {
-        try { cidades = JSON.parse(elCidades.textContent.trim()) || []; } catch {}
+        try { cidades = JSON.parse(elCidades.textContent.trim()) || []; } catch (_) {}
     }
 
-    selEstado.addEventListener('change', function () {
+    // Alguns UFs vêm em minúsculas no JSON
+    const cidadesPorUf = Array.isArray(cidades) ? null : (cidades || {});
+
+    function preencherCidades(uf) {
         selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
-        if (!this.value) return;
-        cidades.forEach(c => {
+
+        let lista = [];
+        if (cidadesPorUf && cidadesPorUf[uf]) {
+            lista = cidadesPorUf[uf];
+        } else if (Array.isArray(cidades)) {
+            // caso seja array plano (ex.: página do estado, só as cidades desse estado)
+            lista = uf ? cidades : [];
+        }
+
+        lista.forEach(c => {
             const opt = document.createElement('option');
             opt.value = c.slug;
             opt.textContent = capitalizar(c.cidade);
             selCidade.appendChild(opt);
         });
+    }
+
+    selEstado.addEventListener('change', function () {
+        preencherCidades(this.value);
     });
 
     selAno.addEventListener('change', function () {
@@ -44,9 +59,9 @@ export function inicializarBarraFeriados() {
             return;
         }
 
-        let destino = `/${ano}/`;
-        if (cidade) destino = `/${ano}/${uf}/${cidade}/`;
-        else if (uf) destino = `/${ano}/${uf}/`;
+        let destino = `/feriados/${ano}/`;
+        if (cidade) destino = `/feriados/${ano}/${uf}/${cidade}/`;
+        else if (uf) destino = `/feriados/${ano}/${uf}/`;
 
         window.location.href = destino;
     });
