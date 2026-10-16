@@ -9,7 +9,7 @@
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
 @import "bootstrap/dist/css/bootstrap.min.css";
-@import "vanilla-calendar-pro/styles/index.css";
+@import "vanilla-calendar-pro/build/vanilla-calendar.min.css";
 @import "./feriados.css";
 
 @source "../../src";
