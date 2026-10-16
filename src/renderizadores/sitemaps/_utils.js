@@ -115,8 +115,12 @@ ${urls.map(u => `
 </urlset>`;
 }
 
-// Busca paginada. Aceita filtro no formato { coluna, valor }.
-// Ordena sempre pela primeira coluna do select para a paginação ser estável.
+// ---- Helpers internos -------------------------------------------------
+
+// Busca paginada. `filtro` pode ser:
+//   - null
+//   - { coluna: 'excluido', valor: 0 }
+// Ordena sempre pela primeira coluna do select para paginação estável.
 async function buscarTodos(supabase, tabela, colunas, filtro = null) {
   const pageSize = 1000;
   let todos = [];
@@ -155,13 +159,52 @@ async function contarComFiltro(supabase, tabela, colunaSelect, filtro = null) {
   }
 }
 
+// ---- API pública ------------------------------------------------------
+
+// Compatibilidade com o base.js: checa se existe pelo menos um registro na tabela.
 export async function existeRegistroAtivo(supabase, tabela) {
   return (await contarComFiltro(supabase, tabela, 'id')) > 0;
 }
 
-// Sitemap simples de uma tabela: uma linha por registro.
-// `colunaSlug` é a coluna que alimenta o urlBuilder.
-// `filtro` é opcional: { coluna, valor }.
+// Compatibilidade com o base.js: gera sitemap de UMA tabela,
+// com urlBuilder a receber o slug.
+//   gerarSitemapDeTabela(supabase, config, tabela, urlBuilder, changefreq, priority, filtroStatus)
+// `filtroStatus` (opcional) é um valor para a coluna `status`.
+export async function gerarSitemapDeTabela(
+  supabase,
+  config,
+  tabela,
+  urlBuilder,
+  changefreq,
+  priority,
+  filtroStatus = null
+) {
+  const baseUrl = config.dominio;
+  const filtro = filtroStatus ? { coluna: 'status', valor: filtroStatus } : null;
+
+  let data;
+  try {
+    data = await buscarTodos(supabase, tabela, 'slug, data_hora_atualizacao', filtro);
+  } catch (error) {
+    console.error(`Erro ao buscar ${tabela}:`, error);
+    return new Response('Erro interno', { status: 500 });
+  }
+
+  const urls = (data || []).map(item => ({
+    loc: urlBuilder(item.slug),
+    lastmod: item.data_hora_atualizacao || new Date().toISOString(),
+    changefreq,
+    priority
+  }));
+
+  const xml = gerarXMLUrls(baseUrl, urls);
+  return new Response(xml, {
+    status: 200,
+    headers: gerarHeadersCache(config, 'application/xml; charset=utf-8')
+  });
+}
+
+// API nova usada pelo feriados.js: aceita `colunaSlug` e `filtro: {coluna, valor}`.
 export function criarSitemapTabela({
   loc,
   tabela,
@@ -206,10 +249,7 @@ export function criarSitemapTabela({
   };
 }
 
-// Sitemap cruzado: combina N queries independentes e delega no urlBuilder
-// a geração da lista final de URLs.
-// `queries`: [{ chave, tabela, select, filtro }]
-// `urlBuilder`: (...resultados) => array de strings de URL (com barra inicial)
+// API nova usada pelo feriados.js: cruza N queries e delega no urlBuilder.
 export function criarSitemapCruzado({ loc, changefreq, priority, queries, urlBuilder }) {
   return {
     loc,
