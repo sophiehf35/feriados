@@ -12,7 +12,15 @@ export function inicializarBarraFeriados() {
     const elCidades = document.getElementById('dados-barra-cidades');
     let cidadesRaw = null;
     if (elCidades) {
-        try { cidadesRaw = JSON.parse(elCidades.textContent.trim()); } catch (_) { cidadesRaw = null; }
+        try {
+            const texto = elCidades.textContent.trim();
+            if (texto && texto !== 'undefined' && texto !== 'null') {
+                cidadesRaw = JSON.parse(texto);
+            }
+        } catch (e) {
+            console.warn('[barra-feriados] JSON de cidades inválido:', e);
+            cidadesRaw = null;
+        }
     }
 
     function preencherCidades(uf) {
@@ -20,10 +28,8 @@ export function inicializarBarraFeriados() {
 
         let lista = [];
         if (Array.isArray(cidadesRaw)) {
-            // Lista plana — normalmente já é só do estado atual
             lista = uf ? cidadesRaw : [];
         } else if (cidadesRaw && typeof cidadesRaw === 'object') {
-            // Agrupado por UF: { sp: [{slug, cidade}, ...], rj: [...] }
             if (uf && Array.isArray(cidadesRaw[uf])) {
                 lista = cidadesRaw[uf];
             }

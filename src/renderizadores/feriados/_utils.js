@@ -85,9 +85,9 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
     const estados = barra?.estados || [];
 
     // `cidades` pode vir em 3 formas:
-    //   - Array   → lista plana (páginas estado/cidade)
-    //   - Object  → { uf: [{slug, cidade}, ...] } (páginas ano/mês com RPC agrupado)
-    //   - undefined/null → sem cidades
+    //   - Array        → lista plana (páginas estado/cidade)
+    //   - Object       → { uf: [{slug, cidade}, ...] } (páginas ano/mês com RPC agrupado)
+    //   - undefined    → sem cidades
     const cidadesRaw = barra?.cidades;
     let cidades = [];
     let cidadesJson = '[]';
