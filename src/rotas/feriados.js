@@ -5,7 +5,7 @@ import { mapa as renderizadores } from '../renderizadores/feriados/_indice.js';
 const PREFIXO = 'feriados';
 
 function debugHtml(msg, extra = '') {
-    return `<pre style="background:#111;color:#0f0;padding:20px;font-size:14px;white-space:pre-wrap;">[feriados debug]
+    return `<pre style="background:#1111;color:#0f0;padding:20px;font-size:14px;white-space:pre-wrap;">[feriados debug]
 ${msg}
 ${extra}</pre>`;
 }
