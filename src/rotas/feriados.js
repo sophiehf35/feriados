@@ -40,6 +40,7 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
             }
 
             try {
+                data[0].ano = data[0].ano || ano;
                 const html = mod.render(config, data[0], {
                     scriptsAdicionais: scriptsAdicionaisBase,
                     url
@@ -63,6 +64,7 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
                 if (error) return { html: debugHtml('RPC get_estado erro:', JSON.stringify(error, null, 2)), status: 200 };
                 if (!data || data.length === 0) return { html: debugHtml('RPC get_estado vazio para ' + slug + '/' + ano), status: 200 };
                 try {
+                    data[0].ano = ano;
                     const html = mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url });
                     return { html, status: 200 };
                 } catch (e) {
@@ -78,6 +80,7 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
             if (error) return { html: debugHtml('RPC get_mes erro:', JSON.stringify(error, null, 2)), status: 200 };
             if (!data || data.length === 0) return { html: debugHtml('RPC get_mes vazio para ' + slug + '/' + ano), status: 200 };
             try {
+                data[0].ano = ano;
                 const html = mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url });
                 return { html, status: 200 };
             } catch (e) {
@@ -96,6 +99,7 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
             if (error) return { html: debugHtml('RPC get_cidade erro:', JSON.stringify(error, null, 2)), status: 200 };
             if (!data || data.length === 0) return { html: debugHtml('RPC get_cidade vazio para ' + cidadeSlug + '/' + ano), status: 200 };
             try {
+                data[0].ano = ano;
                 const html = mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url });
                 return { html, status: 200 };
             } catch (e) {
