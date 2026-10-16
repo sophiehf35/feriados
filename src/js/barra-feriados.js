@@ -10,23 +10,23 @@ export function inicializarBarraFeriados() {
     if (!selAno || !selEstado || !selCidade || !botao) return;
 
     const elCidades = document.getElementById('dados-barra-cidades');
-    let cidades = [];
+    let cidadesRaw = null;
     if (elCidades) {
-        try { cidades = JSON.parse(elCidades.textContent.trim()) || []; } catch (_) {}
+        try { cidadesRaw = JSON.parse(elCidades.textContent.trim()); } catch (_) { cidadesRaw = null; }
     }
-
-    // Alguns UFs vêm em minúsculas no JSON
-    const cidadesPorUf = Array.isArray(cidades) ? null : (cidades || {});
 
     function preencherCidades(uf) {
         selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
 
         let lista = [];
-        if (cidadesPorUf && cidadesPorUf[uf]) {
-            lista = cidadesPorUf[uf];
-        } else if (Array.isArray(cidades)) {
-            // caso seja array plano (ex.: página do estado, só as cidades desse estado)
-            lista = uf ? cidades : [];
+        if (Array.isArray(cidadesRaw)) {
+            // Lista plana — normalmente já é só do estado atual
+            lista = uf ? cidadesRaw : [];
+        } else if (cidadesRaw && typeof cidadesRaw === 'object') {
+            // Agrupado por UF: { sp: [{slug, cidade}, ...], rj: [...] }
+            if (uf && Array.isArray(cidadesRaw[uf])) {
+                lista = cidadesRaw[uf];
+            }
         }
 
         lista.forEach(c => {

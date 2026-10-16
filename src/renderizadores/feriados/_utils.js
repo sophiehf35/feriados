@@ -83,7 +83,24 @@ export function gerarTabelaFeriados(feriados) {
 export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
     const anos = barra?.anos || [];
     const estados = barra?.estados || [];
-    const cidades = barra?.cidades || [];
+
+    // `cidades` pode vir em 3 formas:
+    //   - Array   → lista plana (páginas estado/cidade)
+    //   - Object  → { uf: [{slug, cidade}, ...] } (páginas ano/mês com RPC agrupado)
+    //   - undefined/null → sem cidades
+    const cidadesRaw = barra?.cidades;
+    let cidades = [];
+    let cidadesJson = '[]';
+
+    if (Array.isArray(cidadesRaw)) {
+        cidades = cidadesRaw;
+        cidadesJson = JSON.stringify(cidadesRaw);
+    } else if (cidadesRaw && typeof cidadesRaw === 'object') {
+        cidadesJson = JSON.stringify(cidadesRaw);
+        if (ufAtual && Array.isArray(cidadesRaw[ufAtual])) {
+            cidades = cidadesRaw[ufAtual];
+        }
+    }
 
     const opcoesAno = anos.map(a =>
         `<option value="${a}" ${String(a) === String(anoAtual) ? 'selected' : ''}>${a}</option>`
@@ -126,7 +143,7 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
                         </button>
                     </div>
                 </div>
-                <script type="application/json" id="dados-barra-cidades">${JSON.stringify(cidades)}</script>
+                <script type="application/json" id="dados-barra-cidades">${cidadesJson}</script>
             </form>
         </div>
     </div>`;
