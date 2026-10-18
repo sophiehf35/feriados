@@ -1,6 +1,6 @@
 // src/renderizadores/feriados/_utils.js
 
-import { escapeHtml, capitalizar, slugify } from '../../js/utils.js';
+import { escapeHtml, capitalizar, slugify, encodeData } from '../../js/utils.js';
 
 export function organizaFeriados(ano, dadosArray) {
     const dados = (dadosArray || []).map(f => String(f).trim()).filter(Boolean);
@@ -254,6 +254,9 @@ export function renderScriptsFeriados(feriados) {
 
 // ============================================================
 // Helpers para as novas tabelas (estados / meses / cidades)
+// A tabela em si é renderizada dinamicamente em src/js/main.js
+// usando TabelaGenerica (busca + paginação + sort = FIPE).
+// Aqui só emitimos o JSON dos dados + o container vazio.
 // ============================================================
 
 export function parseConcatenado(str, chaves) {
@@ -288,92 +291,56 @@ export function renderTabelaEstados(estadosConcatenados, ano) {
     const estados = parseConcatenado(estadosConcatenados, ['uf', 'estado']);
     if (!estados.length) return '';
 
-    const linhas = estados.map(e => `
-        <tr class="border-b border-gray-100 hover:bg-gray-50">
-            <td class="px-3 py-2">${escapeHtml(capitalizar(e.estado))}</td>
-            <td class="px-3 py-2 font-mono text-xs">${escapeHtml(e.uf.toUpperCase())}</td>
-            <td class="px-3 py-2">
-                <a href="/${ano}/${e.uf}/" class="text-primary hover:underline font-medium">Ver feriados</a>
-            </td>
-        </tr>`).join('');
+    const dados = estados.map(e => ({
+        estado: capitalizar(e.estado),
+        uf: e.uf.toUpperCase(),
+        slug: e.uf.toLowerCase(),
+    }));
+    const dadosCodificados = encodeData(dados);
 
     return `
     <div id="estados" class="bg-white rounded-md border border-gray-200 p-4">
         <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
             <h2 class="text-lg md:text-xl font-semibold">Feriados por Estado em ${ano}</h2>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-700">
-                    <tr>
-                        <th class="text-left px-3 py-2 font-semibold">Estado</th>
-                        <th class="text-left px-3 py-2 font-semibold">UF</th>
-                        <th class="text-left px-3 py-2 font-semibold">Feriados</th>
-                    </tr>
-                </thead>
-                <tbody>${linhas}</tbody>
-            </table>
-        </div>
-    </div>`;
+        <div id="tabelaEstadosContainer"></div>
+    </div>
+    <script id="dados-tabela-estados" type="application/json">${dadosCodificados}</script>`;
 }
 
 export function renderTabelaMeses(ano) {
-    const linhas = MESES.map(m => `
-        <tr class="border-b border-gray-100 hover:bg-gray-50">
-            <td class="px-3 py-2">${m.nome}</td>
-            <td class="px-3 py-2">
-                <a href="/${ano}/${m.slug}/" class="text-primary hover:underline font-medium">
-                    Ver feriados de ${m.nome.toLowerCase()}
-                </a>
-            </td>
-        </tr>`).join('');
+    const dados = MESES.map(m => ({
+        mes: m.nome,
+        slug: m.slug,
+    }));
+    const dadosCodificados = encodeData(dados);
 
     return `
     <div id="meses" class="bg-white rounded-md border border-gray-200 p-4">
         <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
             <h2 class="text-lg md:text-xl font-semibold">Feriados por Mês em ${ano}</h2>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-700">
-                    <tr>
-                        <th class="text-left px-3 py-2 font-semibold">Mês</th>
-                        <th class="text-left px-3 py-2 font-semibold">Feriados</th>
-                    </tr>
-                </thead>
-                <tbody>${linhas}</tbody>
-            </table>
-        </div>
-    </div>`;
+        <div id="tabelaMesesContainer"></div>
+    </div>
+    <script id="dados-tabela-meses" type="application/json">${dadosCodificados}</script>`;
 }
 
 export function renderTabelaCidades(cidadesConcatenadas, ano, uf) {
     const cidades = parseConcatenado(cidadesConcatenadas, ['slug', 'cidade']);
     if (!cidades.length) return '';
 
-    const linhas = cidades.map(c => `
-        <tr class="border-b border-gray-100 hover:bg-gray-50">
-            <td class="px-3 py-2">${escapeHtml(capitalizar(c.cidade))}</td>
-            <td class="px-3 py-2">
-                <a href="/${ano}/${uf}/${c.slug}/" class="text-primary hover:underline font-medium">Ver feriados</a>
-            </td>
-        </tr>`).join('');
+    const dados = cidades.map(c => ({
+        cidade: capitalizar(c.cidade),
+        slug: c.slug,
+    }));
+    const dadosCodificados = encodeData(dados);
 
     return `
     <div id="cidades" class="bg-white rounded-md border border-gray-200 p-4">
         <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
             <h2 class="text-lg md:text-xl font-semibold">Feriados por Cidade — ${escapeHtml(uf.toUpperCase())}</h2>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-700">
-                    <tr>
-                        <th class="text-left px-3 py-2 font-semibold">Cidade</th>
-                        <th class="text-left px-3 py-2 font-semibold">Feriados ${ano}</th>
-                    </tr>
-                </thead>
-                <tbody>${linhas}</tbody>
-            </table>
-        </div>
-    </div>`;
+        <div id="tabelaCidadesContainer"></div>
+    </div>
+    <script id="dados-tabela-cidades" type="application/json">${dadosCodificados}</script>`;
 }
