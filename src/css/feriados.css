@@ -22,15 +22,18 @@
 
 
 /* ============================================================
-   VANILLA CALENDAR — visual "solto" na página
-   (sem card, sem sombra, sem fundo, sem padding, sem raio)
+   VANILLA CALENDAR
+   - Cada mês (column) é um card branco com o MESMO raio/sombra
+     dos outros cards do layout (rounded-md + shadow-md).
+   - O container que agrupa os meses (grid) fica transparente,
+     para não parecer um card dentro de outro card.
+   - No modo single (1 mês, página /mes/), o próprio container
+     vira o card branco.
    ============================================================ */
 
-/* Reset global do componente */
-.vanilla-calendar,
-.vanilla-calendar.vanilla-calendar_default,
-[data-calendar-theme=light].vanilla-calendar,
-[data-calendar-theme=light].vanilla-calendar.vanilla-calendar_default {
+/* Container do grid (12 meses) — transparente, só agrupa os cards */
+.vanilla-calendar.vanilla-calendar_multiple,
+[data-calendar-theme=light].vanilla-calendar.vanilla-calendar_multiple {
     background: transparent !important;
     background-color: transparent !important;
     box-shadow: none !important;
@@ -42,29 +45,45 @@
     max-width: 100%;
 }
 
-/* Cada coluna (mês) — sem card */
+/* Cada coluna (mês) — card padrão, igual aos demais do layout */
 .vanilla-calendar-column {
-    background: transparent !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+    background: #fff !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+    border-radius: 0.375rem !important;
+    overflow: hidden;
     display: flex;
     flex: 1;
     flex-direction: column;
 }
 
-/* Wrapper / área dos dias — sem card */
-.vanilla-calendar-wrapper,
-.vanilla-calendar-days,
-.vanilla-calendar.vanilla-calendar_multiple .vanilla-calendar-days {
-    background: transparent !important;
-    border-radius: 0 !important;
+/* Modo single (1 mês) — o container em si é o card */
+.vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple),
+[data-calendar-theme=light].vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple) {
+    background: #fff !important;
+    background-color: #fff !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+    border: none !important;
+    border-radius: 0.375rem !important;
+    padding: 0 !important;
+    overflow: hidden;
+    height: max-content;
+    min-width: 272px;
+    max-width: 100%;
 }
 
-/* Header — mantém a cor mas sem cantos arredondados */
+/* Header — cor de destaque; o raio é aplicado pelo card pai via overflow:hidden */
 .vanilla-calendar-header {
     background: #b01233;
     border-radius: 0 !important;
     margin-bottom: 0;
+}
+
+/* Área dos dias — branca, para combinar com o card */
+.vanilla-calendar-wrapper,
+.vanilla-calendar-days,
+.vanilla-calendar.vanilla-calendar_multiple .vanilla-calendar-days {
+    background: #fff !important;
+    border-radius: 0 !important;
 }
 
 /* Meses/anos no header */
@@ -122,7 +141,6 @@
 
 /* ============================================================
    LEGENDA — card comprido abaixo do calendário
-   (layout flexível; o grid/flex vem das classes Tailwind no JS)
    ============================================================ */
 .legend-item {
     display: flex;
