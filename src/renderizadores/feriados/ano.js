@@ -75,7 +75,6 @@ export function render(config, data, contexto = {}) {
     ];
 
     const sumarioHtml = renderSumarioHtml([
-        { titulo: 'Calendário', href: '#calendario' },
         { titulo: `Feriados ${ano}`, href: '#feriados' },
         { titulo: `Feriados Nacionais ${ano}`, href: '#feriados-nacionais' },
         { titulo: 'Feriados por Estado', href: '#estados' },
@@ -108,9 +107,14 @@ export function render(config, data, contexto = {}) {
             <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> Confira todos os feriados ${ano} e programe sua agenda, seja para descansar ou fazer aquela tão sonhada viagem, os feriados ${ano} são um alívio para o stress.</p>
         </div>
 
-        <!-- CALENDÁRIO full-width -->
-        <div id="calendario" class="mb-6 bg-white rounded-md shadow-md p-4">
+        <!-- CALENDÁRIO solto (sem card) -->
+        <div id="calendario" class="mb-6">
             ${renderCalendarioHtml()}
+        </div>
+
+        <!-- LEGENDA card comprido (full-width) -->
+        <div class="mb-6">
+            ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -163,7 +167,6 @@ export function render(config, data, contexto = {}) {
 
             <aside class="flex flex-col gap-6">
                 ${sumarioHtml}
-                ${renderLegendaHtml(['nacional', 'facultativo'])}
                 ${renderLinksUteisHtml()}
             </aside>
         </div>

@@ -84,10 +84,6 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
     const anos = barra?.anos || [];
     const estados = barra?.estados || [];
 
-    // `cidades` pode vir em 3 formas:
-    //   - Array        → lista plana (páginas estado/cidade)
-    //   - Object       → { uf: [{slug, cidade}, ...] } (páginas ano/mês com RPC agrupado)
-    //   - undefined    → sem cidades
     const cidadesRaw = barra?.cidades;
     let cidades = [];
     let cidadesJson = '[]';
@@ -150,7 +146,6 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
 }
 
 export function renderCalendarioHtml() {
-    // Apenas o container interno; o wrapper (largura total / max-w) é decidido pelo renderizador
     return `<div id="calendario-de-feriados"></div>`;
 }
 
@@ -176,8 +171,8 @@ export function renderLegendaHtml(tipos) {
         <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
             <h3 class="text-sm font-semibold text-white uppercase tracking-wider">LEGENDA</h3>
         </div>
-        <div class="p-4">
-            <div class="legend-grid grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="px-5 py-4">
+            <div class="legend-grid flex flex-wrap gap-x-8 gap-y-3">
                 ${itens}
             </div>
         </div>

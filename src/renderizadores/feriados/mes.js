@@ -52,7 +52,6 @@ export function render(config, data, contexto = {}) {
     ];
 
     const sumarioHtml = renderSumarioHtml([
-        { titulo: 'Calendário', href: '#calendario' },
         { titulo: `Feriados ${mes} ${ano}`, href: '#feriados' },
         {
             titulo: `Feriados em ${mes}`,
@@ -101,9 +100,14 @@ export function render(config, data, contexto = {}) {
             <p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> confira abaixo todos os feriados ${mes} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${mes} ${ano}.</p>
         </div>
 
-        <!-- CALENDÁRIO (1 mês, centralizado e menor) -->
-        <div id="calendario" class="mb-6 max-w-md mx-auto bg-white rounded-md shadow-md p-4">
+        <!-- CALENDÁRIO solto (sem card) — 1 mês, centralizado -->
+        <div id="calendario" class="mb-6 max-w-md mx-auto">
             ${renderCalendarioHtml()}
+        </div>
+
+        <!-- LEGENDA card comprido (full-width) -->
+        <div class="mb-6">
+            ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -137,7 +141,6 @@ export function render(config, data, contexto = {}) {
 
             <aside class="flex flex-col gap-6">
                 ${sumarioHtml}
-                ${renderLegendaHtml(['nacional', 'facultativo'])}
                 ${renderLinksUteisHtml()}
             </aside>
         </div>
