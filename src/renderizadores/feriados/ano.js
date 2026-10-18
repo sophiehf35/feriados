@@ -14,6 +14,8 @@ import {
     renderFaqHtml,
     renderLinksUteisHtml,
     renderScriptsFeriados,
+    renderTabelaEstados,
+    renderTabelaMeses,
 } from './_utils.js';
 import {
     renderizarAvaliacoes,
@@ -76,6 +78,8 @@ export function render(config, data, contexto = {}) {
         { titulo: 'Calendário', href: '#calendario' },
         { titulo: `Feriados ${ano}`, href: '#feriados' },
         { titulo: `Feriados Nacionais ${ano}`, href: '#feriados-nacionais' },
+        { titulo: 'Feriados por Estado', href: '#estados' },
+        { titulo: 'Feriados por Mês', href: '#meses' },
         {
             titulo: `Feriados em ${ano}`,
             href: `#faq`,
@@ -98,14 +102,19 @@ export function render(config, data, contexto = {}) {
     ${renderBarra(data.barra, { anoAtual: ano })}
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
+
+        <!-- INTRO -->
+        <div class="bg-white shadow-md rounded-md p-4 mb-6">
+            <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> Confira todos os feriados ${ano} e programe sua agenda, seja para descansar ou fazer aquela tão sonhada viagem, os feriados ${ano} são um alívio para o stress.</p>
+        </div>
+
+        <!-- CALENDÁRIO full-width -->
+        <div id="calendario" class="mb-6 bg-white rounded-md shadow-md p-4">
+            ${renderCalendarioHtml()}
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white shadow-md rounded-md p-4">
-                    <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> Confira todos os feriados ${ano} e programe sua agenda, seja para descansar ou fazer aquela tão sonhada viagem, os feriados ${ano} são um alívio para o stress.</p>
-                </div>
-
-                <div id="calendario">${renderCalendarioHtml()}</div>
-
                 <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-3">${data.paragrafo1 || ''}</p>
@@ -126,6 +135,9 @@ export function render(config, data, contexto = {}) {
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados em ${ano}</h2>
                     <p class="text-gray-700 text-justify">${data.paragrafo3 || ''}</p>
                 </div>
+
+                ${renderTabelaEstados(data.estados_concatenados, ano)}
+                ${renderTabelaMeses(ano)}
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados nacionais ${ano}</h2>

@@ -141,10 +141,10 @@ function inicializarTabelaFeriados() {
         return;
     }
 
+    // ----- Botão de impressão com cor -----
     const button = document.createElement('button');
     button.id = 'imprimirTableFeriados';
-    button.style.cssText = 'width:100%;margin-top:10px;';
-    button.className = 'fe-pulse';
+    button.className = 'fe-pulse bg-botao-acao hover:brightness-110 text-white font-bold w-full mt-2.5 py-2.5 px-4 rounded-md transition-colors cursor-pointer border-0';
     button.type = 'button';
     button.textContent = 'IMPRIMIR OU SALVAR TABELA';
     tabela.insertAdjacentElement('afterend', button);

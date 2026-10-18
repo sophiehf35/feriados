@@ -14,6 +14,7 @@ import {
     renderFaqHtml,
     renderLinksUteisHtml,
     renderScriptsFeriados,
+    renderTabelaCidades,
 } from './_utils.js';
 import {
     renderizarAvaliacoes,
@@ -34,8 +35,8 @@ export function render(config, data, contexto = {}) {
     const feriados = organizaFeriados(ano, (data.feriados_concatenados || '').split(';'));
     const tabelaFeriados = gerarTabelaFeriados(feriados);
 
-    const proximoFeriado = proximaDataComemorativa(feriados);
-    const feriadosEstaduais = filtrarFeriados(feriados, 'Feriado Estadual');
+    const proximoFeriado     = proximaDataComemorativa(feriados);
+    const feriadosEstaduais  = filtrarFeriados(feriados, 'Feriado Estadual');
 
     const faqQuestions = [
         {
@@ -55,6 +56,7 @@ export function render(config, data, contexto = {}) {
     const sumarioHtml = renderSumarioHtml([
         { titulo: 'Calendário', href: '#calendario' },
         { titulo: `Feriados ${estado} ${ano}`, href: '#feriados' },
+        { titulo: 'Feriados por Cidade', href: '#cidades' },
         {
             titulo: `Feriados em ${estado}`,
             href: `#faq`,
@@ -96,14 +98,19 @@ export function render(config, data, contexto = {}) {
     ${renderBarra(data.barra, { anoAtual: ano, ufAtual: uf })}
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
+
+        <!-- INTRO -->
+        <div class="bg-white shadow-md rounded-md p-4 mb-6">
+            <p class="text-gray-700 text-justify"><b>Feriados ${estado} ${ano}:</b> Confira no calendário abaixo todos os feriados ${estado} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores.</p>
+        </div>
+
+        <!-- CALENDÁRIO full-width -->
+        <div id="calendario" class="mb-6 bg-white rounded-md shadow-md p-4">
+            ${renderCalendarioHtml()}
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white shadow-md rounded-md p-4">
-                    <p class="text-gray-700 text-justify"><b>Feriados ${estado} ${ano}:</b> Confira no calendário abaixo todos os feriados ${estado} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores.</p>
-                </div>
-
-                <div id="calendario">${renderCalendarioHtml()}</div>
-
                 <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${estado} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados ${estado} ${ano} em forma de lista, desde os pontos facultativos, feriados nacionais ${estado} ${ano} até os feriados estaduais ${estado} ${ano}. Caso deseje é possível imprimir ou salvar a lista de feriados ${estado} ${ano}, basta clicar no botão.</p>
@@ -120,6 +127,8 @@ export function render(config, data, contexto = {}) {
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado ${estado} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Vale ressaltar que o estado de ${estado} pode a qualquer momento enviar um decreto onde é criado um novo feriado estadual e assim mudar os feriados em ${estado} ${ano}.</p>
                 </div>
+
+                ${renderTabelaCidades(data.cidades_concatenadas, ano, uf)}
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados em ${estado} ${ano}</h2>

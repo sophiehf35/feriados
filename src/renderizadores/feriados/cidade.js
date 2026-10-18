@@ -102,14 +102,19 @@ export function render(config, data, contexto = {}) {
     ${renderBarra(data.barra, { anoAtual: ano, ufAtual: uf, cidadeAtual: slug })}
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
+
+        <!-- INTRO -->
+        <div class="bg-white shadow-md rounded-md p-4 mb-6">
+            <p class="text-gray-700 text-justify"><b>Feriados ${cidade} ${ano}:</b> confira abaixo todos os feriados ${cidade} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${cidade} ${uf} ${ano}.</p>
+        </div>
+
+        <!-- CALENDÁRIO full-width -->
+        <div id="calendario" class="mb-6 bg-white rounded-md shadow-md p-4">
+            ${renderCalendarioHtml()}
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white shadow-md rounded-md p-4">
-                    <p class="text-gray-700 text-justify"><b>Feriados ${cidade} ${ano}:</b> confira abaixo todos os feriados ${cidade} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${cidade} ${uf} ${ano}.</p>
-                </div>
-
-                <div id="calendario">${renderCalendarioHtml()}</div>
-
                 <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify">É importante ressaltar que os feriados da cidade de ${cidade} ${ano} podem sofrer alterações a qualquer momento, isso porque as cidades possuem autonomia para criar e alterar novos feriados.</p>

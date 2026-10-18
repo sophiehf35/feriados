@@ -150,13 +150,8 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
 }
 
 export function renderCalendarioHtml() {
-    return `
-    <div class="bg-white rounded-md border border-gray-200 p-4">
-        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-            <h2 class="text-lg md:text-xl font-semibold">Calendário</h2>
-        </div>
-        <div id="calendario-de-feriados"></div>
-    </div>`;
+    // Apenas o container interno; o wrapper (largura total / max-w) é decidido pelo renderizador
+    return `<div id="calendario-de-feriados"></div>`;
 }
 
 export function renderLegendaHtml(tipos) {
@@ -260,4 +255,130 @@ export function renderLinksUteisHtml() {
 
 export function renderScriptsFeriados(feriados) {
     return `<script>window.__FERIADOS__ = ${JSON.stringify(feriados)};</script>`;
+}
+
+// ============================================================
+// Helpers para as novas tabelas (estados / meses / cidades)
+// ============================================================
+
+export function parseConcatenado(str, chaves) {
+    return (str || '')
+        .split(';')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map(s => {
+            const partes = s.split('||').map(p => p.trim());
+            const obj = {};
+            chaves.forEach((k, i) => { obj[k] = partes[i] || ''; });
+            return obj;
+        });
+}
+
+export const MESES = [
+    { slug: 'janeiro',   nome: 'Janeiro'   },
+    { slug: 'fevereiro', nome: 'Fevereiro' },
+    { slug: 'marco',     nome: 'Março'     },
+    { slug: 'abril',     nome: 'Abril'     },
+    { slug: 'maio',      nome: 'Maio'      },
+    { slug: 'junho',     nome: 'Junho'     },
+    { slug: 'julho',     nome: 'Julho'     },
+    { slug: 'agosto',    nome: 'Agosto'    },
+    { slug: 'setembro',  nome: 'Setembro'  },
+    { slug: 'outubro',   nome: 'Outubro'   },
+    { slug: 'novembro',  nome: 'Novembro'  },
+    { slug: 'dezembro',  nome: 'Dezembro'  },
+];
+
+export function renderTabelaEstados(estadosConcatenados, ano) {
+    const estados = parseConcatenado(estadosConcatenados, ['uf', 'estado']);
+    if (!estados.length) return '';
+
+    const linhas = estados.map(e => `
+        <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="px-3 py-2">${escapeHtml(capitalizar(e.estado))}</td>
+            <td class="px-3 py-2 font-mono text-xs">${escapeHtml(e.uf.toUpperCase())}</td>
+            <td class="px-3 py-2">
+                <a href="/${ano}/${e.uf}/" class="text-primary hover:underline font-medium">Ver feriados</a>
+            </td>
+        </tr>`).join('');
+
+    return `
+    <div id="estados" class="bg-white rounded-md border border-gray-200 p-4">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+            <h2 class="text-lg md:text-xl font-semibold">Feriados por Estado em ${ano}</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-700">
+                    <tr>
+                        <th class="text-left px-3 py-2 font-semibold">Estado</th>
+                        <th class="text-left px-3 py-2 font-semibold">UF</th>
+                        <th class="text-left px-3 py-2 font-semibold">Feriados</th>
+                    </tr>
+                </thead>
+                <tbody>${linhas}</tbody>
+            </table>
+        </div>
+    </div>`;
+}
+
+export function renderTabelaMeses(ano) {
+    const linhas = MESES.map(m => `
+        <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="px-3 py-2">${m.nome}</td>
+            <td class="px-3 py-2">
+                <a href="/${ano}/${m.slug}/" class="text-primary hover:underline font-medium">
+                    Ver feriados de ${m.nome.toLowerCase()}
+                </a>
+            </td>
+        </tr>`).join('');
+
+    return `
+    <div id="meses" class="bg-white rounded-md border border-gray-200 p-4">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+            <h2 class="text-lg md:text-xl font-semibold">Feriados por Mês em ${ano}</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-700">
+                    <tr>
+                        <th class="text-left px-3 py-2 font-semibold">Mês</th>
+                        <th class="text-left px-3 py-2 font-semibold">Feriados</th>
+                    </tr>
+                </thead>
+                <tbody>${linhas}</tbody>
+            </table>
+        </div>
+    </div>`;
+}
+
+export function renderTabelaCidades(cidadesConcatenadas, ano, uf) {
+    const cidades = parseConcatenado(cidadesConcatenadas, ['slug', 'cidade']);
+    if (!cidades.length) return '';
+
+    const linhas = cidades.map(c => `
+        <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="px-3 py-2">${escapeHtml(capitalizar(c.cidade))}</td>
+            <td class="px-3 py-2">
+                <a href="/${ano}/${uf}/${c.slug}/" class="text-primary hover:underline font-medium">Ver feriados</a>
+            </td>
+        </tr>`).join('');
+
+    return `
+    <div id="cidades" class="bg-white rounded-md border border-gray-200 p-4">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+            <h2 class="text-lg md:text-xl font-semibold">Feriados por Cidade — ${escapeHtml(uf.toUpperCase())}</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-700">
+                    <tr>
+                        <th class="text-left px-3 py-2 font-semibold">Cidade</th>
+                        <th class="text-left px-3 py-2 font-semibold">Feriados ${ano}</th>
+                    </tr>
+                </thead>
+                <tbody>${linhas}</tbody>
+            </table>
+        </div>
+    </div>`;
 }
