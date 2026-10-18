@@ -74,11 +74,11 @@ export function render(config, data, contexto = {}) {
                 <meta itemprop="position" content="1"><span class="mx-2 text-white">›</span>
             </li>
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="flex items-center">
-                <a itemprop="item" href="/${ano}/" class="text-white hover:text-blue-200"><span itemprop="name">${ano}</span></a>
+                <a itemprop="item" href="/feriados/${ano}/" class="text-white hover:text-blue-200"><span itemprop="name">${ano}</span></a>
                 <meta itemprop="position" content="2"><span class="mx-2 text-white">›</span>
             </li>
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="flex items-center">
-                <a itemprop="item" href="/${ano}/${uf}/" class="text-white hover:text-blue-200"><span itemprop="name">${estado}</span></a>
+                <a itemprop="item" href="/feriados/${ano}/${uf}/" class="text-white hover:text-blue-200"><span itemprop="name">${estado}</span></a>
                 <meta itemprop="position" content="3"><span class="mx-2 text-white">›</span>
             </li>
             <li class="flex items-center" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -102,17 +102,14 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
-        <!-- INTRO -->
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
             <p class="text-gray-700 text-justify"><b>Feriados ${cidade} ${ano}:</b> confira abaixo todos os feriados ${cidade} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${cidade} ${uf} ${ano}.</p>
         </div>
 
-        <!-- CALENDÁRIO solto (sem card) -->
         <div id="calendario" class="mb-6">
             ${renderCalendarioHtml()}
         </div>
 
-        <!-- LEGENDA card comprido (full-width) -->
         <div class="mb-6">
             ${renderLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
         </div>
@@ -173,7 +170,7 @@ export function render(config, data, contexto = {}) {
         config,
         titulo,
         descricao,
-        `${config.dominio}/${ano}/${uf}/${slug}/`,
+        `${config.dominio}/feriados/${ano}/${uf}/${slug}/`,
         null
     );
 

@@ -107,12 +107,12 @@ export function render(config, data, contexto = {}) {
             <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> Confira todos os feriados ${ano} e programe sua agenda, seja para descansar ou fazer aquela tão sonhada viagem, os feriados ${ano} são um alívio para o stress.</p>
         </div>
 
-        <!-- CALENDÁRIO solto (sem card) -->
+        <!-- CALENDÁRIO -->
         <div id="calendario" class="mb-6">
             ${renderCalendarioHtml()}
         </div>
 
-        <!-- LEGENDA card comprido (full-width) -->
+        <!-- LEGENDA -->
         <div class="mb-6">
             ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
@@ -180,7 +180,7 @@ export function render(config, data, contexto = {}) {
         config,
         titulo,
         descricao,
-        `${config.dominio}/${ano}/`,
+        `${config.dominio}/feriados/${ano}/`,
         null
     );
 
