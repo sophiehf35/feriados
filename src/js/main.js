@@ -13,6 +13,8 @@ import {
     inicializarMenuDesktop
 } from '@sophiehf35/plataforma-base/client';
 import { inicializarBarraFeriados } from './barra-feriados.js';
+import { TabelaGenerica } from './tabela.js';
+import { decodeData, escapeHtml } from './utils.js';
 
 window.configurarValidacaoComentario = configurarValidacaoComentario;
 
@@ -141,7 +143,7 @@ function inicializarTabelaFeriados() {
         return;
     }
 
-    // ----- Botão de impressão com cor -----
+    // ----- Botão de impressão com cor (mesma classe do botão ACESSAR) -----
     const button = document.createElement('button');
     button.id = 'imprimirTableFeriados';
     button.className = 'fe-pulse bg-botao-acao hover:brightness-110 text-white font-bold w-full mt-2.5 py-2.5 px-4 rounded-md transition-colors cursor-pointer border-0';
@@ -192,6 +194,147 @@ function inicializarBotoesDescricao() {
     });
 }
 
+// ============================================================
+// Tabelas dinâmicas (estados / meses / cidades) — TabelaGenerica
+// ============================================================
+
+function renderLinhaEstados(ano, item, colunasAtivas) {
+    let cells = '';
+    colunasAtivas.forEach(col => {
+        if (col.key === 'estado') {
+            cells += `<td class="px-3 py-2">${escapeHtml(item.estado)}</td>`;
+        } else if (col.key === 'uf') {
+            cells += `<td class="px-3 py-2 font-mono text-xs">${escapeHtml(item.uf)}</td>`;
+        } else if (col.key === 'acao') {
+            cells += `<td class="px-3 py-2"><a href="/${ano}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
+        }
+    });
+    return `<tr class="bg-white border-b border-gray-200 hover:bg-gray-50">${cells}</tr>`;
+}
+
+function renderLinhaMeses(ano, item, colunasAtivas) {
+    let cells = '';
+    colunasAtivas.forEach(col => {
+        if (col.key === 'mes') {
+            cells += `<td class="px-3 py-2">${escapeHtml(item.mes)}</td>`;
+        } else if (col.key === 'acao') {
+            cells += `<td class="px-3 py-2"><a href="/${ano}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
+        }
+    });
+    return `<tr class="bg-white border-b border-gray-200 hover:bg-gray-50">${cells}</tr>`;
+}
+
+function renderLinhaCidades(ano, uf, item, colunasAtivas) {
+    let cells = '';
+    colunasAtivas.forEach(col => {
+        if (col.key === 'cidade') {
+            cells += `<td class="px-3 py-2">${escapeHtml(item.cidade)}</td>`;
+        } else if (col.key === 'acao') {
+            cells += `<td class="px-3 py-2"><a href="/${ano}/${uf}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
+        }
+    });
+    return `<tr class="bg-white border-b border-gray-200 hover:bg-gray-50">${cells}</tr>`;
+}
+
+function inicializarTabelaEstados() {
+    const container = document.getElementById('tabelaEstadosContainer');
+    if (!container) return;
+
+    const scriptEl = document.getElementById('dados-tabela-estados');
+    if (!scriptEl) return;
+
+    let dados = [];
+    try {
+        const decoded = decodeData(scriptEl.textContent.trim());
+        if (decoded) dados = decoded;
+    } catch (_) {}
+
+    if (!dados.length) return;
+
+    const h1 = document.querySelector('h1');
+    const ano = h1?.dataset.ano || new Date().getFullYear();
+
+    const tabela = new TabelaGenerica({
+        dados,
+        containerId: 'tabelaEstadosContainer',
+        colunas: [
+            { key: 'estado', label: 'Estado' },
+            { key: 'uf',     label: 'UF',    width: '80px' },
+            { key: 'acao',   label: 'Ação',  width: '150px' }
+        ],
+        hideOnMobile: ['uf'],
+        chaveBusca: 'estado',
+        labelBusca: 'Buscar estado',
+        renderLinha: (item, cols) => renderLinhaEstados(ano, item, cols)
+    });
+    tabela.renderizar();
+}
+
+function inicializarTabelaMeses() {
+    const container = document.getElementById('tabelaMesesContainer');
+    if (!container) return;
+
+    const scriptEl = document.getElementById('dados-tabela-meses');
+    if (!scriptEl) return;
+
+    let dados = [];
+    try {
+        const decoded = decodeData(scriptEl.textContent.trim());
+        if (decoded) dados = decoded;
+    } catch (_) {}
+
+    if (!dados.length) return;
+
+    const h1 = document.querySelector('h1');
+    const ano = h1?.dataset.ano || new Date().getFullYear();
+
+    const tabela = new TabelaGenerica({
+        dados,
+        containerId: 'tabelaMesesContainer',
+        colunas: [
+            { key: 'mes',  label: 'Mês' },
+            { key: 'acao', label: 'Ação', width: '150px' }
+        ],
+        chaveBusca: 'mes',
+        labelBusca: 'Buscar mês',
+        renderLinha: (item, cols) => renderLinhaMeses(ano, item, cols)
+    });
+    tabela.renderizar();
+}
+
+function inicializarTabelaCidades() {
+    const container = document.getElementById('tabelaCidadesContainer');
+    if (!container) return;
+
+    const scriptEl = document.getElementById('dados-tabela-cidades');
+    if (!scriptEl) return;
+
+    let dados = [];
+    try {
+        const decoded = decodeData(scriptEl.textContent.trim());
+        if (decoded) dados = decoded;
+    } catch (_) {}
+
+    if (!dados.length) return;
+
+    const h1 = document.querySelector('h1');
+    const ano = h1?.dataset.ano || new Date().getFullYear();
+    const uf  = h1?.dataset.uf;
+
+    const tabela = new TabelaGenerica({
+        dados,
+        containerId: 'tabelaCidadesContainer',
+        colunas: [
+            { key: 'cidade', label: 'Cidade' },
+            { key: 'acao',   label: 'Ação', width: '150px' }
+        ],
+        chaveBusca: 'cidade',
+        labelBusca: 'Buscar cidade',
+        renderLinha: (item, cols) => renderLinhaCidades(ano, uf, item, cols)
+    });
+    tabela.renderizar();
+}
+
 async function inicializarAnuncios() {
     if (!config.possui_adsterra) return;
     try {
@@ -214,6 +357,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarCalendario();
     inicializarTabelaFeriados();
     inicializarBotoesDescricao();
+
+    // Tabelas dinâmicas (estados/meses/cidades)
+    inicializarTabelaEstados();
+    inicializarTabelaMeses();
+    inicializarTabelaCidades();
 
     if (document.querySelector('[data-barra-feriados]')) {
         inicializarBarraFeriados();

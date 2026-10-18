@@ -1,5 +1,8 @@
 /* src/css/feriados.css */
 
+/* ============================================================
+   CORES DOS TIPOS DE FERIADO (legenda + calendário)
+   ============================================================ */
 .bg-feriado-nacional {
     background-color: chocolate !important;
     color: #fff !important;
@@ -17,20 +20,54 @@
     color: #fff !important;
 }
 
-[data-calendar-theme=light].vanilla-calendar {
-    background-color: unset;
+
+/* ============================================================
+   VANILLA CALENDAR — visual "solto" na página
+   (sem card, sem sombra, sem fundo, sem padding, sem raio)
+   ============================================================ */
+
+/* Reset global do componente */
+.vanilla-calendar,
+.vanilla-calendar.vanilla-calendar_default,
+[data-calendar-theme=light].vanilla-calendar,
+[data-calendar-theme=light].vanilla-calendar.vanilla-calendar_default {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    height: max-content;
+    min-width: 272px;
+    max-width: 100%;
 }
+
+/* Cada coluna (mês) — sem card */
 .vanilla-calendar-column {
-    background: #fff;
-    box-shadow: 0 0 30px 0 rgb(0 0 0 / 33%);
-    border-radius: 5px;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 }
+
+/* Wrapper / área dos dias — sem card */
+.vanilla-calendar-wrapper,
+.vanilla-calendar-days,
+.vanilla-calendar.vanilla-calendar_multiple .vanilla-calendar-days {
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+/* Header — mantém a cor mas sem cantos arredondados */
 .vanilla-calendar-header {
     background: #b01233;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-radius: 0 !important;
     margin-bottom: 0;
 }
+
+/* Meses/anos no header */
 [data-calendar-theme=light] .vanilla-calendar-month.vanilla-calendar-month_disabled {
     color: #fff;
     opacity: 1;
@@ -38,25 +75,36 @@
 [data-calendar-theme=light] .vanilla-calendar-year.vanilla-calendar-year_disabled {
     color: #fff;
 }
-.vanilla-calendar-wrapper {
-    border-bottom-left-radius: 5px;
-    background: #fff;
-    border-bottom-right-radius: 5px;
-}
+
+/* Linha dos nomes dos dias da semana */
 .vanilla-calendar-week {
     margin-bottom: 0;
     padding: 5px;
     background: #f8f8f8;
 }
-.vanilla-calendar.vanilla-calendar_multiple .vanilla-calendar-days {
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    background: #fff;
-}
+
+/* Grid dos meses */
 .vanilla-calendar-grid {
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    justify-content: space-between;
     row-gap: 0.5rem;
     column-gap: 0.5rem;
 }
+
+.vanilla-calendar_multiple {
+    width: 100%;
+}
+@supports ((width: -webkit-fit-content) or (width: -moz-fit-content) or (width: fit-content)) {
+    .vanilla-calendar_multiple { width: 100%; }
+}
+
+/* Dias — sem gap */
+.vanilla-calendar-days {
+    row-gap: 0;
+}
+
 .vanilla-calendar-day__btn {
     font-size: 0.8rem;
     border-radius: unset;
@@ -64,62 +112,23 @@
 [data-calendar-theme=light] .vanilla-calendar-day__btn {
     background-color: unset;
 }
-.vanilla-calendar-days {
-    row-gap: 0;
-}
+
+/* Popup de detalhes do dia */
 .vanilla-calendar-day__popup {
     left: max(100px, min(calc(100% - 200px), 50%));
     right: max(100px, min(calc(100% - 200px), 50%));
 }
-.vanilla-calendar_multiple {
-    width: 100%;
-}
-.vanilla-calendar {
-    position: relative;
-    box-sizing: border-box;
-    display: flex;
-    min-width: 272px;
-    max-width: 100%;
-    flex-direction: column;
-    border-radius: .75rem;
-    padding: 0;
-    opacity: 1;
-    transition-property: opacity;
-    transition-timing-function: cubic-bezier(.4,0,.2,1);
-    transition-duration: .15s;
-    height: max-content;
-}
-@supports ((width: -webkit-fit-content) or (width: -moz-fit-content) or (width: fit-content)) {
-    .vanilla-calendar_multiple { width: 100%; }
-}
-.vanilla-calendar-grid {
-    display: flex;
-    flex-grow: 1;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-.vanilla-calendar-column {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
-[data-calendar-theme=light].vanilla-calendar.vanilla-calendar_default {
-    background: #fff;
-    box-shadow: 0 0 30px 0 rgb(0 0 0 / 33%);
-    border-radius: 5px;
-    width: 100%;
-}
 
-.legend-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-}
+
+/* ============================================================
+   LEGENDA — card comprido abaixo do calendário
+   (layout flexível; o grid/flex vem das classes Tailwind no JS)
+   ============================================================ */
 .legend-item {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e5e7eb;
     border-radius: 0.25rem;
     background-color: #fff;
 }
@@ -129,7 +138,5 @@
     display: inline-block;
     margin-right: 0.5rem;
     border-radius: 3px;
+    flex-shrink: 0;
 }
-@media (max-width: 1024px) { .legend-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px) { .legend-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .legend-grid { grid-template-columns: 1fr; } }
