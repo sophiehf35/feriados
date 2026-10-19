@@ -117,10 +117,6 @@ ${urls.map(u => `
 
 // ---- Helpers internos -------------------------------------------------
 
-// Busca paginada. `filtro` pode ser:
-//   - null
-//   - { coluna: 'excluido', valor: 0 }
-// Ordena sempre pela primeira coluna do select para paginação estável.
 async function buscarTodos(supabase, tabela, colunas, filtro = null) {
   const pageSize = 1000;
   let todos = [];
@@ -159,17 +155,41 @@ async function contarComFiltro(supabase, tabela, colunaSelect, filtro = null) {
   }
 }
 
+// ---- Anos indexáveis -------------------------------------------------
+// Mesma regra do get_barra_feriados: apenas feriados_nacional
+// no range [ano_atual - 1 .. ano_atual + 5].
+export async function buscarAnosIndexaveis(supabase) {
+  const anoAtual = new Date().getFullYear();
+  const min = String(anoAtual - 1);
+  const max = String(anoAtual + 5);
+  const agora = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('feriados_nacional')
+    .select('ano')
+    .gte('ano', min)
+    .lte('ano', max)
+    .neq('ano', '');
+
+  if (error) throw error;
+
+  const mapa = new Map();
+  for (const f of data || []) {
+    if (!f.ano || !/^\d{4}$/.test(f.ano)) continue;
+    if (!mapa.has(f.ano)) mapa.set(f.ano, agora);
+  }
+
+  return Array.from(mapa.entries())
+    .map(([ano, lastmod]) => ({ ano, lastmod }))
+    .sort((a, b) => b.ano.localeCompare(a.ano));
+}
+
 // ---- API pública ------------------------------------------------------
 
-// Compatibilidade com o base.js: checa se existe pelo menos um registro na tabela.
 export async function existeRegistroAtivo(supabase, tabela) {
   return (await contarComFiltro(supabase, tabela, 'id')) > 0;
 }
 
-// Compatibilidade com o base.js: gera sitemap de UMA tabela,
-// com urlBuilder a receber o slug.
-//   gerarSitemapDeTabela(supabase, config, tabela, urlBuilder, changefreq, priority, filtroStatus)
-// `filtroStatus` (opcional) é um valor para a coluna `status`.
 export async function gerarSitemapDeTabela(
   supabase,
   config,
@@ -204,7 +224,6 @@ export async function gerarSitemapDeTabela(
   });
 }
 
-// API nova usada pelo feriados.js: aceita `colunaSlug` e `filtro: {coluna, valor}`.
 export function criarSitemapTabela({
   loc,
   tabela,
@@ -249,15 +268,49 @@ export function criarSitemapTabela({
   };
 }
 
-// API nova usada pelo feriados.js: cruza N queries e delega no urlBuilder.
+export function criarSitemapAnos({ loc, urlBuilder, changefreq = 'yearly', priority = '1.0' }) {
+  return {
+    loc,
+    deveIncluir: async (supabase) => (await buscarAnosIndexaveis(supabase)).length > 0,
+    gerar: async (supabase, config) => {
+      const baseUrl = config.dominio;
+      let anos;
+      try {
+        anos = await buscarAnosIndexaveis(supabase);
+      } catch (error) {
+        console.error('Erro ao buscar anos indexáveis:', error);
+        return new Response('Erro interno', { status: 500 });
+      }
+
+      const urls = (anos || []).map(a => ({
+        loc: urlBuilder(a.ano),
+        lastmod: a.lastmod,
+        changefreq,
+        priority
+      }));
+
+      const xml = gerarXMLUrls(baseUrl, urls);
+      return new Response(xml, {
+        status: 200,
+        headers: gerarHeadersCache(config, 'application/xml; charset=utf-8')
+      });
+    }
+  };
+}
+
 export function criarSitemapCruzado({ loc, changefreq, priority, queries, urlBuilder }) {
   return {
     loc,
     deveIncluir: async (supabase) => {
       try {
         for (const q of queries) {
-          const n = await contarComFiltro(supabase, q.tabela, q.select, q.filtro || null);
-          if (!n) return false;
+          if (typeof q.custom === 'function') {
+            const dados = await q.custom(supabase);
+            if (!dados || dados.length === 0) return false;
+          } else {
+            const n = await contarComFiltro(supabase, q.tabela, q.select, q.filtro || null);
+            if (!n) return false;
+          }
         }
         return true;
       } catch (_) {
@@ -268,7 +321,9 @@ export function criarSitemapCruzado({ loc, changefreq, priority, queries, urlBui
       const baseUrl = config.dominio;
       try {
         const resultados = await Promise.all(
-          queries.map(q => buscarTodos(supabase, q.tabela, q.select, q.filtro || null))
+          queries.map(q => typeof q.custom === 'function'
+            ? q.custom(supabase)
+            : buscarTodos(supabase, q.tabela, q.select, q.filtro || null))
         );
         const listaUrls = urlBuilder(...resultados);
         const urls = (listaUrls || []).map(u => ({

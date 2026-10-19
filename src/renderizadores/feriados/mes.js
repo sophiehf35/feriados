@@ -34,22 +34,40 @@ export function render(config, data, contexto = {}) {
     const feriadosMes         = filtrarFeriados(feriados, 'Feriado Nacional');
     const pontoFacultativoMes = filtrarFeriados(feriados, 'Ponto Facultativo');
 
-    const faqQuestions = [
-        {
-            pergunta: `Quantos feriados ${mes} ${ano} existem?`,
-            resposta: feriadosMes.numero > 1
-                ? `Existem ${feriadosMes.numero} feriados em ${mes} ${ano}, sendo eles: ${feriadosMes.descricao}.`
-                : `Existe ${feriadosMes.numero} feriado em ${mes} ${ano}, sendo ele: ${feriadosMes.descricao}.`
-        },
-        {
-            pergunta: `Quantos pontos facultativos ${mes} ${ano} existem?`,
-            resposta: pontoFacultativoMes.numero > 1
-                ? `Existem ${pontoFacultativoMes.numero} pontos facultativos em ${mes} ${ano}, sendo eles: ${pontoFacultativoMes.descricao}.`
-                : pontoFacultativoMes.numero === 1
-                    ? `Existe 1 ponto facultativo em ${mes} ${ano}, sendo ele: ${pontoFacultativoMes.descricao}.`
-                    : `Não há nenhum ponto facultativo em ${mes} ${ano}.`
-        }
-    ];
+    const semFeriados = feriadosMes.numero === 0;
+
+    // ─────────────────────────────────────────────────────────
+    // Blocos condicionais — quando o mês não tem feriado, troca
+    // o texto de "X feriados" por um fallback útil.
+    // ───────────────────────────────────────────────────────────
+
+    const faqQuestions = semFeriados
+        ? [
+            {
+                pergunta: `Existem feriados em ${mes} ${ano}?`,
+                resposta: `Não há feriados nacionais em ${mes} de ${ano}. No entanto, alguns estados e municípios podem ter feriados locais nesse mês — consulte seu estado ou cidade no filtro acima para verificar.`
+            },
+            {
+                pergunta: `Quando cai o próximo feriado depois de ${mes} ${ano}?`,
+                resposta: `O próximo feriado nacional após ${mes} de ${ano} pode ser conferido no calendário ${ano} completo. Clique em "${ano}" no filtro de ano acima.`
+            }
+        ]
+        : [
+            {
+                pergunta: `Quantos feriados ${mes} ${ano} existem?`,
+                resposta: feriadosMes.numero > 1
+                    ? `Existem ${feriadosMes.numero} feriados em ${mes} ${ano}, sendo eles: ${feriadosMes.descricao}.`
+                    : `Existe ${feriadosMes.numero} feriado em ${mes} ${ano}, sendo ele: ${feriadosMes.descricao}.`
+            },
+            {
+                pergunta: `Quantos pontos facultativos ${mes} ${ano} existem?`,
+                resposta: pontoFacultativoMes.numero > 1
+                    ? `Existem ${pontoFacultativoMes.numero} pontos facultativos em ${mes} ${ano}, sendo eles: ${pontoFacultativoMes.descricao}.`
+                    : pontoFacultativoMes.numero === 1
+                        ? `Existe 1 ponto facultativo em ${mes} ${ano}, sendo ele: ${pontoFacultativoMes.descricao}.`
+                        : `Não há nenhum ponto facultativo em ${mes} ${ano}.`
+            }
+        ];
 
     const sumarioHtml = renderSumarioHtml([
         { titulo: `Feriados ${mes} ${ano}`, href: '#feriados' },
@@ -81,6 +99,30 @@ export function render(config, data, contexto = {}) {
         </ol>
     </div>`;
 
+    // ─────────────────────────────────────────────────────────
+    // Bloco intro — muda se tem ou não feriado
+    // ─────────────────────────────────────────────────────────
+    const introHtml = semFeriados
+        ? `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> não há feriados nacionais em ${mes} de ${ano}. O calendário abaixo está vazio para feriados nacionais, mas estados e municípios podem ter feriados locais — consulte o filtro acima.</p>`
+        : `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> confira abaixo todos os feriados ${mes} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${mes} ${ano}.</p>`;
+
+    // ─────────────────────────────────────────────────────────
+    // Bloco principal — muda se tem ou não feriado
+    // ─────────────────────────────────────────────────────────
+    const blocoPrincipalHtml = semFeriados
+        ? `
+        <div class="bg-white shadow-md rounded-md p-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
+            <p class="text-gray-700 text-justify mb-3">Não há feriados nacionais em <b>${mes} de ${ano}</b>. Este mês não tem datas comemorativas de abrangência nacional — mas ainda pode ter feriados estaduais ou municipais, que variam conforme a região.</p>
+            <p class="text-gray-700 text-justify mb-3">Se você está planejando uma viagem ou folga em ${mes} ${ano}, vale conferir o calendário do seu estado ou cidade. Alguns feriados locais (como datas religiosas, aniversários de cidades ou datas estaduais) podem cair nesse mês.</p>
+            <p class="text-gray-700 text-justify">Confira também os <a href="/${ano}/" class="text-primary hover:underline font-medium">feriados nacionais de ${ano}</a> para ver o panorama completo do ano, ou consulte os <a href="/${ano}/#estados" class="text-primary hover:underline font-medium">feriados por estado em ${ano}</a>.</p>
+        </div>`
+        : `
+        <div class="bg-white shadow-md rounded-md p-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
+            <p class="text-gray-700 text-justify">É importante ressaltar que os feriados listados no calendário acima são feriados nacionais de ${mes} ${ano}, se você deseja visualizar estaduais ou municipais é preciso escolher o estado / cidade no filtro.</p>
+        </div>`;
+
     const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
@@ -96,7 +138,7 @@ export function render(config, data, contexto = {}) {
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
-            <p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> confira abaixo todos os feriados ${mes} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${mes} ${ano}.</p>
+            ${introHtml}
         </div>
 
         <div id="calendario" class="mb-6 max-w-md mx-auto">
@@ -109,10 +151,7 @@ export function render(config, data, contexto = {}) {
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
-                    <p class="text-gray-700 text-justify">É importante ressaltar que os feriados listados no calendário acima são feriados nacionais de ${mes} ${ano}, se você deseja visualizar estaduais ou municipais é preciso escolher o estado / cidade no filtro.</p>
-                </div>
+                ${blocoPrincipalHtml}
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados em ${mes} ${ano}</h2>
