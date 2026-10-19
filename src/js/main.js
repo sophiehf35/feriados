@@ -194,8 +194,8 @@ function inicializarBotoesDescricao() {
 }
 
 // ============================================================
-// TABELAS DINÂMICAS — TabelaGenerica (busca + paginação + sort)
-// URLs geradas com prefixo /feriados/
+// TABELAS DINÂMICAS — TabelaGenerica
+// URLs no formato /ano/, /ano/uf/, /ano/uf/cidade/, /ano/mes/
 // ============================================================
 
 function renderLinhaEstados(ano, item, colunasAtivas) {
@@ -206,7 +206,7 @@ function renderLinhaEstados(ano, item, colunasAtivas) {
         } else if (col.key === 'uf') {
             cells += `<td class="px-3 py-2 font-mono text-xs">${escapeHtml(item.uf)}</td>`;
         } else if (col.key === 'acao') {
-            cells += `<td class="px-3 py-2"><a href="/feriados/${ano}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
+            cells += `<td class="px-3 py-2"><a href="/${ano}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
         }
     });
     return `<tr class="bg-white border-b border-gray-200 hover:bg-gray-50">${cells}</tr>`;
@@ -218,7 +218,7 @@ function renderLinhaMeses(ano, item, colunasAtivas) {
         if (col.key === 'mes') {
             cells += `<td class="px-3 py-2">${escapeHtml(item.mes)}</td>`;
         } else if (col.key === 'acao') {
-            cells += `<td class="px-3 py-2"><a href="/feriados/${ano}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
+            cells += `<td class="px-3 py-2"><a href="/${ano}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
         }
     });
     return `<tr class="bg-white border-b border-gray-200 hover:bg-gray-50">${cells}</tr>`;
@@ -230,7 +230,7 @@ function renderLinhaCidades(ano, uf, item, colunasAtivas) {
         if (col.key === 'cidade') {
             cells += `<td class="px-3 py-2">${escapeHtml(item.cidade)}</td>`;
         } else if (col.key === 'acao') {
-            cells += `<td class="px-3 py-2"><a href="/feriados/${ano}/${uf}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
+            cells += `<td class="px-3 py-2"><a href="/${ano}/${uf}/${item.slug}/" class="inline-block px-3 py-1.5 rounded-md bg-botao-acao text-white text-xs font-semibold hover:brightness-110 transition">Ver feriados</a></td>`;
         }
     });
     return `<tr class="bg-white border-b border-gray-200 hover:bg-gray-50">${cells}</tr>`;

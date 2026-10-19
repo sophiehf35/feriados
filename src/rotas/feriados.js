@@ -2,7 +2,7 @@
 
 import { mapa as renderizadores } from '../renderizadores/feriados/_indice.js';
 
-const PREFIXO = 'feriados';
+const RE_ANO = /^\d{4}$/;
 
 function naoEncontrado(msg) {
     return {
@@ -27,22 +27,15 @@ function erroInterno(msg, extra) {
 }
 
 export async function resolver({ supabase, slugParts, config, scriptsAdicionaisBase, url }) {
-    if (slugParts[0] !== PREFIXO) return null;
+    // Aceita apenas URLs que começam com um ano de 4 dígitos.
+    // /feriados/2026/ NÃO é tratado aqui — cai em outro resolver.
+    if (!RE_ANO.test(slugParts[0])) return null;
 
-    const parts = slugParts.slice(1);
-
-    // /feriados/ → redireciona para home
-    if (parts.length === 0) {
-        return { html: '', status: 302, headers: { Location: '/' } };
-    }
-
+    const parts = slugParts;
     const ano = parts[0];
-    if (!/^\d{4}$/.test(ano)) {
-        return naoEncontrado('Ano inválido na URL.');
-    }
 
     try {
-        // /feriados/2025/
+        // /2026/
         if (parts.length === 1) {
             const mod = renderizadores['ano'];
             if (!mod?.render) return erroInterno('renderizador "ano" ausente');
@@ -58,7 +51,7 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
             };
         }
 
-        // /feriados/2025/sp/ ou /feriados/2025/janeiro/
+        // /2026/sp/ ou /2026/janeiro/
         if (parts.length === 2) {
             const slug = parts[1];
 
@@ -81,7 +74,12 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
             if (!mod?.render) return erroInterno('renderizador "mes" ausente');
 
             const { data, error } = await supabase.rpc('get_mes', { p_slug: slug, p_ano: ano });
-            if (error) return erroInterno('RPC get_mes', error);
+            if (error) {
+                if (String(error.message || '').includes('Nome do mês inválido')) {
+                    return naoEncontrado(`Mês "${slug}" não encontrado.`);
+                }
+                return erroInterno('RPC get_mes', error);
+            }
             if (!data?.length) return naoEncontrado(`Mês "${slug}" não encontrado.`);
 
             data[0].ano = ano;
@@ -91,7 +89,7 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
             };
         }
 
-        // /feriados/2025/sp/saopaulo/
+        // /2026/pr/abatia-pr/
         if (parts.length === 3) {
             const cidadeSlug = parts[2];
             const mod = renderizadores['cidade'];

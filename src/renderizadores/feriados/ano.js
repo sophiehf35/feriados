@@ -102,17 +102,14 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
-        <!-- INTRO -->
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
             <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> Confira todos os feriados ${ano} e programe sua agenda, seja para descansar ou fazer aquela tão sonhada viagem, os feriados ${ano} são um alívio para o stress.</p>
         </div>
 
-        <!-- CALENDÁRIO -->
         <div id="calendario" class="mb-6">
             ${renderCalendarioHtml()}
         </div>
 
-        <!-- LEGENDA -->
         <div class="mb-6">
             ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
@@ -180,7 +177,7 @@ export function render(config, data, contexto = {}) {
         config,
         titulo,
         descricao,
-        `${config.dominio}/feriados/${ano}/`,
+        `${config.dominio}/${ano}/`,
         null
     );
 

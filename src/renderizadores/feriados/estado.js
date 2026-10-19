@@ -74,7 +74,7 @@ export function render(config, data, contexto = {}) {
                 <meta itemprop="position" content="1"><span class="mx-2 text-white">›</span>
             </li>
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="flex items-center">
-                <a itemprop="item" href="/feriados/${ano}/" class="text-white hover:text-blue-200"><span itemprop="name">${ano}</span></a>
+                <a itemprop="item" href="/${ano}/" class="text-white hover:text-blue-200"><span itemprop="name">${ano}</span></a>
                 <meta itemprop="position" content="2"><span class="mx-2 text-white">›</span>
             </li>
             <li class="flex items-center" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -168,7 +168,7 @@ export function render(config, data, contexto = {}) {
         config,
         titulo,
         descricao,
-        `${config.dominio}/feriados/${ano}/${uf}/`,
+        `${config.dominio}/${ano}/${uf}/`,
         null
     );
 
