@@ -14,7 +14,6 @@ import {
     renderFaqHtml,
     renderLinksUteisHtml,
     renderScriptsFeriados,
-    renderContainersAnaliseHtml,
     renderTabelaEstados,
     renderTabelaMeses,
 } from './_utils.js';
@@ -103,7 +102,8 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
-        ${renderContainersAnaliseHtml()}
+        <!-- Card "próximo feriado" — preenchido por JS -->
+        <div id="proximo-feriado-container"></div>
 
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
             <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> ${data.paragrafo1 || ''}</p>
@@ -116,6 +116,10 @@ export function render(config, data, contexto = {}) {
         <div class="mb-6">
             ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
+
+        <!-- Números + feriadões — preenchidos por JS após legenda -->
+        <div id="numeros-container"></div>
+        <div id="feriadoes-container"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
@@ -142,6 +146,9 @@ export function render(config, data, contexto = {}) {
 
                 ${renderTabelaEstados(data.estados_concatenados, ano)}
                 ${renderTabelaMeses(ano)}
+
+                <!-- Comparação com ano anterior — preenchido por JS -->
+                <div id="comparacao-container"></div>
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados nacionais ${ano}</h2>
