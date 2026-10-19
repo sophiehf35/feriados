@@ -16,6 +16,12 @@ import {
     renderScriptsFeriados,
     renderTabelaEstados,
     renderTabelaMeses,
+    calcularAnaliseAno,
+    renderProximoFeriadoHtml,
+    renderNumerosHtml,
+    renderFeriadoesHtml,
+    renderComparacaoHtml,
+    renderNavegacaoAnosHtml,
 } from './_utils.js';
 import {
     renderizarAvaliacoes,
@@ -37,6 +43,9 @@ export function render(config, data, contexto = {}) {
     const proximoFeriado      = proximaDataComemorativa(feriados, 'Feriado Nacional');
     const proximoFacultativo  = proximaDataComemorativa(feriados, 'Ponto Facultativo');
 
+    // ─── Análise SEO (calculada no render, zero RPC extra) ────
+    const analise = calcularAnaliseAno(feriados, ano);
+
     const diasCarnaval   = Object.keys(feriados).filter(d => feriados[d].nome.includes('Carnaval'));
     const sextaSanta     = Object.keys(feriados).filter(d => feriados[d].nome.includes('Sexta-feira Santa'));
     const corpusChristi  = Object.keys(feriados).filter(d => feriados[d].nome.includes('Corpus Christi'));
@@ -47,6 +56,10 @@ export function render(config, data, contexto = {}) {
             resposta: proximoFeriado.existe
                 ? `O próximo feriado nacional de ${ano} é ${proximoFeriado.descricao}.`
                 : `Não existe próximo feriado em ${ano} pois o ano já terminou.`
+        },
+        {
+            pergunta: `Quantos feriados nacionais ${ano} tem?`,
+            resposta: `${ano} tem ${analise.total} feriados nacionais no total, sendo ${analise.emendas} em segundas ou sextas (potenciais emendas) e ${analise.fds} em fins de semana.`
         },
         {
             pergunta: `Qual o próximo ponto facultativo ${ano}?`,
@@ -89,12 +102,15 @@ export function render(config, data, contexto = {}) {
         }
     ]);
 
+    const navegacaoHtml = renderNavegacaoAnosHtml(ano, data.barra?.anos || []);
+
     const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
             <h1 data-tipo-pagina="ano" data-id="${data.id}" data-ano="${ano}" data-uf="todos" data-cidade="todas" data-comentarios='${JSON.stringify(data.comentarios || [])}' class="text-xl md:!text-3xl font-bold text-white">
                 ${escapeHtml(titulo)}
             </h1>
+            ${navegacaoHtml}
         </div>
     </div>
 
@@ -102,8 +118,10 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
+        ${renderProximoFeriadoHtml(analise.proximo, ano)}
+
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
-            <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> Confira todos os feriados ${ano} e programe sua agenda, seja para descansar ou fazer aquela tão sonhada viagem, os feriados ${ano} são um alívio para o stress.</p>
+            <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> ${data.paragrafo1 || ''}</p>
         </div>
 
         <div id="calendario" class="mb-6">
@@ -114,13 +132,16 @@ export function render(config, data, contexto = {}) {
             ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
 
+        ${renderNumerosHtml(analise, ano)}
+        ${renderFeriadoesHtml(analise.feriadoes, ano)}
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
                 <div class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${ano}</h2>
-                    <p class="text-gray-700 text-justify mb-3">${data.paragrafo1 || ''}</p>
+                    <p class="text-gray-700 text-justify mb-3">${data.paragrafo2 || ''}</p>
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados de ${ano}</h2>
-                    <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados de ${ano} em forma de lista, desde os pontos facultativos até os feriados nacionais ${ano}. Caso deseje é possível imprimir ou salvar a lista de feriados ${ano}, basta clicar no botão.</p>
+                    <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados de ${ano} em forma de lista, desde os pontos facultativos até os feriados nacionais. Caso deseje é possível imprimir ou salvar a lista, basta clicar no botão.</p>
                 </div>
 
                 <div class="bg-white rounded-md border border-gray-200 p-4">
@@ -132,13 +153,15 @@ export function render(config, data, contexto = {}) {
 
                 <div id="feriados-nacionais" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados Nacionais ${ano}</h2>
-                    <p class="text-gray-700 text-justify mb-3">${data.paragrafo2 || ''}</p>
+                    <p class="text-gray-700 text-justify mb-3">${data.paragrafo3 || ''}</p>
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados em ${ano}</h2>
-                    <p class="text-gray-700 text-justify">${data.paragrafo3 || ''}</p>
+                    <p class="text-gray-700 text-justify">Confira no calendário acima as datas móveis e fixas do ano, incluindo Carnaval, Páscoa, Corpus Christi, Independência, Natal e os demais feriados nacionais.</p>
                 </div>
 
                 ${renderTabelaEstados(data.estados_concatenados, ano)}
                 ${renderTabelaMeses(ano)}
+
+                ${renderComparacaoHtml(data.comparacao, ano)}
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados nacionais ${ano}</h2>

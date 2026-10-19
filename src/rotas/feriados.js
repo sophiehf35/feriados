@@ -27,8 +27,6 @@ function erroInterno(msg, extra) {
 }
 
 export async function resolver({ supabase, slugParts, config, scriptsAdicionaisBase, url }) {
-    // Aceita apenas URLs que começam com um ano de 4 dígitos.
-    // /feriados/2026/ NÃO é tratado aqui — cai em outro resolver.
     if (!RE_ANO.test(slugParts[0])) return null;
 
     const parts = slugParts;
@@ -44,7 +42,11 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
             if (error) return erroInterno('RPC get_ano', error);
             if (!data?.length) return naoEncontrado(`Não há dados para o ano ${ano}.`);
 
+            // Busca comparação em paralelo (não bloqueia se falhar)
+            const comp = await supabase.rpc('get_comparacao_ano', { p_ano: ano });
+            data[0].comparacao = (comp && !comp.error && comp.data) ? comp.data : null;
             data[0].ano = data[0].ano || ano;
+
             return {
                 html: mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
                 status: 200,
