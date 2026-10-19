@@ -15,6 +15,7 @@ import {
 import { inicializarBarraFeriados } from './barra-feriados.js';
 import { TabelaGenerica } from './tabela.js';
 import { decodeData, escapeHtml } from './utils.js';
+import { inicializarAnaliseAno } from './analise-ano.js';
 
 window.configurarValidacaoComentario = configurarValidacaoComentario;
 
@@ -195,7 +196,6 @@ function inicializarBotoesDescricao() {
 
 // ============================================================
 // TABELAS DINÂMICAS — TabelaGenerica
-// URLs no formato /ano/, /ano/uf/, /ano/uf/cidade/, /ano/mes/
 // ============================================================
 
 function renderLinhaEstados(ano, item, colunasAtivas) {
@@ -357,6 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarCalendario();
     inicializarTabelaFeriados();
     inicializarBotoesDescricao();
+    inicializarAnaliseAno();
 
     inicializarTabelaEstados();
     inicializarTabelaMeses();

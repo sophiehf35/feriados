@@ -248,8 +248,28 @@ export function renderLinksUteisHtml() {
     </div>`;
 }
 
-export function renderScriptsFeriados(feriados) {
-    return `<script>window.__FERIADOS__ = ${JSON.stringify(feriados)};</script>`;
+// ────────────────────────────────────────────────────────────
+// Script tags com dados pro JS do cliente
+//   window.__FERIADOS__      — objeto feriados (usado pelo calendário)
+//   window.__FERIADOS_ANO__  — { ano, comparacao } (usado pelos cards JS)
+// Os cards NÃO são renderizados no server — só os dados vão.
+// Assim o cache de 1 ano nunca deixa dado dinâmico congelado.
+// ────────────────────────────────────────────────────────────
+export function renderScriptsFeriados(feriados, anoData = null) {
+    let html = `<script>window.__FERIADOS__ = ${JSON.stringify(feriados)};</script>`;
+    if (anoData) {
+        html += `<script>window.__FERIADOS_ANO__ = ${JSON.stringify(anoData)};</script>`;
+    }
+    return html;
+}
+
+// Containers vazios pros cards de análise — JS preenche
+export function renderContainersAnaliseHtml() {
+    return `
+    <div id="proximo-feriado-container"></div>
+    <div id="numeros-container"></div>
+    <div id="feriadoes-container"></div>
+    <div id="comparacao-container"></div>`;
 }
 
 // ============================================================
@@ -340,236 +360,4 @@ export function renderTabelaCidades(cidadesConcatenadas, ano, uf) {
         <div id="tabelaCidadesContainer"></div>
     </div>
     <script id="dados-tabela-cidades" type="application/json">${dadosCodificados}</script>`;
-}
-
-// ============================================================
-// ANÁLISE DE ANO — helpers pra /ano/
-// Todos puros (calculados dos dados existentes) → zero RPC extra
-// ============================================================
-
-function _ehBissexto(ano) {
-    const a = Number(ano);
-    return (a % 4 === 0 && a % 100 !== 0) || a % 400 === 0;
-}
-
-function _diasNoAno(ano) {
-    return _ehBissexto(ano) ? 366 : 365;
-}
-
-function _contarFinsDeSemana(ano) {
-    let count = 0;
-    const dias = _diasNoAno(ano);
-    for (let d = 0; d < dias; d++) {
-        const data = new Date(Number(ano), 0, 1 + d);
-        if (data.getDay() === 0 || data.getDay() === 6) count++;
-    }
-    return count;
-}
-
-export function calcularAnaliseAno(feriados, ano) {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    const entradas = Object.entries(feriados || {});
-    const total = entradas.length;
-
-    let fds = 0, emendas = 0, feriadosUteis = 0;
-    const feriadoes = [];
-    let proximo = null;
-
-    for (const [dataISO, f] of entradas) {
-        const data = new Date(dataISO + 'T00:00:00');
-        const dow = data.getDay();
-
-        if (dow === 0 || dow === 6) fds++;
-        else {
-            feriadosUteis++;
-            if (dow === 1 || dow === 5) emendas++;
-            else if (dow === 2 || dow === 4) emendas++;
-        }
-
-        // Próximo feriado (só Nacional, hoje ou futuro)
-        if (!proximo && data >= hoje && f.tipo === 'Feriado Nacional') {
-            const diasFaltando = Math.round((data - hoje) / 86400000);
-            proximo = {
-                nome: f.nome,
-                data: dataISO.split('-').reverse().join('/'),
-                diasFaltando,
-                tipo: f.tipo,
-            };
-        }
-
-        // Feriadões (só Nacionais com potencial >= 3 dias)
-        if (f.tipo === 'Feriado Nacional' && dow !== 0 && dow !== 6) {
-            let dias = 1;
-            if (dow === 1 || dow === 5) dias = 3;
-            else if (dow === 2 || dow === 4) dias = 4;
-            if (f.nome.toLowerCase().includes('carnaval')) dias = 5;
-
-            if (dias >= 3) {
-                feriadoes.push({
-                    nome: f.nome,
-                    data: dataISO.split('-').reverse().join('/'),
-                    dias,
-                    dow,
-                });
-            }
-        }
-    }
-
-    const diasFds = _contarFinsDeSemana(ano);
-    const diasUteis = _diasNoAno(ano) - diasFds - feriadosUteis;
-
-    const seen = new Set();
-    const feriadoesUnicos = feriadoes.filter(f => {
-        const key = f.nome.toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-    });
-
-    feriadoesUnicos.sort((a, b) => b.dias - a.dias || a.data.localeCompare(b.data));
-
-    return {
-        total,
-        fds,
-        emendas,
-        diasUteis,
-        proximo,
-        feriadoes: feriadoesUnicos.slice(0, 3),
-    };
-}
-
-export function renderProximoFeriadoHtml(proximo, ano) {
-    if (!proximo) {
-        return `
-        <div class="bg-white shadow-md rounded-md p-4 mb-6 border-l-4 border-gray-300">
-            <p class="text-gray-600 text-sm"><b>Ano passado.</b> Os feriados de ${ano} já aconteceram. Confira os <a href="/${Number(ano) + 1}/" class="text-primary hover:underline font-medium">feriados ${Number(ano) + 1}</a> para planejar o próximo ano.</p>
-        </div>`;
-    }
-
-    const { nome, data, diasFaltando } = proximo;
-    const quando = diasFaltando === 0 ? 'hoje' :
-                   diasFaltando === 1 ? 'amanhã' :
-                   `daqui a ${diasFaltando} dias`;
-
-    // Ícone interno: SVG (check) quando é hoje, número quando falta
-    const iconeInterno = diasFaltando === 0
-        ? `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-           </svg>`
-        : `<span class="text-lg font-bold leading-none">${diasFaltando}</span>`;
-
-    return `
-    <div class="bg-white shadow-md rounded-md p-4 mb-6 border-l-4 border-primary">
-        <div class="flex items-start gap-3">
-            <div class="flex-shrink-0 bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center" aria-hidden="true">
-                ${iconeInterno}
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Próximo feriado nacional</p>
-                <p class="text-lg font-bold text-gray-800 mt-0.5">${escapeHtml(nome)}</p>
-                <p class="text-sm text-gray-600">${data} — <b>${quando}</b></p>
-            </div>
-        </div>
-    </div>`;
-}
-
-export function renderNumerosHtml(analise, ano) {
-    return `
-    <div class="bg-white shadow-md rounded-md p-4 mb-6">
-        <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-4">Calendário ${ano} em números</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.total}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Feriados no ano</p>
-            </div>
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.diasUteis}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Dias úteis</p>
-            </div>
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.emendas}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Emendas naturais</p>
-            </div>
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.fds}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Em fins de semana</p>
-            </div>
-        </div>
-    </div>`;
-}
-
-export function renderFeriadoesHtml(feriadoes, ano) {
-    if (!feriadoes.length) return '';
-
-    const cards = feriadoes.map(f => `
-        <div class="flex items-center justify-between p-3 border border-gray-200 rounded-md hover:border-primary transition">
-            <div class="min-w-0">
-                <p class="font-semibold text-gray-800 truncate">${escapeHtml(f.nome)}</p>
-                <p class="text-sm text-gray-600">${f.data}</p>
-            </div>
-            <div class="flex-shrink-0 ml-3">
-                <span class="inline-flex items-center rounded-md bg-primary/10 text-primary px-2.5 py-1 text-xs font-semibold">
-                    ${f.dias} dias
-                </span>
-            </div>
-        </div>
-    `).join('');
-
-    return `
-    <div class="bg-white shadow-md rounded-md p-4 mb-6">
-        <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-1">Melhores feriadões ${ano}</h2>
-        <p class="text-sm text-gray-600 mb-4">Feriados que caem em segundas ou sextas geram 3 dias de folga. Em terças ou quintas, até 4 dias com 1 dia de emenda.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            ${cards}
-        </div>
-    </div>`;
-}
-
-export function renderComparacaoHtml(comparacao, ano) {
-    if (!comparacao || !comparacao.existe) return '';
-
-    const delta = comparacao.delta;
-    const deltaTexto = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : 'mesma quantidade';
-    const seta = delta > 0 ? '↑' : delta < 0 ? '↓' : '→';
-    const cor = delta > 0 ? 'text-green-600' : delta < 0 ? 'text-red-600' : 'text-gray-600';
-
-    return `
-    <div class="bg-white shadow-md rounded-md p-4 mb-6">
-        <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-2">${ano} vs ${comparacao.ano_anterior}</h2>
-        <p class="text-gray-700 text-justify">
-            <b>${ano}</b> tem <b>${comparacao.total_atual}</b> feriados nacionais contra
-            <b>${comparacao.total_anterior}</b> em <b>${comparacao.ano_anterior}</b>
-            — <span class="${cor} font-semibold">${seta} ${deltaTexto}</span>.
-            A diferença vem das datas móveis (Páscoa, Carnaval e Corpus Christi), que mudam de posição a cada ano,
-            e de feriados que caem em fins de semana em um ano mas não no outro.
-        </p>
-    </div>`;
-}
-
-export function renderNavegacaoAnosHtml(ano, anos) {
-    const lista = anos || [];
-    const idx = lista.indexOf(String(ano));
-    if (idx === -1) return '';
-
-    const anterior = idx + 1 < lista.length ? lista[idx + 1] : null;
-    const proximo  = idx - 1 >= 0 ? lista[idx - 1] : null;
-
-    const botaoBase = 'inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md transition';
-
-    const botaoAnterior = anterior
-        ? `<a href="/${anterior}/" class="${botaoBase} text-white bg-white/10 hover:bg-white/20">← ${anterior}</a>`
-        : `<span class="${botaoBase} text-white/40 cursor-not-allowed">← —</span>`;
-
-    const botaoProximo = proximo
-        ? `<a href="/${proximo}/" class="${botaoBase} text-white bg-white/10 hover:bg-white/20">${proximo} →</a>`
-        : `<span class="${botaoBase} text-white/40 cursor-not-allowed">— →</span>`;
-
-    return `
-    <div class="flex items-center justify-center gap-3 mt-3">
-        ${botaoAnterior}
-        <span class="text-white/60 text-xs uppercase tracking-wider">${ano}</span>
-        ${botaoProximo}
-    </div>`;
 }

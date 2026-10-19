@@ -14,14 +14,9 @@ import {
     renderFaqHtml,
     renderLinksUteisHtml,
     renderScriptsFeriados,
+    renderContainersAnaliseHtml,
     renderTabelaEstados,
     renderTabelaMeses,
-    calcularAnaliseAno,
-    renderProximoFeriadoHtml,
-    renderNumerosHtml,
-    renderFeriadoesHtml,
-    renderComparacaoHtml,
-    renderNavegacaoAnosHtml,
 } from './_utils.js';
 import {
     renderizarAvaliacoes,
@@ -43,9 +38,6 @@ export function render(config, data, contexto = {}) {
     const proximoFeriado      = proximaDataComemorativa(feriados, 'Feriado Nacional');
     const proximoFacultativo  = proximaDataComemorativa(feriados, 'Ponto Facultativo');
 
-    // ─── Análise SEO (calculada no render, zero RPC extra) ────
-    const analise = calcularAnaliseAno(feriados, ano);
-
     const diasCarnaval   = Object.keys(feriados).filter(d => feriados[d].nome.includes('Carnaval'));
     const sextaSanta     = Object.keys(feriados).filter(d => feriados[d].nome.includes('Sexta-feira Santa'));
     const corpusChristi  = Object.keys(feriados).filter(d => feriados[d].nome.includes('Corpus Christi'));
@@ -56,10 +48,6 @@ export function render(config, data, contexto = {}) {
             resposta: proximoFeriado.existe
                 ? `O próximo feriado nacional de ${ano} é ${proximoFeriado.descricao}.`
                 : `Não existe próximo feriado em ${ano} pois o ano já terminou.`
-        },
-        {
-            pergunta: `Quantos feriados nacionais ${ano} tem?`,
-            resposta: `${ano} tem ${analise.total} feriados nacionais no total, sendo ${analise.emendas} em segundas ou sextas (potenciais emendas) e ${analise.fds} em fins de semana.`
         },
         {
             pergunta: `Qual o próximo ponto facultativo ${ano}?`,
@@ -102,15 +90,12 @@ export function render(config, data, contexto = {}) {
         }
     ]);
 
-    const navegacaoHtml = renderNavegacaoAnosHtml(ano, data.barra?.anos || []);
-
     const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
             <h1 data-tipo-pagina="ano" data-id="${data.id}" data-ano="${ano}" data-uf="todos" data-cidade="todas" data-comentarios='${JSON.stringify(data.comentarios || [])}' class="text-xl md:!text-3xl font-bold text-white">
                 ${escapeHtml(titulo)}
             </h1>
-            ${navegacaoHtml}
         </div>
     </div>
 
@@ -118,7 +103,7 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
-        ${renderProximoFeriadoHtml(analise.proximo, ano)}
+        ${renderContainersAnaliseHtml()}
 
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
             <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> ${data.paragrafo1 || ''}</p>
@@ -131,9 +116,6 @@ export function render(config, data, contexto = {}) {
         <div class="mb-6">
             ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
-
-        ${renderNumerosHtml(analise, ano)}
-        ${renderFeriadoesHtml(analise.feriadoes, ano)}
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
@@ -160,8 +142,6 @@ export function render(config, data, contexto = {}) {
 
                 ${renderTabelaEstados(data.estados_concatenados, ano)}
                 ${renderTabelaMeses(ano)}
-
-                ${renderComparacaoHtml(data.comparacao, ano)}
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados nacionais ${ano}</h2>
@@ -192,7 +172,10 @@ export function render(config, data, contexto = {}) {
         </div>
     </div>
 
-    ${renderScriptsFeriados(feriados)}
+    ${renderScriptsFeriados(feriados, {
+        ano,
+        comparacao: data.comparacao || null,
+    })}
     ${renderScriptsTurnstile(config)}
     `;
 
