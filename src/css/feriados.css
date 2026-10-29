@@ -23,15 +23,8 @@
 
 /* ============================================================
    VANILLA CALENDAR
-   - Cada mês (column) é um card branco com o MESMO raio/sombra
-     dos outros cards do layout (rounded-md + shadow-md).
-   - O container que agrupa os meses (grid) fica transparente,
-     para não parecer um card dentro de outro card.
-   - No modo single (1 mês, página /mes/), o próprio container
-     vira o card branco.
    ============================================================ */
 
-/* Container do grid (12 meses) — transparente, só agrupa os cards */
 .vanilla-calendar.vanilla-calendar_multiple,
 [data-calendar-theme=light].vanilla-calendar.vanilla-calendar_multiple {
     background: transparent !important;
@@ -45,7 +38,6 @@
     max-width: 100%;
 }
 
-/* Cada coluna (mês) — card padrão, igual aos demais do layout */
 .vanilla-calendar-column {
     background: #fff !important;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
@@ -56,7 +48,6 @@
     flex-direction: column;
 }
 
-/* Modo single (1 mês) — o container em si é o card */
 .vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple),
 [data-calendar-theme=light].vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple) {
     background: #fff !important;
@@ -71,14 +62,12 @@
     max-width: 100%;
 }
 
-/* Header — cor de destaque; o raio é aplicado pelo card pai via overflow:hidden */
 .vanilla-calendar-header {
     background: #b01233;
     border-radius: 0 !important;
     margin-bottom: 0;
 }
 
-/* Área dos dias — branca, para combinar com o card */
 .vanilla-calendar-wrapper,
 .vanilla-calendar-days,
 .vanilla-calendar.vanilla-calendar_multiple .vanilla-calendar-days {
@@ -86,7 +75,6 @@
     border-radius: 0 !important;
 }
 
-/* Meses/anos no header */
 [data-calendar-theme=light] .vanilla-calendar-month.vanilla-calendar-month_disabled {
     color: #fff;
     opacity: 1;
@@ -95,14 +83,12 @@
     color: #fff;
 }
 
-/* Linha dos nomes dos dias da semana */
 .vanilla-calendar-week {
     margin-bottom: 0;
     padding: 5px;
     background: #f8f8f8;
 }
 
-/* Grid dos meses */
 .vanilla-calendar-grid {
     display: flex;
     flex-grow: 1;
@@ -119,7 +105,6 @@
     .vanilla-calendar_multiple { width: 100%; }
 }
 
-/* Dias — sem gap */
 .vanilla-calendar-days {
     row-gap: 0;
 }
@@ -132,7 +117,6 @@
     background-color: unset;
 }
 
-/* Popup de detalhes do dia */
 .vanilla-calendar-day__popup {
     left: max(100px, min(calc(100% - 200px), 50%));
     right: max(100px, min(calc(100% - 200px), 50%));
@@ -140,75 +124,120 @@
 
 
 /* ============================================================
-   BARRA DE FERIADOS — botão "Acessar" (#botaoBuscar)
-   Usado em renderBarra() (renderizadores/feriados/_utils.js)
-   e acionado em src/js/barra-feriados.js.
-   Seletor por ID garante sobrescrever as classes utilitárias
-   do Tailwind sem precisar de !important.
+   BARRA DE FERIADOS — grupo contínuo de busca
+   ------------------------------------------------------------
+   Estrutura gerada por renderBarra():
+     #cmbAno → #cmbEstado → #cmbCidade → #botaoBuscar
+
+   Desktop (≥768px): todos alinhados lado a lado, formando
+     um único bloco. Apenas as extremidades são arredondadas
+     (canto superior/inferior esquerdo do primeiro, canto
+     superior/inferior direito do botão).
+
+   Mobile (<768px): empilhados, cada um com raio completo.
    ============================================================ */
+
+/* --- Base comum --- */
+#cmbAno,
+#cmbEstado,
+#cmbCidade,
+#botaoBuscar {
+    box-sizing: border-box;
+    height: 48px;
+    font-size: 1rem;
+    line-height: 1;
+    margin: 0;
+}
+
+/* --- Selects --- */
+#cmbAno,
+#cmbEstado,
+#cmbCidade {
+    padding: 0 0.875rem;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #1f2937;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+#cmbAno:focus,
+#cmbEstado:focus,
+#cmbCidade:focus {
+    border-color: #b01233;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Botão Acessar --- */
 #botaoBuscar {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
 
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1rem;
-    letter-spacing: 0.02em;
-    line-height: 1;
-
-    padding: 0.9rem 1.75rem;
-    min-width: 150px;
-    min-height: 48px;
-    border-radius: 0.5rem;
-    border: 2px solid rgba(255, 255, 255, 0.35);
-
-    /* Contraste alto sobre o fundo bg-primary da hero */
-    background-color: #ffffff;
-    color: #005c82;
-
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    color: #ffffff;
+    background-color: #b01233;
+    border: none;
+    padding: 0 1.75rem;
+    min-width: 130px;
     cursor: pointer;
-    transition:
-        background-color 0.18s ease,
-        color 0.18s ease,
-        transform 0.18s ease,
-        box-shadow 0.18s ease,
-        filter 0.18s ease;
+    transition: background-color 0.18s ease;
 }
 
 #botaoBuscar:hover {
-    background-color: #f1f5f9;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+    background-color: #8e0e28;
 }
 
 #botaoBuscar:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background-color: #750b21;
 }
 
 #botaoBuscar:focus-visible {
     outline: 2px solid #ffffff;
-    outline-offset: 2px;
+    outline-offset: -4px;
 }
 
-/* Desktop: alinha com os selects da barra */
+/* --- Desktop: bloco contínuo --- */
 @media (min-width: 768px) {
+    #cmbAno {
+        border-radius: 0.5rem 0 0 0.5rem;
+        border-right: none;
+    }
+
+    #cmbEstado,
+    #cmbCidade {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
     #botaoBuscar {
-        align-self: flex-end;
-        height: 48px;
+        border-radius: 0 0.5rem 0.5rem 0;
     }
 }
 
-/* Mobile: botão em largura total, mais alto para toque confortável */
-@media (max-width: 640px) {
+/* --- Mobile: empilhado, todos com raio completo --- */
+@media (max-width: 767px) {
+    #cmbAno,
+    #cmbEstado,
+    #cmbCidade,
     #botaoBuscar {
         width: 100%;
-        min-width: 0;
+        border-radius: 0.5rem;
+    }
+
+    #cmbAno,
+    #cmbEstado,
+    #cmbCidade {
+        margin-bottom: 0.5rem;
+    }
+
+    #botaoBuscar {
         min-height: 52px;
         font-size: 1.0625rem;
-        padding: 1rem 1.25rem;
     }
 }
 
