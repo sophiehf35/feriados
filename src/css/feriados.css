@@ -129,12 +129,14 @@
    Estrutura gerada por renderBarra():
      #cmbAno → #cmbEstado → #cmbCidade → #botaoBuscar
 
-   Desktop (≥768px): todos alinhados lado a lado, formando
-     um único bloco. Apenas as extremidades são arredondadas
-     (canto superior/inferior esquerdo do primeiro, canto
-     superior/inferior direito do botão).
+   Desktop (≥768px): bloco contínuo alinhado. Cada select tem
+     borda 1px #e5e7eb em todos os lados. Para não "costurar"
+     duas bordas (2px), removemos apenas a borda esquerda do
+     select seguinte — o direito do anterior funciona como
+     separador único.
 
-   Mobile (<768px): empilhados, cada um com raio completo.
+   Mobile (<768px): empilhado, todos com raio completo e
+     espaçamento entre eles.
    ============================================================ */
 
 /* --- Base comum --- */
@@ -149,22 +151,29 @@
     margin: 0;
 }
 
-/* --- Selects --- */
+/* --- Selects: borda suave cinza-claro (padrão Correios) --- */
 #cmbAno,
 #cmbEstado,
 #cmbCidade {
     padding: 0 0.875rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #e5e7eb;
     background-color: #ffffff;
     color: #1f2937;
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#cmbAno:hover,
+#cmbEstado:hover,
+#cmbCidade:hover {
+    border-color: #cbd5e1;
 }
 
 #cmbAno:focus,
 #cmbEstado:focus,
 #cmbCidade:focus {
     border-color: #b01233;
+    box-shadow: 0 0 0 3px rgba(176, 18, 51, 0.12);
     position: relative;
     z-index: 1;
 }
@@ -200,18 +209,17 @@
     outline-offset: -4px;
 }
 
-/* --- Desktop: bloco contínuo --- */
+/* --- Desktop: bloco contínuo, raio só nas pontas --- */
 @media (min-width: 768px) {
     #cmbAno {
         border-radius: 0.5rem 0 0 0.5rem;
-        border-right: none;
+        /* mantém border-right — vira separador com #cmbEstado */
     }
 
     #cmbEstado,
     #cmbCidade {
         border-radius: 0;
-        border-left: none;
-        border-right: none;
+        border-left: none; /* evita 2px; o direito do anterior é o separador */
     }
 
     #botaoBuscar {
@@ -219,7 +227,7 @@
     }
 }
 
-/* --- Mobile: empilhado, todos com raio completo --- */
+/* --- Mobile: empilhado, raio completo + respiro --- */
 @media (max-width: 767px) {
     #cmbAno,
     #cmbEstado,
@@ -239,6 +247,18 @@
         min-height: 52px;
         font-size: 1.0625rem;
     }
+}
+
+
+/* ============================================================
+   BREADCRUMB
+   ============================================================ */
+nav[aria-label="breadcrumb"] ol li a {
+    color: #005c82;
+    text-decoration: none;
+}
+nav[aria-label="breadcrumb"] ol li a:hover {
+    text-decoration: underline;
 }
 
 

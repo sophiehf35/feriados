@@ -42,7 +42,7 @@ export function inicializarBarraFeriados() {
         }
     }
 
-    // Se a página já veio com estado definido (ex.: /feriados/2025/sp/),
+    // Se a página já veio com estado definido (ex.: /2025/sp/),
     // carrega as cidades desse estado com o slug atual marcado.
     if (selEstado.value) {
         preencherCidades(selEstado.value, selCidade.value);
@@ -64,9 +64,10 @@ export function inicializarBarraFeriados() {
             return;
         }
 
-        let destino = `/feriados/${ano}/`;
-        if (uf && cidade) destino = `/feriados/${ano}/${uf}/${cidade}/`;
-        else if (uf) destino = `/feriados/${ano}/${uf}/`;
+        // URL: /{ano}/  |  /{ano}/{uf}/  |  /{ano}/{uf}/{cidade}/
+        let destino = `/${ano}/`;
+        if (uf && cidade) destino = `/${ano}/${uf}/${cidade}/`;
+        else if (uf) destino = `/${ano}/${uf}/`;
 
         window.location.href = destino;
     });

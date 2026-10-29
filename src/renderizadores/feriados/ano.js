@@ -8,6 +8,7 @@ import {
     proximaDataComemorativa,
     converterData,
     renderBarra,
+    renderBreadcrumb,
     renderCalendarioHtml,
     renderLegendaHtml,
     renderSumarioHtml,
@@ -90,6 +91,11 @@ export function render(config, data, contexto = {}) {
     ]);
 
     const conteudo = `
+    ${renderBreadcrumb([
+        { nome: 'Home',            url: `${config.dominio}/` },
+        { nome: `Feriados ${ano}`, url: `${config.dominio}/${ano}/` }
+    ])}
+
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
             <h1 data-tipo-pagina="ano" data-id="${data.id}" data-ano="${ano}" data-uf="todos" data-cidade="todas" data-comentarios='${JSON.stringify(data.comentarios || [])}' class="text-xl md:!text-3xl font-bold text-white">
