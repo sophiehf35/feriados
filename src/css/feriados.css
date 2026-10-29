@@ -23,6 +23,12 @@
 
 /* ============================================================
    VANILLA CALENDAR
+   ------------------------------------------------------------
+   Os cards (column e default) NÃO têm overflow:hidden, porque
+   isso cortava o tooltip (popup) dos dias nas extremidades.
+   O arredondamento do topo é feito no próprio header via
+   border-radius (antes era "emprestado" do overflow:hidden do
+   card pai, que era o que cortava o tooltip).
    ============================================================ */
 
 .vanilla-calendar.vanilla-calendar_multiple,
@@ -38,16 +44,17 @@
     max-width: 100%;
 }
 
+/* Cada coluna (mês) — card padrão. Sem overflow:hidden. */
 .vanilla-calendar-column {
     background: #fff !important;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
     border-radius: 0.375rem !important;
-    overflow: hidden;
     display: flex;
     flex: 1;
     flex-direction: column;
 }
 
+/* Modo single (1 mês) — o container em si é o card. Sem overflow:hidden. */
 .vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple),
 [data-calendar-theme=light].vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple) {
     background: #fff !important;
@@ -56,15 +63,15 @@
     border: none !important;
     border-radius: 0.375rem !important;
     padding: 0 !important;
-    overflow: hidden;
     height: max-content;
     min-width: 272px;
     max-width: 100%;
 }
 
+/* Header — agora ele mesmo arredonda o topo do card */
 .vanilla-calendar-header {
     background: #b01233;
-    border-radius: 0 !important;
+    border-radius: 0.375rem 0.375rem 0 0 !important;
     margin-bottom: 0;
 }
 
@@ -117,25 +124,17 @@
     background-color: unset;
 }
 
+/* Popup de detalhes do dia — z-index garante que fica por
+   cima dos cards vizinhos quando se estende além da coluna */
 .vanilla-calendar-day__popup {
     left: max(100px, min(calc(100% - 200px), 50%));
     right: max(100px, min(calc(100% - 200px), 50%));
+    z-index: 100;
 }
 
 
 /* ============================================================
    BARRA DE FERIADOS — grupo contínuo de busca
-   ------------------------------------------------------------
-   Estrutura gerada por renderBarra():
-     #cmbAno → #cmbEstado → #cmbCidade → #botaoBuscar
-
-   Desktop (≥768px): bloco contínuo alinhado. Cada select tem
-     borda 1px #e5e7eb. Removemos só a border-left dos do meio
-     para não "costurar" duas bordas (2px) — o direito do
-     anterior funciona como separador único.
-
-   Mobile (<768px): empilhado, todos com raio completo e
-     espaçamento entre eles.
    ============================================================ */
 
 /* --- Base comum --- */
