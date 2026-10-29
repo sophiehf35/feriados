@@ -8,7 +8,6 @@ import {
     proximaDataComemorativa,
     converterData,
     renderBarra,
-    renderBreadcrumb,
     renderCalendarioHtml,
     renderLegendaHtml,
     renderSumarioHtml,
@@ -90,18 +89,28 @@ export function render(config, data, contexto = {}) {
         }
     ]);
 
-    const conteudo = `
-    ${renderBreadcrumb([
-        { nome: 'Home',            url: `${config.dominio}/` },
-        { nome: `Feriados ${ano}`, url: `${config.dominio}/${ano}/` }
-    ])}
+    const breadcrumbHtml = `
+    <div class="bc-icons-2 mt-2">
+        <ol class="flex flex-wrap items-center justify-center text-sm md:!text-base text-blue-100" itemscope itemtype="https://schema.org/BreadcrumbList">
+            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="flex items-center">
+                <a itemprop="item" href="/" class="text-white hover:text-blue-200"><span itemprop="name">Feriados</span></a>
+                <meta itemprop="position" content="1"><span class="mx-2 text-white">›</span>
+            </li>
+            <li class="flex items-center" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <span itemprop="name" class="text-white font-semibold">${ano}</span>
+                <meta itemprop="position" content="2">
+            </li>
+        </ol>
+    </div>`;
 
+    const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
             <h1 data-tipo-pagina="ano" data-id="${data.id}" data-ano="${ano}" data-uf="todos" data-cidade="todas" data-comentarios='${JSON.stringify(data.comentarios || [])}' class="text-xl md:!text-3xl font-bold text-white">
                 ${escapeHtml(titulo)}
             </h1>
         </div>
+        ${breadcrumbHtml}
     </div>
 
     ${renderBarra(data.barra, { anoAtual: ano })}

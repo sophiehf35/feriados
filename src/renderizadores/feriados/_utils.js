@@ -145,40 +145,6 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
     </div>`;
 }
 
-export function renderBreadcrumb(itens) {
-    if (!Array.isArray(itens) || !itens.length) return '';
-
-    const ldJson = {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: itens.map((item, idx) => ({
-            '@type': 'ListItem',
-            position: idx + 1,
-            name: item.nome,
-            ...(item.url ? { item: item.url } : {})
-        }))
-    };
-
-    const links = itens.map((item, idx) => {
-        const isLast = idx === itens.length - 1;
-        const el = isLast
-            ? `<span class="text-gray-600 font-medium" aria-current="page">${escapeHtml(item.nome)}</span>`
-            : `<a href="${item.url}" class="text-primary hover:underline">${escapeHtml(item.nome)}</a>`;
-        const sep = isLast ? '' : '<span class="text-gray-400 mx-1" aria-hidden="true">›</span>';
-        return `<li class="inline-flex items-center">${el}${sep}</li>`;
-    }).join('');
-
-    return `
-    <nav aria-label="breadcrumb" class="bg-gray-100 border-b border-gray-200 w-full">
-        <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-2">
-            <ol class="flex flex-wrap items-center text-xs md:text-sm gap-0">
-                ${links}
-            </ol>
-        </div>
-    </nav>
-    <script type="application/ld+json">${JSON.stringify(ldJson)}</script>`;
-}
-
 export function renderCalendarioHtml() {
     return `<div id="calendario-de-feriados"></div>`;
 }

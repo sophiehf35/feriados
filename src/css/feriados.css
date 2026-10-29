@@ -130,10 +130,9 @@
      #cmbAno → #cmbEstado → #cmbCidade → #botaoBuscar
 
    Desktop (≥768px): bloco contínuo alinhado. Cada select tem
-     borda 1px #e5e7eb em todos os lados. Para não "costurar"
-     duas bordas (2px), removemos apenas a borda esquerda do
-     select seguinte — o direito do anterior funciona como
-     separador único.
+     borda 1px #e5e7eb. Removemos só a border-left dos do meio
+     para não "costurar" duas bordas (2px) — o direito do
+     anterior funciona como separador único.
 
    Mobile (<768px): empilhado, todos com raio completo e
      espaçamento entre eles.
@@ -151,7 +150,7 @@
     margin: 0;
 }
 
-/* --- Selects: borda suave cinza-claro (padrão Correios) --- */
+/* --- Selects --- */
 #cmbAno,
 #cmbEstado,
 #cmbCidade {
@@ -213,13 +212,12 @@
 @media (min-width: 768px) {
     #cmbAno {
         border-radius: 0.5rem 0 0 0.5rem;
-        /* mantém border-right — vira separador com #cmbEstado */
     }
 
     #cmbEstado,
     #cmbCidade {
         border-radius: 0;
-        border-left: none; /* evita 2px; o direito do anterior é o separador */
+        border-left: none;
     }
 
     #botaoBuscar {
@@ -247,18 +245,6 @@
         min-height: 52px;
         font-size: 1.0625rem;
     }
-}
-
-
-/* ============================================================
-   BREADCRUMB
-   ============================================================ */
-nav[aria-label="breadcrumb"] ol li a {
-    color: #005c82;
-    text-decoration: none;
-}
-nav[aria-label="breadcrumb"] ol li a:hover {
-    text-decoration: underline;
 }
 
 
