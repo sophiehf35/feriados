@@ -30,18 +30,19 @@ export async function render(config, pagina, dados = {}) {
     const descricao = pagina.meta_descricao || '';
     const imagemCapa = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
 
+    // --- Cards: agora dentro de swiper-slide ---
     const cardsAnos = anos.map(ano => `
-    <div class="col-md-4">
-        <div class="card box_detail p-0 bg-white shadow-md rounded-md overflow-hidden">
+    <div class="swiper-slide h-auto">
+        <div class="card box_detail p-0 bg-white shadow-md rounded-md overflow-hidden h-full flex flex-col">
             <img width="376" height="211"
                 src="${config.url_cdn_imagens}/${ano}/feriados-nacionais.webp"
                 class="img-fluid fade-in card-img-top w-full"
                 title="Feriados ${ano}" alt="Imagem ilustrativa dos feriados ${ano}" loading="lazy">
-            <div class="card-body p-4">
+            <div class="card-body p-4 flex flex-col flex-grow">
                 <h2 class="card-title text-xl font-semibold mb-2">
                     <a href="/${ano}/" class="text-gray-800 hover:text-primary">Feriados ${ano}</a>
                 </h2>
-                <p class="card-text text-gray-600 text-sm mb-3">
+                <p class="card-text text-gray-600 text-sm mb-3 flex-grow">
                     Confira todos os feriados do ano de ${ano}, incluindo os feriados nacionais, estaduais, municipais e pontos facultativos.
                 </p>
                 <a href="/${ano}/" class="block text-center bg-botao-acao hover:brightness-110 text-white font-medium py-2 px-4 rounded-md transition">Ver feriados</a>
@@ -85,8 +86,15 @@ export async function render(config, pagina, dados = {}) {
 
     <section class="bg-gray-50 pt-8 pb-4">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          ${cardsAnos}
+        <div class="anos-carrossel relative">
+          <div class="swiper anos-swiper !pb-12">
+            <div class="swiper-wrapper">
+              ${cardsAnos}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -129,5 +137,41 @@ export async function render(config, pagina, dados = {}) {
 
     const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemCapa);
 
-    return renderizarBase(config, conteudo, meta, scriptsAdicionais);
+    // Swiper via CDN — evita dependência do bundle do portal
+    const scriptsCarrossel = `
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+    (function () {
+      function initAnosSwiper() {
+        var el = document.querySelector('.anos-swiper');
+        if (!el || typeof Swiper === 'undefined') return;
+        if (el.classList.contains('swiper-initialized')) return;
+        new Swiper(el, {
+          slidesPerView: 1,
+          spaceBetween: 24,
+          watchOverflow: true,
+          grabCursor: true,
+          pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
+          navigation: {
+            nextEl: el.querySelector('.swiper-button-next'),
+            prevEl: el.querySelector('.swiper-button-prev')
+          },
+          breakpoints: {
+            640:  { slidesPerView: 1, spaceBetween: 16 },
+            768:  { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 24 }
+          }
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAnosSwiper);
+      } else {
+        initAnosSwiper();
+      }
+    })();
+    </script>
+    `;
+
+    return renderizarBase(config, conteudo, meta, scriptsAdicionais + scriptsCarrossel);
 }

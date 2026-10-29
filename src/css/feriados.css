@@ -140,6 +140,80 @@
 
 
 /* ============================================================
+   BARRA DE FERIADOS — botão "Acessar" (#botaoBuscar)
+   Usado em renderBarra() (renderizadores/feriados/_utils.js)
+   e acionado em src/js/barra-feriados.js.
+   Seletor por ID garante sobrescrever as classes utilitárias
+   do Tailwind sem precisar de !important.
+   ============================================================ */
+#botaoBuscar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+
+    padding: 0.9rem 1.75rem;
+    min-width: 150px;
+    min-height: 48px;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+
+    /* Contraste alto sobre o fundo bg-primary da hero */
+    background-color: #ffffff;
+    color: #005c82;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        filter 0.18s ease;
+}
+
+#botaoBuscar:hover {
+    background-color: #f1f5f9;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+#botaoBuscar:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#botaoBuscar:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* Desktop: alinha com os selects da barra */
+@media (min-width: 768px) {
+    #botaoBuscar {
+        align-self: flex-end;
+        height: 48px;
+    }
+}
+
+/* Mobile: botão em largura total, mais alto para toque confortável */
+@media (max-width: 640px) {
+    #botaoBuscar {
+        width: 100%;
+        min-width: 0;
+        min-height: 52px;
+        font-size: 1.0625rem;
+        padding: 1rem 1.25rem;
+    }
+}
+
+
+/* ============================================================
    LEGENDA — card comprido abaixo do calendário
    ============================================================ */
 .legend-item {
