@@ -130,6 +130,30 @@ export function render(config, data, contexto = {}) {
         </div>
     </div>`;
 
+    // ─────────────────────────────────────────────────────────
+    // Containers de análise (JS) dentro do padrão de card +
+    // header, para ficarem iguais aos demais cards da sidebar.
+    // ─────────────────────────────────────────────────────────
+    const cardNumeros = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">NÚMEROS DE ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="numeros-container"></div>
+        </div>
+    </div>`;
+
+    const cardFeriadoes = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">FERIADÕES DE ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="feriadoes-container"></div>
+        </div>
+    </div>`;
+
     const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
@@ -157,9 +181,6 @@ export function render(config, data, contexto = {}) {
         <div class="mb-6">
             ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
-
-        <div id="numeros-container"></div>
-        <div id="feriadoes-container"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
@@ -215,6 +236,8 @@ export function render(config, data, contexto = {}) {
                 ${cardImagemCapa}
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
+                ${cardNumeros}
+                ${cardFeriadoes}
             </aside>
         </div>
     </div>
