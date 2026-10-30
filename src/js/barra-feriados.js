@@ -19,25 +19,24 @@ export function inicializarBarraFeriados() {
         } catch (_) {}
     }
 
-    // Aceita 2 formatos:
-    //   1. Objeto:  { "sp": [{slug, cidade}, ...], "rj": [...] }
-    //   2. Array:   [{slug, cidade, uf}, ...]   (filtra por c.uf)
-    // Comparação de UF é case-insensitive ("SP" == "sp").
-    function listaCidades(uf) {
+    const cacheCidades = {};
+
+    // ─── Local ─────────────────────────────────────────────
+    // Lê do objeto/array embutido no HTML. Funciona pro estado inicial
+    // (e pra todos os estados, se o backend mandar tudo).
+    function listaCidadesLocal(uf) {
         if (!uf || !cidadesRaw) return [];
         const ufNorm = String(uf).toLowerCase();
 
-        // Formato 1 — objeto { uf: [...] }
         if (!Array.isArray(cidadesRaw) && typeof cidadesRaw === 'object') {
             const chave = Object.keys(cidadesRaw)
                 .find(k => k.toLowerCase() === ufNorm);
             return chave && Array.isArray(cidadesRaw[chave]) ? cidadesRaw[chave] : [];
         }
 
-        // Formato 2 — array plano
         if (Array.isArray(cidadesRaw)) {
             const temUf = cidadesRaw.some(c => c && c.uf);
-            if (!temUf) return cidadesRaw; // se não há .uf, não dá pra filtrar
+            if (!temUf) return [];
             return cidadesRaw.filter(c =>
                 c && String(c.uf || '').toLowerCase() === ufNorm
             );
@@ -46,10 +45,59 @@ export function inicializarBarraFeriados() {
         return [];
     }
 
-    function preencherCidades(uf, selecionarSlug) {
-        selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
+    // ─── Remoto ────────────────────────────────────────────
+    // Busca via RPC do Supabase. Precisa de:
+    //   • window.PORTAL_CONFIG.supabase_url
+    //   • window.PORTAL_CONFIG.supabase_anon_key
+    //   • RPC `get_cidades_por_uf(p_uf text)` no banco (ver SQL abaixo)
+    async function listaCidadesRemoto(uf) {
+        const cfg = window.PORTAL_CONFIG || {};
+        const url = cfg.supabase_url;
+        const key = cfg.supabase_anon_key;
 
-        const cidades = listaCidades(uf);
+        if (!url || !key || !uf) return [];
+
+        try {
+            const res = await fetch(`${url}/rest/v1/rpc/get_cidades_por_uf`, {
+                method: 'POST',
+                headers: {
+                    'apikey': key,
+                    'Authorization': `Bearer ${key}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ p_uf: String(uf).toLowerCase() }),
+            });
+            if (!res.ok) return [];
+            const data = await res.json();
+            return Array.isArray(data) ? data : [];
+        } catch (_) {
+            return [];
+        }
+    }
+
+    // ─── Combinado ─────────────────────────────────────────
+    async function obterCidades(uf) {
+        if (!uf) return [];
+
+        const local = listaCidadesLocal(uf);
+        if (local.length) return local;
+
+        const ufNorm = String(uf).toLowerCase();
+        if (Array.isArray(cacheCidades[ufNorm])) return cacheCidades[ufNorm];
+
+        const remoto = await listaCidadesRemoto(uf);
+        if (remoto.length) cacheCidades[ufNorm] = remoto;
+        return remoto;
+    }
+
+    // ─── Render ────────────────────────────────────────────
+    async function preencherCidades(uf, selecionarSlug) {
+        selCidade.innerHTML = '<option value="">Carregando...</option>';
+        selCidade.disabled = true;
+
+        const cidades = await obterCidades(uf);
+
+        selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
         cidades.forEach(c => {
             const opt = document.createElement('option');
             opt.value = c.slug;
@@ -57,8 +105,8 @@ export function inicializarBarraFeriados() {
             selCidade.appendChild(opt);
         });
 
-        // Se veio uma cidade pré-selecionada (ex.: /2026/sp/sao-paulo/),
-        // tenta marcar. Se não existir na lista, deixa vazio.
+        selCidade.disabled = false;
+
         if (selecionarSlug) {
             selCidade.value = selecionarSlug;
             if (selCidade.value !== selecionarSlug) selCidade.value = '';
@@ -67,13 +115,12 @@ export function inicializarBarraFeriados() {
         }
     }
 
-    // Se a página já veio com estado definido (ex.: /2026/sp/),
-    // carrega as cidades desse estado com o slug atual marcado (se for o caso).
+    // Estado inicial (ex.: /2026/sp/ ou /2026/sp/sao-paulo/)
     if (selEstado.value) {
         preencherCidades(selEstado.value, selCidade.value);
     }
 
-    // Troca de estado: SEMPRE repopula as cidades do novo estado
+    // Troca de estado
     selEstado.addEventListener('change', function () {
         preencherCidades(this.value, '');
     });
@@ -90,7 +137,6 @@ export function inicializarBarraFeriados() {
             return;
         }
 
-        // URL: /{ano}/  |  /{ano}/{uf}/  |  /{ano}/{uf}/{cidade}/
         let destino = `/${ano}/`;
         if (uf && cidade) destino = `/${ano}/${uf}/${cidade}/`;
         else if (uf) destino = `/${ano}/${uf}/`;
