@@ -33,6 +33,10 @@ export function render(config, data, contexto = {}) {
     const descricao = data.meta_descricao_google || '';
     const imagem    = `${config.url_cdn_imagens}/feriados/${ano}/${uf}.webp`;
 
+    const srcsetImagem = [250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950]
+        .map(w => `${imagem}?tr=w-${w} ${w}w`)
+        .join(', ');
+
     const feriados = organizaFeriados(ano, (data.feriados_concatenados || '').split(';'));
     const tabelaFeriados = gerarTabelaFeriados(feriados);
 
@@ -83,6 +87,28 @@ export function render(config, data, contexto = {}) {
                 <meta itemprop="position" content="3">
             </li>
         </ol>
+    </div>`;
+
+    const cardImagemCapa = `
+    <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">IMAGEM DE CAPA</h3>
+        </div>
+        <div class="p-4">
+            <figure>
+                <img
+                    src="${imagem}"
+                    data-src="${imagem}"
+                    sizes="(max-width: 125px), (max-width: 150px), (max-width: 175px), (max-width: 200px), (max-width: 225px), (max-width: 250px), (max-width: 275px), (max-width: 300px), (max-width: 325px), (max-width: 350px), (max-width: 375px), (max-width: 400px), (max-width: 425px), (max-width: 450px), (max-width: 475px), (-webkit-min-device-pixel-ratio: 1.1) AND (-webkit-max-device-pixel-ratio: 1.5) 80.5vw, (-webkit-min-device-pixel-ratio: 1.6) AND (-webkit-max-device-pixel-ratio: 2) 57.5vw, (-webkit-min-device-pixel-ratio: 2.1) AND (-webkit-max-device-pixel-ratio: 2.5) 42.5vw, (-webkit-min-device-pixel-ratio: 2.6) AND (-webkit-max-device-pixel-ratio: 3) 39.5vw, (-webkit-min-device-pixel-ratio: 3.1) AND (-webkit-max-device-pixel-ratio: 3.5) 32.5vw, (-webkit-min-device-pixel-ratio: 3.6) AND (-webkit-max-device-pixel-ratio: 4) 28.5vw"
+                    data-srcset="${srcsetImagem}"
+                    class="img-fluid w-full rounded fade-in"
+                    title="Feriados ${estado} ${ano}"
+                    alt="Feriados ${estado} ${ano}"
+                    itemprop="image"
+                    loading="lazy"
+                    srcset="${srcsetImagem}">
+            </figure>
+        </div>
     </div>`;
 
     const conteudo = `
@@ -155,9 +181,7 @@ export function render(config, data, contexto = {}) {
             </div>
 
             <aside class="flex flex-col gap-6">
-                <div class="bg-white shadow-md rounded-md overflow-hidden">
-                    <img src="${imagem}" alt="Feriados ${estado} ${ano}" class="w-full h-auto block" loading="lazy">
-                </div>
+                ${cardImagemCapa}
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
             </aside>
