@@ -113,6 +113,26 @@ export function render(config, data, contexto = {}) {
         </div>
     </div>`;
 
+    const cardNumeros = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">NÚMEROS DE ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="numeros-container"></div>
+        </div>
+    </div>`;
+
+    const cardFeriadoes = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">FERIADÕES DE ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="feriadoes-container"></div>
+        </div>
+    </div>`;
+
     const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
@@ -127,8 +147,10 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
+        <div id="proximo-feriado-container"></div>
+
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
-            <p class="text-gray-700 text-justify"><b>Feriados ${estado} ${ano}:</b> Confira no calendário abaixo todos os feriados ${estado} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores.</p>
+            <p class="text-gray-700 text-justify">${data.paragrafo1 || `<b>Feriados ${estado} ${ano}:</b> Confira no calendário abaixo todos os feriados ${estado} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores.`}</p>
         </div>
 
         <div id="calendario" class="mb-6">
@@ -144,7 +166,7 @@ export function render(config, data, contexto = {}) {
 
                 <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${estado} ${ano}</h2>
-                    <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados ${estado} ${ano} em forma de lista, desde os pontos facultativos, feriados nacionais ${estado} ${ano} até os feriados estaduais ${estado} ${ano}. Caso deseje é possível imprimir ou salvar a lista de feriados ${estado} ${ano}, basta clicar no botão.</p>
+                    <p class="text-gray-700 text-justify">${data.paragrafo2 || `Abaixo é possível visualizar todos os feriados ${estado} ${ano} em forma de lista, desde os pontos facultativos, feriados nacionais ${estado} ${ano} até os feriados estaduais ${estado} ${ano}. Caso deseje é possível imprimir ou salvar a lista de feriados ${estado} ${ano}, basta clicar no botão.`}</p>
                 </div>
 
                 <div id="lista-feriados" class="bg-white rounded-md border border-gray-200 p-4">
@@ -156,10 +178,12 @@ export function render(config, data, contexto = {}) {
 
                 <div id="feriado-estado" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriado ${estado} ${ano}</h2>
-                    <p class="text-gray-700 text-justify">Vale ressaltar que o estado de ${estado} pode a qualquer momento enviar um decreto onde é criado um novo feriado estadual e assim mudar os feriados em ${estado} ${ano}.</p>
+                    <p class="text-gray-700 text-justify">${data.paragrafo3 || `Vale ressaltar que o estado de ${estado} pode a qualquer momento enviar um decreto onde é criado um novo feriado estadual e assim mudar os feriados em ${estado} ${ano}.`}</p>
                 </div>
 
                 ${renderTabelaCidades(data.cidades_concatenadas, ano, uf)}
+
+                <div id="comparacao-container"></div>
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${estado} ${ano}</h2>
@@ -183,11 +207,18 @@ export function render(config, data, contexto = {}) {
                 ${cardImagemCapa}
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
+                ${cardNumeros}
+                ${cardFeriadoes}
             </aside>
         </div>
     </div>
 
-    ${renderScriptsFeriados(feriados)}
+    ${renderScriptsFeriados(feriados, {
+        ano,
+        contexto: 'estado',
+        label: estado,
+        comparacao: data.comparacao || null,
+    })}
     ${renderScriptsTurnstile(config)}
     `;
 

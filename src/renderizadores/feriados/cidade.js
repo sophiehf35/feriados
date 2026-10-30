@@ -117,6 +117,26 @@ export function render(config, data, contexto = {}) {
         </div>
     </div>`;
 
+    const cardNumeros = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">NÚMEROS DE ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="numeros-container"></div>
+        </div>
+    </div>`;
+
+    const cardFeriadoes = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">FERIADÕES DE ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="feriadoes-container"></div>
+        </div>
+    </div>`;
+
     const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
@@ -131,8 +151,10 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
+        <div id="proximo-feriado-container"></div>
+
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
-            <p class="text-gray-700 text-justify"><b>Feriados ${cidade} ${ano}:</b> confira abaixo todos os feriados ${cidade} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${cidade} ${uf} ${ano}.</p>
+            <p class="text-gray-700 text-justify">${data.paragrafo1 || `<b>Feriados ${cidade} ${ano}:</b> confira abaixo todos os feriados ${cidade} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${cidade} ${uf} ${ano}.`}</p>
         </div>
 
         <div id="calendario" class="mb-6">
@@ -148,7 +170,7 @@ export function render(config, data, contexto = {}) {
 
                 <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${cidade} ${ano}</h2>
-                    <p class="text-gray-700 text-justify">É importante ressaltar que os feriados da cidade de ${cidade} ${ano} podem sofrer alterações a qualquer momento, isso porque as cidades possuem autonomia para criar e alterar novos feriados.</p>
+                    <p class="text-gray-700 text-justify">${data.paragrafo2 || `É importante ressaltar que os feriados da cidade de ${cidade} ${ano} podem sofrer alterações a qualquer momento, isso porque as cidades possuem autonomia para criar e alterar novos feriados.`}</p>
                 </div>
 
                 <div id="lista-feriados" class="bg-white rounded-md border border-gray-200 p-4">
@@ -160,8 +182,10 @@ export function render(config, data, contexto = {}) {
 
                 <div id="feriado-cidade" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriado ${cidade} ${ano}</h2>
-                    <p class="text-gray-700 text-justify">Caso tenha alguma sugestão a respeito de algum feriado ${cidade} ${ano} fique à vontade para enviar um comentário no formulário abaixo.</p>
+                    <p class="text-gray-700 text-justify">${data.paragrafo3 || `Caso tenha alguma sugestão a respeito de algum feriado ${cidade} ${ano} fique à vontade para enviar um comentário no formulário abaixo.`}</p>
                 </div>
+
+                <div id="comparacao-container"></div>
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${cidade} ${ano}</h2>
@@ -185,11 +209,18 @@ export function render(config, data, contexto = {}) {
                 ${cardImagemCapa}
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
+                ${cardNumeros}
+                ${cardFeriadoes}
             </aside>
         </div>
     </div>
 
-    ${renderScriptsFeriados(feriados)}
+    ${renderScriptsFeriados(feriados, {
+        ano,
+        contexto: 'cidade',
+        label: cidade,
+        comparacao: data.comparacao || null,
+    })}
     ${renderScriptsTurnstile(config)}
     `;
 

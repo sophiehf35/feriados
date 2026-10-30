@@ -15,7 +15,7 @@ import {
 import { inicializarBarraFeriados } from './barra-feriados.js';
 import { TabelaGenerica } from './tabela.js';
 import { decodeData, escapeHtml } from './utils.js';
-import { inicializarAnaliseAno } from './analise-ano.js';
+import { inicializarAnaliseFeriados } from './analise-feriados.js';
 
 window.configurarValidacaoComentario = configurarValidacaoComentario;
 
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarCalendario();
     inicializarTabelaFeriados();
     inicializarBotoesDescricao();
-    inicializarAnaliseAno();
+    inicializarAnaliseFeriados();
 
     inicializarTabelaEstados();
     inicializarTabelaMeses();

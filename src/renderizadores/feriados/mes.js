@@ -99,23 +99,40 @@ export function render(config, data, contexto = {}) {
         </ol>
     </div>`;
 
-    const introHtml = semFeriados
-        ? `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> não há feriados nacionais em ${mes} de ${ano}. O calendário abaixo está vazio para feriados nacionais, mas estados e municípios podem ter feriados locais — consulte o filtro acima.</p>`
-        : `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> confira abaixo todos os feriados ${mes} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${mes} ${ano}.</p>`;
+    const introHtml = data.paragrafo1
+        ? `<p class="text-gray-700 text-justify">${data.paragrafo1}</p>`
+        : (semFeriados
+            ? `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> não há feriados nacionais em ${mes} de ${ano}. O calendário abaixo está vazio para feriados nacionais, mas estados e municípios podem ter feriados locais — consulte o filtro acima.</p>`
+            : `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> confira abaixo todos os feriados ${mes} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${mes} ${ano}.</p>`);
 
-    const blocoPrincipalHtml = semFeriados
+    const blocoPrincipalHtml = data.paragrafo2
         ? `
+        <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
+            <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
+            <p class="text-gray-700 text-justify">${data.paragrafo2}</p>
+        </div>`
+        : (semFeriados
+            ? `
         <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
             <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
             <p class="text-gray-700 text-justify mb-3">Não há feriados nacionais em <b>${mes} de ${ano}</b>. Este mês não tem datas comemorativas de abrangência nacional — mas ainda pode ter feriados estaduais ou municipais, que variam conforme a região.</p>
             <p class="text-gray-700 text-justify mb-3">Se você está planejando uma viagem ou folga em ${mes} ${ano}, vale conferir o calendário do seu estado ou cidade. Alguns feriados locais (como datas religiosas, aniversários de cidades ou datas estaduais) podem cair nesse mês.</p>
             <p class="text-gray-700 text-justify">Confira também os <a href="/${ano}/" class="text-primary hover:underline font-medium">feriados nacionais de ${ano}</a> para ver o panorama completo do ano, ou consulte os <a href="/${ano}/#estados" class="text-primary hover:underline font-medium">feriados por estado em ${ano}</a>.</p>
         </div>`
-        : `
+            : `
         <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
             <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
             <p class="text-gray-700 text-justify">É importante ressaltar que os feriados listados no calendário acima são feriados nacionais de ${mes} ${ano}, se você deseja visualizar estaduais ou municipais é preciso escolher o estado / cidade no filtro.</p>
-        </div>`;
+        </div>`);
+
+    // Parágrafo 3 (opcional) — só aparece se o backend mandar
+    const blocoParagrafo3Html = data.paragrafo3
+        ? `
+        <div class="bg-white shadow-md rounded-md p-4">
+            <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Mais sobre ${mes} ${ano}</h2>
+            <p class="text-gray-700 text-justify">${data.paragrafo3}</p>
+        </div>`
+        : '';
 
     const cardImagemCapa = `
     <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
@@ -139,6 +156,26 @@ export function render(config, data, contexto = {}) {
         </div>
     </div>`;
 
+    const cardNumeros = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">NÚMEROS DE ${mes.toUpperCase()} ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="numeros-container"></div>
+        </div>
+    </div>`;
+
+    const cardFeriadoes = `
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+        <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">FERIADÕES DE ${mes.toUpperCase()} ${ano}</h3>
+        </div>
+        <div class="p-4">
+            <div id="feriadoes-container"></div>
+        </div>
+    </div>`;
+
     const conteudo = `
     <div class="sub_header_in bg-primary text-white py-6 w-full">
         <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto text-center">
@@ -152,6 +189,8 @@ export function render(config, data, contexto = {}) {
     ${renderBarra(data.barra, { anoAtual: ano })}
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
+
+        <div id="proximo-feriado-container"></div>
 
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
             ${introHtml}
@@ -168,6 +207,9 @@ export function render(config, data, contexto = {}) {
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
                 ${blocoPrincipalHtml}
+                ${blocoParagrafo3Html}
+
+                <div id="comparacao-container"></div>
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${mes} ${ano}</h2>
@@ -191,11 +233,18 @@ export function render(config, data, contexto = {}) {
                 ${cardImagemCapa}
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
+                ${cardNumeros}
+                ${cardFeriadoes}
             </aside>
         </div>
     </div>
 
-    ${renderScriptsFeriados(feriados)}
+    ${renderScriptsFeriados(feriados, {
+        ano,
+        contexto: 'mes',
+        label: mes,
+        comparacao: data.comparacao || null,
+    })}
     ${renderScriptsTurnstile(config)}
     `;
 

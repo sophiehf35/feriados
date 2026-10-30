@@ -3,6 +3,7 @@
   "include": ["/*"],
   "exclude": [
     "/assets/*",
+    "/ads.txt",
     "/manifest.json",
     "/browserconfig.xml",
     "/favicon.ico",

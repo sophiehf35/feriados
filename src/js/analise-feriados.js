@@ -1,4 +1,4 @@
-// src/js/analise-ano.js
+// src/js/analise-feriados.js
 
 import { escapeHtml } from './utils.js';
 
@@ -22,7 +22,7 @@ function _contarFinsDeSemana(ano) {
     return count;
 }
 
-export function calcularAnaliseAno(feriados, ano) {
+export function calcularAnalise(feriados, ano) {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
@@ -44,7 +44,7 @@ export function calcularAnaliseAno(feriados, ano) {
             if (dow === 1 || dow === 5 || dow === 2 || dow === 4) emendas++;
         }
 
-        if (!proximo && data >= hoje && f.tipo === 'Feriado Nacional') {
+        if (!proximo && data >= hoje && f.tipo && f.tipo.startsWith('Feriado')) {
             const diasFaltando = Math.round((data - hoje) / 86400000);
             proximo = {
                 nome: f.nome,
@@ -54,7 +54,7 @@ export function calcularAnaliseAno(feriados, ano) {
             };
         }
 
-        if (f.tipo === 'Feriado Nacional' && dow !== 0 && dow !== 6) {
+        if (f.tipo && f.tipo.startsWith('Feriado') && dow !== 0 && dow !== 6) {
             let dias = 1;
             if (dow === 1 || dow === 5) dias = 3;
             else if (dow === 2 || dow === 4) dias = 4;
@@ -94,15 +94,24 @@ export function calcularAnaliseAno(feriados, ano) {
 }
 
 // ────────────────────────────────────────────────────────────
-// Próximo feriado — container no conteúdo principal.
-// Continua sendo card próprio (não está no sidebar).
+// Próximo feriado — o texto muda conforme o contexto
 // ────────────────────────────────────────────────────────────
-function renderProximoFeriadoHtml(proximo, ano) {
+function _labelProximo(contexto, label) {
+    if (contexto === 'estado') return `Próximo feriado no ${label}`;
+    if (contexto === 'cidade') return `Próximo feriado em ${label}`;
+    if (contexto === 'mes')    return `Próximo feriado em ${label}`;
+    return 'Próximo feriado nacional';
+}
+
+function renderProximoFeriadoHtml(proximo, ano, contexto, label) {
+    const labelProximo = _labelProximo(contexto, label);
+
     if (!proximo) {
+        const labelVazio = contexto === 'mes' ? 'Mês passado' : 'Ano passado';
         return `
         <div class="bg-white shadow-md rounded-md p-4 mb-6 border-l-4 border-gray-300">
             <p class="text-gray-600 text-sm">
-                <b>Ano passado.</b> Os feriados de ${ano} já aconteceram.
+                <b>${labelVazio}.</b> Os feriados de ${ano} já aconteceram.
                 Confira os <a href="/${Number(ano) + 1}/" class="text-primary hover:underline font-medium">feriados ${Number(ano) + 1}</a>
                 para planejar o próximo ano.
             </p>
@@ -127,7 +136,7 @@ function renderProximoFeriadoHtml(proximo, ano) {
                 ${iconeInterno}
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Próximo feriado nacional</p>
+                <p class="text-xs uppercase tracking-wider text-gray-500 font-semibold">${labelProximo}</p>
                 <p class="text-lg font-bold text-gray-800 mt-0.5">${escapeHtml(nome)}</p>
                 <p class="text-sm text-gray-600">${data} — <b>${quando}</b></p>
             </div>
@@ -136,40 +145,50 @@ function renderProximoFeriadoHtml(proximo, ano) {
 }
 
 // ────────────────────────────────────────────────────────────
-// Números — dentro do card do sidebar.
-// SEM wrapper de card, SEM h2 (o título do sidebar já cobre).
-// Layout: lista vertical, um dado por linha.
+// Números — 4 linhas (ano/estado/cidade) ou 3 (mês)
 // ────────────────────────────────────────────────────────────
-function renderNumerosHtml(analise /*, ano */) {
+function renderNumerosHtml(analise, contexto) {
+    const linhas = [];
+
+    linhas.push({
+        label: contexto === 'mes' ? 'Feriados no mês' : 'Feriados no ano',
+        valor: analise.total,
+    });
+
+    if (contexto !== 'mes') {
+        linhas.push({ label: 'Dias úteis', valor: analise.diasUteis });
+    }
+
+    linhas.push({
+        label: contexto === 'mes' ? 'Emendas no mês' : 'Emendas naturais',
+        valor: analise.emendas,
+    });
+
+    linhas.push({
+        label: contexto === 'mes' ? 'Fins de semana no mês' : 'Em fins de semana',
+        valor: analise.fds,
+    });
+
     return `
     <ul class="divide-y divide-gray-200">
-        <li class="flex items-center justify-between py-2.5">
-            <span class="text-sm text-gray-600">Feriados no ano</span>
-            <span class="text-lg font-bold text-primary">${analise.total}</span>
-        </li>
-        <li class="flex items-center justify-between py-2.5">
-            <span class="text-sm text-gray-600">Dias úteis</span>
-            <span class="text-lg font-bold text-primary">${analise.diasUteis}</span>
-        </li>
-        <li class="flex items-center justify-between py-2.5">
-            <span class="text-sm text-gray-600">Emendas naturais</span>
-            <span class="text-lg font-bold text-primary">${analise.emendas}</span>
-        </li>
-        <li class="flex items-center justify-between py-2.5">
-            <span class="text-sm text-gray-600">Em fins de semana</span>
-            <span class="text-lg font-bold text-primary">${analise.fds}</span>
-        </li>
+        ${linhas.map(l => `
+            <li class="flex items-center justify-between py-2.5">
+                <span class="text-sm text-gray-600">${l.label}</span>
+                <span class="text-lg font-bold text-primary">${l.valor}</span>
+            </li>
+        `).join('')}
     </ul>`;
 }
 
 // ────────────────────────────────────────────────────────────
-// Feriadões — dentro do card do sidebar.
-// SEM wrapper de card, SEM h2.
-// Layout: lista vertical, um feriadão por linha.
+// Feriadões
 // ────────────────────────────────────────────────────────────
-function renderFeriadoesHtml(feriadoes /*, ano */) {
+function renderFeriadoesHtml(feriadoes, contexto) {
     if (!feriadoes.length) {
-        return `<p class="text-sm text-gray-600">Nenhum feriadão identificado para este ano.</p>`;
+        const msg = contexto === 'mes'
+            ? 'Nenhum feriadão identificado neste mês.'
+            : 'Nenhum feriadão identificado para este ano.';
+        return `<p class="text-sm text-gray-600">${msg}</p>`;
     }
 
     const itens = feriadoes.map(f => `
@@ -190,8 +209,7 @@ function renderFeriadoesHtml(feriadoes /*, ano */) {
 }
 
 // ────────────────────────────────────────────────────────────
-// Comparação — container no conteúdo principal.
-// Continua sendo card próprio (não está no sidebar).
+// Comparação
 // ────────────────────────────────────────────────────────────
 function renderComparacaoHtml(comparacao, ano) {
     if (!comparacao || !comparacao.existe) return '';
@@ -214,24 +232,39 @@ function renderComparacaoHtml(comparacao, ano) {
     </div>`;
 }
 
-export function inicializarAnaliseAno() {
+export function inicializarAnaliseFeriados() {
     const feriados = window.__FERIADOS__ || {};
     const meta     = window.__FERIADOS_ANO__ || {};
 
-    const ano     = Number(meta.ano) || new Date().getFullYear();
+    const ano        = Number(meta.ano) || new Date().getFullYear();
+    const contexto   = meta.contexto || 'ano';
+    const label      = meta.label || '';
     const comparacao = meta.comparacao || null;
 
     if (Object.keys(feriados).length === 0) return;
 
-    const analise = calcularAnaliseAno(feriados, ano);
+    const analise = calcularAnalise(feriados, ano);
 
-    const elProximo   = document.getElementById('proximo-feriado-container');
-    const elNumeros   = document.getElementById('numeros-container');
-    const elFeriadoes = document.getElementById('feriadoes-container');
+    const elProximo    = document.getElementById('proximo-feriado-container');
+    const elNumeros    = document.getElementById('numeros-container');
+    const elFeriadoes  = document.getElementById('feriadoes-container');
     const elComparacao = document.getElementById('comparacao-container');
 
-    if (elProximo)    elProximo.innerHTML    = renderProximoFeriadoHtml(analise.proximo, ano);
-    if (elNumeros)    elNumeros.innerHTML    = renderNumerosHtml(analise, ano);
-    if (elFeriadoes)  elFeriadoes.innerHTML  = renderFeriadoesHtml(analise.feriadoes, ano);
-    if (elComparacao) elComparacao.innerHTML = renderComparacaoHtml(comparacao, ano);
+    if (elProximo) {
+        elProximo.innerHTML = renderProximoFeriadoHtml(analise.proximo, ano, contexto, label);
+    }
+
+    if (elNumeros) {
+        elNumeros.innerHTML = renderNumerosHtml(analise, contexto);
+    }
+
+    if (elFeriadoes) {
+        elFeriadoes.innerHTML = renderFeriadoesHtml(analise.feriadoes, contexto);
+    }
+
+    if (elComparacao) {
+        const html = renderComparacaoHtml(comparacao, ano);
+        elComparacao.innerHTML = html;
+        if (!html) elComparacao.style.display = 'none';
+    }
 }
