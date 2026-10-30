@@ -23,6 +23,20 @@
 
 /* ============================================================
    VANILLA CALENDAR
+   ------------------------------------------------------------
+   FIX DO TOOLTIP:
+   - .vanilla-calendar-column e .vanilla-calendar_default NÃO
+     têm overflow:hidden (senão corta o popup dos dias nas
+     extremidades).
+   - O arredondamento do topo é feito no próprio
+     .vanilla-calendar-header via border-radius.
+   - O .vanilla-calendar-day__popup tem z-index para ficar
+     acima dos cards vizinhos quando escapa da coluna.
+
+   FIX DO RADIUS DOS DIAS:
+   - Dias com cor (feriados/pontos facultativos) NÃO devem ter
+     border-radius. Forçamos 0 em qualquer botão de dia e nos
+     modificadores de cor.
    ============================================================ */
 
 .vanilla-calendar.vanilla-calendar_multiple,
@@ -38,16 +52,17 @@
     max-width: 100%;
 }
 
+/* Cada coluna (mês) — SEM overflow:hidden */
 .vanilla-calendar-column {
     background: #fff !important;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
     border-radius: 0.375rem !important;
-    overflow: hidden;
     display: flex;
     flex: 1;
     flex-direction: column;
 }
 
+/* Modo single (1 mês) — SEM overflow:hidden */
 .vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple),
 [data-calendar-theme=light].vanilla-calendar.vanilla-calendar_default:not(.vanilla-calendar_multiple) {
     background: #fff !important;
@@ -56,15 +71,15 @@
     border: none !important;
     border-radius: 0.375rem !important;
     padding: 0 !important;
-    overflow: hidden;
     height: max-content;
     min-width: 272px;
     max-width: 100%;
 }
 
+/* Header — ele mesmo arredonda o topo do card */
 .vanilla-calendar-header {
     background: #b01233;
-    border-radius: 0 !important;
+    border-radius: 0.375rem 0.375rem 0 0 !important;
     margin-bottom: 0;
 }
 
@@ -109,17 +124,43 @@
     row-gap: 0;
 }
 
-.vanilla-calendar-day__btn {
+/* ─── Dias: SEM radius ─────────────────────────────────────── */
+.vanilla-calendar-day__btn,
+.vanilla-calendar-day__btn_today,
+.vanilla-calendar-day__btn_selected,
+.vanilla-calendar-day__btn_holiday,
+.vanilla-calendar-day__btn_weekend {
     font-size: 0.8rem;
-    border-radius: unset;
-}
-[data-calendar-theme=light] .vanilla-calendar-day__btn {
-    background-color: unset;
+    border-radius: 0 !important;
 }
 
+[data-calendar-theme=light] .vanilla-calendar-day__btn {
+    background-color: unset;
+    border-radius: 0 !important;
+}
+
+/* Dias com cor (feriado / ponto facultativo) — SEM radius */
+.vanilla-calendar-day__btn.bg-feriado-nacional,
+.vanilla-calendar-day__btn.bg-feriado-estadual,
+.vanilla-calendar-day__btn.bg-feriado-municipal,
+.vanilla-calendar-day__btn.bg-ponto-facultativo,
+.vanilla-calendar-day [class*="bg-feriado-"],
+.vanilla-calendar-day [class*="bg-ponto-facultativo"] {
+    border-radius: 0 !important;
+}
+
+/* Garantia extra: qualquer elemento do calendário com fundo
+   de feriado herda raio zero (cobre wrappers internos da lib) */
+.vanilla-calendar [class*="bg-feriado-"],
+.vanilla-calendar [class*="bg-ponto-facultativo"] {
+    border-radius: 0 !important;
+}
+
+/* Popup — z-index alto para passar por cima dos cards vizinhos */
 .vanilla-calendar-day__popup {
     left: max(100px, min(calc(100% - 200px), 50%));
     right: max(100px, min(calc(100% - 200px), 50%));
+    z-index: 100;
 }
 
 
