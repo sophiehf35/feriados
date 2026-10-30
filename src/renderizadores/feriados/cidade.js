@@ -59,7 +59,6 @@ export function render(config, data, contexto = {}) {
         }
     ];
 
-    // Sumário: TODOS os h2 visíveis da página
     const sumarioHtml = renderSumarioHtml([
         { titulo: `Feriados ${cidade} ${ano}`,          href: '#sobre-feriados' },
         { titulo: `Lista de feriados ${cidade} ${ano}`, href: '#lista-feriados' },
@@ -148,7 +147,7 @@ export function render(config, data, contexto = {}) {
             <div class="lg:col-span-2 space-y-6">
 
                 <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${cidade} ${ano}</h2>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify">É importante ressaltar que os feriados da cidade de ${cidade} ${ano} podem sofrer alterações a qualquer momento, isso porque as cidades possuem autonomia para criar e alterar novos feriados.</p>
                 </div>
 
@@ -160,19 +159,15 @@ export function render(config, data, contexto = {}) {
                 </div>
 
                 <div id="feriado-cidade" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado ${cidade} ${ano}</h2>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriado ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Caso tenha alguma sugestão a respeito de algum feriado ${cidade} ${ano} fique à vontade para enviar um comentário no formulário abaixo.</p>
                 </div>
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados em ${cidade} ${ano}</h2>
-                    <p class="text-center text-gray-600 mt-1">Confira abaixo algumas perguntas e respostas sobre os feriados ${cidade} ${ano}.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div itemscope itemtype="https://schema.org/FAQPage" class="md:col-span-2">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                ${renderFaqHtml(faqQuestions)}
-                            </div>
-                        </div>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${cidade} ${ano}</h2>
+                    <p class="text-gray-700 text-justify mb-4">Confira abaixo algumas perguntas e respostas sobre os feriados ${cidade} ${ano}.</p>
+                    <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 gap-6">
+                        ${renderFaqHtml(faqQuestions)}
                     </div>
                 </div>
 

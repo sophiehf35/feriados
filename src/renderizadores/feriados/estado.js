@@ -58,12 +58,6 @@ export function render(config, data, contexto = {}) {
         }
     ];
 
-    // ─────────────────────────────────────────────────────────
-    // Sumário: TODOS os h2 visíveis da página, na ordem em que
-    // aparecem no conteúdo. Os hrefs batem com os ids colocados
-    // nos cards abaixo (#sobre-feriados, #lista-feriados,
-    // #feriado-estado, #cidades, #faq).
-    // ─────────────────────────────────────────────────────────
     const sumarioHtml = renderSumarioHtml([
         { titulo: `Feriados ${estado} ${ano}`,          href: '#sobre-feriados' },
         { titulo: `Lista de feriados ${estado} ${ano}`, href: '#lista-feriados' },
@@ -149,7 +143,7 @@ export function render(config, data, contexto = {}) {
             <div class="lg:col-span-2 space-y-6">
 
                 <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${estado} ${ano}</h2>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${estado} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados ${estado} ${ano} em forma de lista, desde os pontos facultativos, feriados nacionais ${estado} ${ano} até os feriados estaduais ${estado} ${ano}. Caso deseje é possível imprimir ou salvar a lista de feriados ${estado} ${ano}, basta clicar no botão.</p>
                 </div>
 
@@ -161,21 +155,17 @@ export function render(config, data, contexto = {}) {
                 </div>
 
                 <div id="feriado-estado" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado ${estado} ${ano}</h2>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriado ${estado} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Vale ressaltar que o estado de ${estado} pode a qualquer momento enviar um decreto onde é criado um novo feriado estadual e assim mudar os feriados em ${estado} ${ano}.</p>
                 </div>
 
                 ${renderTabelaCidades(data.cidades_concatenadas, ano, uf)}
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados em ${estado} ${ano}</h2>
-                    <p class="text-center text-gray-600 mt-1">Confira abaixo algumas perguntas e respostas sobre os feriados ${estado} ${ano}.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div itemscope itemtype="https://schema.org/FAQPage" class="md:col-span-2">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                ${renderFaqHtml(faqQuestions)}
-                            </div>
-                        </div>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${estado} ${ano}</h2>
+                    <p class="text-gray-700 text-justify mb-4">Confira abaixo algumas perguntas e respostas sobre os feriados ${estado} ${ano}.</p>
+                    <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 gap-6">
+                        ${renderFaqHtml(faqQuestions)}
                     </div>
                 </div>
 

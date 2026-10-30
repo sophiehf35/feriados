@@ -226,9 +226,9 @@ export function renderFaqHtml(faqQuestions) {
         const perguntaSlug = slugify(faq.pergunta);
         return `
         <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-            <h3 id="${perguntaSlug}" style="margin: 10px 0px; font-size:18px; padding-left: 0px;" itemprop="name">${escapeHtml(faq.pergunta)}</h3>
+            <h3 id="${perguntaSlug}" class="text-base md:text-lg font-semibold text-gray-800 mb-2" itemprop="name">${escapeHtml(faq.pergunta)}</h3>
             <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                <div style="text-align:justify" itemprop="text"><p>${faq.resposta}</p></div>
+                <div class="text-gray-700 text-justify" itemprop="text"><p>${faq.resposta}</p></div>
             </div>
         </div>`;
     }).join('');
@@ -248,13 +248,6 @@ export function renderLinksUteisHtml() {
     </div>`;
 }
 
-// ────────────────────────────────────────────────────────────
-// Script tags com dados pro JS do cliente
-//   window.__FERIADOS__      — objeto feriados (usado pelo calendário)
-//   window.__FERIADOS_ANO__  — { ano, comparacao } (usado pelos cards JS)
-// Os cards NÃO são renderizados no server — só os dados vão.
-// Assim o cache de 1 ano nunca deixa dado dinâmico congelado.
-// ────────────────────────────────────────────────────────────
 export function renderScriptsFeriados(feriados, anoData = null) {
     let html = `<script>window.__FERIADOS__ = ${JSON.stringify(feriados)};</script>`;
     if (anoData) {
@@ -263,7 +256,6 @@ export function renderScriptsFeriados(feriados, anoData = null) {
     return html;
 }
 
-// Containers vazios pros cards de análise — JS preenche
 export function renderContainersAnaliseHtml() {
     return `
     <div id="proximo-feriado-container"></div>
@@ -271,10 +263,6 @@ export function renderContainersAnaliseHtml() {
     <div id="feriadoes-container"></div>
     <div id="comparacao-container"></div>`;
 }
-
-// ============================================================
-// Helpers para as novas tabelas (estados / meses / cidades)
-// ============================================================
 
 export function parseConcatenado(str, chaves) {
     return (str || '')

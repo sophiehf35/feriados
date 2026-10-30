@@ -167,7 +167,6 @@ export function render(config, data, contexto = {}) {
 
         <div id="proximo-feriado-container"></div>
 
-        <!-- Parágrafo (2/3) + Legenda (1/3) na mesma linha -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div class="lg:col-span-2">
                 <div class="bg-white shadow-md rounded-md p-4 h-full">
@@ -187,9 +186,9 @@ export function render(config, data, contexto = {}) {
             <div class="lg:col-span-2 space-y-6">
 
                 <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${ano}</h2>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-3">${data.paragrafo2 || ''}</p>
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados de ${ano}</h2>
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-2 mt-4">Feriados de ${ano}</h3>
                     <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados de ${ano} em forma de lista, desde os pontos facultativos até os feriados nacionais. Caso deseje é possível imprimir ou salvar a lista, basta clicar no botão.</p>
                 </div>
 
@@ -201,9 +200,9 @@ export function render(config, data, contexto = {}) {
                 </div>
 
                 <div id="feriados-nacionais" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados Nacionais ${ano}</h2>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados Nacionais ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-3">${data.paragrafo3 || ''}</p>
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados em ${ano}</h2>
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-2 mt-4">Feriados em ${ano}</h3>
                     <p class="text-gray-700 text-justify">Confira no calendário acima as datas móveis e fixas do ano, incluindo Carnaval, Páscoa, Corpus Christi, Independência, Natal e os demais feriados nacionais.</p>
                 </div>
 
@@ -213,14 +212,10 @@ export function render(config, data, contexto = {}) {
                 <div id="comparacao-container"></div>
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados nacionais ${ano}</h2>
-                    <p class="text-center text-gray-600 mt-1">Confira abaixo algumas perguntas e respostas sobre as datas comemorativas de ${ano}.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div itemscope itemtype="https://schema.org/FAQPage" class="md:col-span-2">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                ${renderFaqHtml(faqQuestions)}
-                            </div>
-                        </div>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados nacionais ${ano}</h2>
+                    <p class="text-gray-700 text-justify mb-4">Confira abaixo algumas perguntas e respostas sobre as datas comemorativas de ${ano}.</p>
+                    <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 gap-6">
+                        ${renderFaqHtml(faqQuestions)}
                     </div>
                 </div>
 

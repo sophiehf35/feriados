@@ -69,7 +69,6 @@ export function render(config, data, contexto = {}) {
             }
         ];
 
-    // Sumário: TODOS os h2 visíveis da página
     const sumarioHtml = renderSumarioHtml([
         { titulo: `Feriados ${mes} ${ano}`, href: '#sobre-feriados' },
         {
@@ -107,14 +106,14 @@ export function render(config, data, contexto = {}) {
     const blocoPrincipalHtml = semFeriados
         ? `
         <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
+            <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
             <p class="text-gray-700 text-justify mb-3">Não há feriados nacionais em <b>${mes} de ${ano}</b>. Este mês não tem datas comemorativas de abrangência nacional — mas ainda pode ter feriados estaduais ou municipais, que variam conforme a região.</p>
             <p class="text-gray-700 text-justify mb-3">Se você está planejando uma viagem ou folga em ${mes} ${ano}, vale conferir o calendário do seu estado ou cidade. Alguns feriados locais (como datas religiosas, aniversários de cidades ou datas estaduais) podem cair nesse mês.</p>
             <p class="text-gray-700 text-justify">Confira também os <a href="/${ano}/" class="text-primary hover:underline font-medium">feriados nacionais de ${ano}</a> para ver o panorama completo do ano, ou consulte os <a href="/${ano}/#estados" class="text-primary hover:underline font-medium">feriados por estado em ${ano}</a>.</p>
         </div>`
         : `
         <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
+            <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
             <p class="text-gray-700 text-justify">É importante ressaltar que os feriados listados no calendário acima são feriados nacionais de ${mes} ${ano}, se você deseja visualizar estaduais ou municipais é preciso escolher o estado / cidade no filtro.</p>
         </div>`;
 
@@ -171,14 +170,10 @@ export function render(config, data, contexto = {}) {
                 ${blocoPrincipalHtml}
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
-                    <h2 class="text-xl font-semibold text-gray-800 text-center">Feriados em ${mes} ${ano}</h2>
-                    <p class="text-center text-gray-600 mt-1">Confira abaixo algumas perguntas e respostas sobre os feriados em ${mes} ${ano}.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div itemscope itemtype="https://schema.org/FAQPage" class="md:col-span-2">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                ${renderFaqHtml(faqQuestions)}
-                            </div>
-                        </div>
+                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${mes} ${ano}</h2>
+                    <p class="text-gray-700 text-justify mb-4">Confira abaixo algumas perguntas e respostas sobre os feriados em ${mes} ${ano}.</p>
+                    <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 gap-6">
+                        ${renderFaqHtml(faqQuestions)}
                     </div>
                 </div>
 
