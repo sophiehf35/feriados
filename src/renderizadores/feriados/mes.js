@@ -69,8 +69,9 @@ export function render(config, data, contexto = {}) {
             }
         ];
 
+    // Sumário: TODOS os h2 visíveis da página
     const sumarioHtml = renderSumarioHtml([
-        { titulo: `Feriados ${mes} ${ano}`, href: '#feriados' },
+        { titulo: `Feriados ${mes} ${ano}`, href: '#sobre-feriados' },
         {
             titulo: `Feriados em ${mes}`,
             href: `#faq`,
@@ -105,14 +106,14 @@ export function render(config, data, contexto = {}) {
 
     const blocoPrincipalHtml = semFeriados
         ? `
-        <div class="bg-white shadow-md rounded-md p-4">
+        <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
             <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
             <p class="text-gray-700 text-justify mb-3">Não há feriados nacionais em <b>${mes} de ${ano}</b>. Este mês não tem datas comemorativas de abrangência nacional — mas ainda pode ter feriados estaduais ou municipais, que variam conforme a região.</p>
             <p class="text-gray-700 text-justify mb-3">Se você está planejando uma viagem ou folga em ${mes} ${ano}, vale conferir o calendário do seu estado ou cidade. Alguns feriados locais (como datas religiosas, aniversários de cidades ou datas estaduais) podem cair nesse mês.</p>
             <p class="text-gray-700 text-justify">Confira também os <a href="/${ano}/" class="text-primary hover:underline font-medium">feriados nacionais de ${ano}</a> para ver o panorama completo do ano, ou consulte os <a href="/${ano}/#estados" class="text-primary hover:underline font-medium">feriados por estado em ${ano}</a>.</p>
         </div>`
         : `
-        <div class="bg-white shadow-md rounded-md p-4">
+        <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
             <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${mes} ${ano}</h2>
             <p class="text-gray-700 text-justify">É importante ressaltar que os feriados listados no calendário acima são feriados nacionais de ${mes} ${ano}, se você deseja visualizar estaduais ou municipais é preciso escolher o estado / cidade no filtro.</p>
         </div>`;

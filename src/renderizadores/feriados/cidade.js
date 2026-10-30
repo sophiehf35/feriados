@@ -59,8 +59,11 @@ export function render(config, data, contexto = {}) {
         }
     ];
 
+    // Sumário: TODOS os h2 visíveis da página
     const sumarioHtml = renderSumarioHtml([
-        { titulo: `Feriados ${cidade} ${ano}`, href: '#feriados' },
+        { titulo: `Feriados ${cidade} ${ano}`,          href: '#sobre-feriados' },
+        { titulo: `Lista de feriados ${cidade} ${ano}`, href: '#lista-feriados' },
+        { titulo: `Feriado ${cidade} ${ano}`,           href: '#feriado-cidade' },
         {
             titulo: `Feriados em ${cidade}`,
             href: `#faq`,
@@ -143,19 +146,20 @@ export function render(config, data, contexto = {}) {
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white shadow-md rounded-md p-4">
+
+                <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify">É importante ressaltar que os feriados da cidade de ${cidade} ${ano} podem sofrer alterações a qualquer momento, isso porque as cidades possuem autonomia para criar e alterar novos feriados.</p>
                 </div>
 
-                <div class="bg-white rounded-md border border-gray-200 p-4">
+                <div id="lista-feriados" class="bg-white rounded-md border border-gray-200 p-4">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
                         <h2 class="text-lg md:text-xl font-semibold">Lista de feriados ${cidade} ${ano}</h2>
                     </div>
                     <div id="feriados">${tabelaFeriados}</div>
                 </div>
 
-                <div class="bg-white shadow-md rounded-md p-4">
+                <div id="feriado-cidade" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Caso tenha alguma sugestão a respeito de algum feriado ${cidade} ${ano} fique à vontade para enviar um comentário no formulário abaixo.</p>
                 </div>

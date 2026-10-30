@@ -93,6 +93,10 @@ export function calcularAnaliseAno(feriados, ano) {
     };
 }
 
+// ────────────────────────────────────────────────────────────
+// Próximo feriado — container no conteúdo principal.
+// Continua sendo card próprio (não está no sidebar).
+// ────────────────────────────────────────────────────────────
 function renderProximoFeriadoHtml(proximo, ano) {
     if (!proximo) {
         return `
@@ -131,35 +135,44 @@ function renderProximoFeriadoHtml(proximo, ano) {
     </div>`;
 }
 
-function renderNumerosHtml(analise, ano) {
+// ────────────────────────────────────────────────────────────
+// Números — dentro do card do sidebar.
+// SEM wrapper de card, SEM h2 (o título do sidebar já cobre).
+// Layout: lista vertical, um dado por linha.
+// ────────────────────────────────────────────────────────────
+function renderNumerosHtml(analise /*, ano */) {
     return `
-    <div class="bg-white shadow-md rounded-md p-4 mb-6">
-        <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-4">Calendário ${ano} em números</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.total}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Feriados no ano</p>
-            </div>
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.diasUteis}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Dias úteis</p>
-            </div>
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.emendas}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Emendas naturais</p>
-            </div>
-            <div class="text-center">
-                <p class="text-3xl font-bold text-primary">${analise.fds}</p>
-                <p class="text-xs text-gray-600 uppercase tracking-wider mt-1">Em fins de semana</p>
-            </div>
-        </div>
-    </div>`;
+    <ul class="divide-y divide-gray-200">
+        <li class="flex items-center justify-between py-2.5">
+            <span class="text-sm text-gray-600">Feriados no ano</span>
+            <span class="text-lg font-bold text-primary">${analise.total}</span>
+        </li>
+        <li class="flex items-center justify-between py-2.5">
+            <span class="text-sm text-gray-600">Dias úteis</span>
+            <span class="text-lg font-bold text-primary">${analise.diasUteis}</span>
+        </li>
+        <li class="flex items-center justify-between py-2.5">
+            <span class="text-sm text-gray-600">Emendas naturais</span>
+            <span class="text-lg font-bold text-primary">${analise.emendas}</span>
+        </li>
+        <li class="flex items-center justify-between py-2.5">
+            <span class="text-sm text-gray-600">Em fins de semana</span>
+            <span class="text-lg font-bold text-primary">${analise.fds}</span>
+        </li>
+    </ul>`;
 }
 
-function renderFeriadoesHtml(feriadoes, ano) {
-    if (!feriadoes.length) return '';
+// ────────────────────────────────────────────────────────────
+// Feriadões — dentro do card do sidebar.
+// SEM wrapper de card, SEM h2.
+// Layout: lista vertical, um feriadão por linha.
+// ────────────────────────────────────────────────────────────
+function renderFeriadoesHtml(feriadoes /*, ano */) {
+    if (!feriadoes.length) {
+        return `<p class="text-sm text-gray-600">Nenhum feriadão identificado para este ano.</p>`;
+    }
 
-    const cards = feriadoes.map(f => `
+    const itens = feriadoes.map(f => `
         <div class="flex items-center justify-between p-3 border border-gray-200 rounded-md hover:border-primary transition">
             <div class="min-w-0">
                 <p class="font-semibold text-gray-800 truncate">${escapeHtml(f.nome)}</p>
@@ -173,16 +186,13 @@ function renderFeriadoesHtml(feriadoes, ano) {
         </div>
     `).join('');
 
-    return `
-    <div class="bg-white shadow-md rounded-md p-4 mb-6">
-        <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-1">Melhores feriadões ${ano}</h2>
-        <p class="text-sm text-gray-600 mb-4">Feriados que caem em segundas ou sextas geram 3 dias de folga. Em terças ou quintas, até 4 dias com 1 dia de emenda.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            ${cards}
-        </div>
-    </div>`;
+    return `<div class="space-y-2">${itens}</div>`;
 }
 
+// ────────────────────────────────────────────────────────────
+// Comparação — container no conteúdo principal.
+// Continua sendo card próprio (não está no sidebar).
+// ────────────────────────────────────────────────────────────
 function renderComparacaoHtml(comparacao, ano) {
     if (!comparacao || !comparacao.existe) return '';
 

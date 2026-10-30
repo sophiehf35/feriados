@@ -79,11 +79,13 @@ export function render(config, data, contexto = {}) {
         },
     ];
 
+    // Sumário: TODOS os h2 visíveis, com href batendo nos ids abaixo.
     const sumarioHtml = renderSumarioHtml([
-        { titulo: `Feriados ${ano}`, href: '#feriados' },
-        { titulo: `Feriados Nacionais ${ano}`, href: '#feriados-nacionais' },
-        { titulo: 'Feriados por Estado', href: '#estados' },
-        { titulo: 'Feriados por Mês', href: '#meses' },
+        { titulo: `Feriados ${ano}`,            href: '#sobre-feriados' },
+        { titulo: `Lista de feriados ${ano}`,   href: '#lista-feriados' },
+        { titulo: `Feriados Nacionais ${ano}`,  href: '#feriados-nacionais' },
+        { titulo: 'Feriados por Estado',        href: '#estados' },
+        { titulo: 'Feriados por Mês',           href: '#meses' },
         {
             titulo: `Feriados em ${ano}`,
             href: `#faq`,
@@ -130,10 +132,6 @@ export function render(config, data, contexto = {}) {
         </div>
     </div>`;
 
-    // ─────────────────────────────────────────────────────────
-    // Containers de análise (JS) dentro do padrão de card +
-    // header, para ficarem iguais aos demais cards da sidebar.
-    // ─────────────────────────────────────────────────────────
     const cardNumeros = `
     <div class="bg-white shadow-md rounded-md overflow-hidden">
         <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
@@ -184,14 +182,15 @@ export function render(config, data, contexto = {}) {
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white shadow-md rounded-md p-4">
+
+                <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-3">${data.paragrafo2 || ''}</p>
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 mt-4">Feriados de ${ano}</h2>
                     <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados de ${ano} em forma de lista, desde os pontos facultativos até os feriados nacionais. Caso deseje é possível imprimir ou salvar a lista, basta clicar no botão.</p>
                 </div>
 
-                <div class="bg-white rounded-md border border-gray-200 p-4">
+                <div id="lista-feriados" class="bg-white rounded-md border border-gray-200 p-4">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
                         <h2 class="text-lg md:text-xl font-semibold">Lista de feriados ${ano}</h2>
                     </div>

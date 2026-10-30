@@ -58,9 +58,17 @@ export function render(config, data, contexto = {}) {
         }
     ];
 
+    // ─────────────────────────────────────────────────────────
+    // Sumário: TODOS os h2 visíveis da página, na ordem em que
+    // aparecem no conteúdo. Os hrefs batem com os ids colocados
+    // nos cards abaixo (#sobre-feriados, #lista-feriados,
+    // #feriado-estado, #cidades, #faq).
+    // ─────────────────────────────────────────────────────────
     const sumarioHtml = renderSumarioHtml([
-        { titulo: `Feriados ${estado} ${ano}`, href: '#feriados' },
-        { titulo: 'Feriados por Cidade', href: '#cidades' },
+        { titulo: `Feriados ${estado} ${ano}`,          href: '#sobre-feriados' },
+        { titulo: `Lista de feriados ${estado} ${ano}`, href: '#lista-feriados' },
+        { titulo: `Feriado ${estado} ${ano}`,           href: '#feriado-estado' },
+        { titulo: 'Feriados por Cidade',                href: '#cidades' },
         {
             titulo: `Feriados em ${estado}`,
             href: `#faq`,
@@ -139,19 +147,20 @@ export function render(config, data, contexto = {}) {
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white shadow-md rounded-md p-4">
+
+                <div id="sobre-feriados" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados ${estado} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Abaixo é possível visualizar todos os feriados ${estado} ${ano} em forma de lista, desde os pontos facultativos, feriados nacionais ${estado} ${ano} até os feriados estaduais ${estado} ${ano}. Caso deseje é possível imprimir ou salvar a lista de feriados ${estado} ${ano}, basta clicar no botão.</p>
                 </div>
 
-                <div class="bg-white rounded-md border border-gray-200 p-4">
+                <div id="lista-feriados" class="bg-white rounded-md border border-gray-200 p-4">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
                         <h2 class="text-lg md:text-xl font-semibold">Lista de feriados ${estado} ${ano}</h2>
                     </div>
                     <div id="feriados">${tabelaFeriados}</div>
                 </div>
 
-                <div class="bg-white shadow-md rounded-md p-4">
+                <div id="feriado-estado" class="bg-white shadow-md rounded-md p-4">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado ${estado} ${ano}</h2>
                     <p class="text-gray-700 text-justify">Vale ressaltar que o estado de ${estado} pode a qualquer momento enviar um decreto onde é criado um novo feriado estadual e assim mudar os feriados em ${estado} ${ano}.</p>
                 </div>
