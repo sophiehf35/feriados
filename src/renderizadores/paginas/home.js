@@ -12,7 +12,6 @@ const ANOS_FALLBACK = ['2026', '2025', '2024'];
 export async function render(config, pagina, dados = {}) {
     const { supabase, scriptsAdicionais = '' } = dados;
 
-    // 1 chamada: anos + estados + cards dos anos
     let barra = { anos: [], estados: [], cidades: [] };
     let anos = [];
 
@@ -28,14 +27,16 @@ export async function render(config, pagina, dados = {}) {
 
     const titulo = pagina.meta_titulo || 'Feriados nacionais | feriados estaduais | feriados municipais';
     const descricao = pagina.meta_descricao || '';
-    const imagemCapa = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
 
-    // --- Cards: agora dentro de swiper-slide ---
+    // OG da home usa a capa específica da home (não é uma "página de feriado")
+    const imagemOG = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
+
+    // --- Cards dos anos: imagem por ano no novo padrão /feriados/{ano}.webp ---
     const cardsAnos = anos.map(ano => `
     <div class="swiper-slide h-auto">
         <div class="card box_detail p-0 bg-white shadow-md rounded-md overflow-hidden h-full flex flex-col">
             <img width="376" height="211"
-                src="${config.url_cdn_imagens}/${ano}/feriados-nacionais.webp"
+                src="${config.url_cdn_imagens}/feriados/${ano}.webp"
                 class="img-fluid fade-in card-img-top w-full"
                 title="Feriados ${ano}" alt="Imagem ilustrativa dos feriados ${ano}" loading="lazy">
             <div class="card-body p-4 flex flex-col flex-grow">
@@ -100,44 +101,38 @@ export async function render(config, pagina, dados = {}) {
     </section>
 
     <section class="bg-gray-50 py-8">
-      <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-2 space-y-6">
-            <div id="feriado" class="bg-white shadow-md rounded-md p-4">
-              <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados</h2>
-              <p class="text-gray-700 text-justify mb-3">Ah, como é maravilhoso acordar pela manhã e perceber que o dia é envolto pela magia de um feriado! É como se o tempo desacelerasse, abrindo espaço para momentos de alegria e descontração.</p>
-              <p class="text-gray-700 text-justify">Cada feriado é como uma paleta de cores, pintando nossas vidas com tonalidades vibrantes de descanso e diversão. É a oportunidade perfeita para reencontrar amigos e familiares, compartilhar risadas e criar memórias que se tornarão tesouros em nosso coração.</p>
-            </div>
+      <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto space-y-6">
+        ${sumarioHtml}
 
-            <div id="feriado-nacional" class="bg-white shadow-md rounded-md p-4">
-              <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados nacionais</h2>
-              <p class="text-gray-700 text-justify mb-3">O ano começa com uma alegria contagiante, e a ansiedade pela chegada dos feriados já se faz presente nos corações de todos. Entre as datas marcadas no calendário, o feriado promete ser uma celebração memorável.</p>
-              <p class="text-gray-700 text-justify">Nesses feriados tão aguardados, as famílias se reunirão com sorrisos sinceros, compartilhando risadas e histórias que fortaleciam os laços afetivos.</p>
-            </div>
-
-            <div id="faq" class="bg-white shadow-md rounded-md p-4">
-              <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-3">Perguntas Frequentes</h2>
-              <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                ${renderFaqHtml(faqQuestions)}
-              </div>
-            </div>
-          </div>
-
-          <aside class="flex flex-col gap-6">
-            ${sumarioHtml}
-            ${renderLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
-            ${renderLinksUteisHtml()}
-          </aside>
+        <div id="feriado" class="bg-white shadow-md rounded-md p-4">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados</h2>
+          <p class="text-gray-700 text-justify mb-3">Ah, como é maravilhoso acordar pela manhã e perceber que o dia é envolto pela magia de um feriado! É como se o tempo desacelerasse, abrindo espaço para momentos de alegria e descontração.</p>
+          <p class="text-gray-700 text-justify">Cada feriado é como uma paleta de cores, pintando nossas vidas com tonalidades vibrantes de descanso e diversão. É a oportunidade perfeita para reencontrar amigos e familiares, compartilhar risadas e criar memórias que se tornarão tesouros em nosso coração.</p>
         </div>
+
+        <div id="feriado-nacional" class="bg-white shadow-md rounded-md p-4">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados nacionais</h2>
+          <p class="text-gray-700 text-justify mb-3">O ano começa com uma alegria contagiante, e a ansiedade pela chegada dos feriados já se faz presente nos corações de todos. Entre as datas marcadas no calendário, o feriado promete ser uma celebração memorável.</p>
+          <p class="text-gray-700 text-justify">Nesses feriados tão aguardados, as famílias se reunirão com sorrisos sinceros, compartilhando risadas e histórias que fortaleciam os laços afetivos.</p>
+        </div>
+
+        <div id="faq" class="bg-white shadow-md rounded-md p-4">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-3">Perguntas Frequentes</h2>
+          <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            ${renderFaqHtml(faqQuestions)}
+          </div>
+        </div>
+
+        ${renderLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
+        ${renderLinksUteisHtml()}
       </div>
     </section>
 
     <script id="dados-barra-cidades" type="application/json">${JSON.stringify(barra.cidades || [])}</script>
     `;
 
-    const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemCapa);
+    const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemOG);
 
-    // Swiper via CDN — evita dependência do bundle do portal
     const scriptsCarrossel = `
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

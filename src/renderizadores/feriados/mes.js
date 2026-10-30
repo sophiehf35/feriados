@@ -28,6 +28,7 @@ export function render(config, data, contexto = {}) {
 
     const titulo    = data.meta_titulo_google    || `Feriados ${mes} ${ano}`;
     const descricao = data.meta_descricao_google || '';
+    const imagem    = `${config.url_cdn_imagens}/feriados/${ano}/${slugMes}.webp`;
 
     const feriados = organizaFeriados(ano, (data.feriados_concatenados || '').split(';'));
 
@@ -35,11 +36,6 @@ export function render(config, data, contexto = {}) {
     const pontoFacultativoMes = filtrarFeriados(feriados, 'Ponto Facultativo');
 
     const semFeriados = feriadosMes.numero === 0;
-
-    // ─────────────────────────────────────────────────────────
-    // Blocos condicionais — quando o mês não tem feriado, troca
-    // o texto de "X feriados" por um fallback útil.
-    // ───────────────────────────────────────────────────────────
 
     const faqQuestions = semFeriados
         ? [
@@ -99,16 +95,10 @@ export function render(config, data, contexto = {}) {
         </ol>
     </div>`;
 
-    // ─────────────────────────────────────────────────────────
-    // Bloco intro — muda se tem ou não feriado
-    // ─────────────────────────────────────────────────────────
     const introHtml = semFeriados
         ? `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> não há feriados nacionais em ${mes} de ${ano}. O calendário abaixo está vazio para feriados nacionais, mas estados e municípios podem ter feriados locais — consulte o filtro acima.</p>`
         : `<p class="text-gray-700 text-justify"><b>Feriados ${mes} ${ano}:</b> confira abaixo todos os feriados ${mes} ${ano}, basta clicar no dia e visualizar os detalhes da data, caso tenha dúvidas verifique a legenda de cores do calendário de feriados ${mes} ${ano}.</p>`;
 
-    // ─────────────────────────────────────────────────────────
-    // Bloco principal — muda se tem ou não feriado
-    // ─────────────────────────────────────────────────────────
     const blocoPrincipalHtml = semFeriados
         ? `
         <div class="bg-white shadow-md rounded-md p-4">
@@ -176,6 +166,9 @@ export function render(config, data, contexto = {}) {
             </div>
 
             <aside class="flex flex-col gap-6">
+                <div class="bg-white shadow-md rounded-md overflow-hidden">
+                    <img src="${imagem}" alt="Feriados ${mes} ${ano}" class="w-full h-auto block" loading="lazy">
+                </div>
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
             </aside>
@@ -191,7 +184,7 @@ export function render(config, data, contexto = {}) {
         titulo,
         descricao,
         `${config.dominio}/${ano}/${slugMes}/`,
-        null
+        imagem
     );
 
     return renderizarBase(config, conteudo, meta, scriptsAdicionais);

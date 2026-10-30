@@ -31,6 +31,7 @@ export function render(config, data, contexto = {}) {
 
     const titulo    = data.meta_titulo_google    || `Feriados ${estado} ${ano}`;
     const descricao = data.meta_descricao_google || '';
+    const imagem    = `${config.url_cdn_imagens}/feriados/${ano}/${uf}.webp`;
 
     const feriados = organizaFeriados(ano, (data.feriados_concatenados || '').split(';'));
     const tabelaFeriados = gerarTabelaFeriados(feriados);
@@ -154,6 +155,9 @@ export function render(config, data, contexto = {}) {
             </div>
 
             <aside class="flex flex-col gap-6">
+                <div class="bg-white shadow-md rounded-md overflow-hidden">
+                    <img src="${imagem}" alt="Feriados ${estado} ${ano}" class="w-full h-auto block" loading="lazy">
+                </div>
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
             </aside>
@@ -169,7 +173,7 @@ export function render(config, data, contexto = {}) {
         titulo,
         descricao,
         `${config.dominio}/${ano}/${uf}/`,
-        null
+        imagem
     );
 
     return renderizarBase(config, conteudo, meta, scriptsAdicionais);

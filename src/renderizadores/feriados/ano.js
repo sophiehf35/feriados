@@ -30,6 +30,7 @@ export function render(config, data, contexto = {}) {
 
     const titulo    = data.meta_titulo_google    || `Feriados ${ano}`;
     const descricao = data.meta_descricao_google || '';
+    const imagem    = `${config.url_cdn_imagens}/feriados/${ano}.webp`;
 
     const feriados = organizaFeriados(ano, (data.feriados_concatenados || '').split(';'));
     const tabelaFeriados = gerarTabelaFeriados(feriados);
@@ -117,7 +118,6 @@ export function render(config, data, contexto = {}) {
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
-        <!-- Card "próximo feriado" — preenchido por JS -->
         <div id="proximo-feriado-container"></div>
 
         <div class="bg-white shadow-md rounded-md p-4 mb-6">
@@ -132,7 +132,6 @@ export function render(config, data, contexto = {}) {
             ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
 
-        <!-- Números + feriadões — preenchidos por JS após legenda -->
         <div id="numeros-container"></div>
         <div id="feriadoes-container"></div>
 
@@ -162,7 +161,6 @@ export function render(config, data, contexto = {}) {
                 ${renderTabelaEstados(data.estados_concatenados, ano)}
                 ${renderTabelaMeses(ano)}
 
-                <!-- Comparação com ano anterior — preenchido por JS -->
                 <div id="comparacao-container"></div>
 
                 <div id="faq" class="bg-white shadow-md rounded-md p-4">
@@ -188,6 +186,9 @@ export function render(config, data, contexto = {}) {
             </div>
 
             <aside class="flex flex-col gap-6">
+                <div class="bg-white shadow-md rounded-md overflow-hidden">
+                    <img src="${imagem}" alt="Feriados ${ano}" class="w-full h-auto block" loading="lazy">
+                </div>
                 ${sumarioHtml}
                 ${renderLinksUteisHtml()}
             </aside>
@@ -206,7 +207,7 @@ export function render(config, data, contexto = {}) {
         titulo,
         descricao,
         `${config.dominio}/${ano}/`,
-        null
+        imagem
     );
 
     return renderizarBase(config, conteudo, meta, scriptsAdicionais);
