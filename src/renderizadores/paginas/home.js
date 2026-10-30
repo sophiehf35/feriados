@@ -6,6 +6,9 @@ import { renderBarra, renderSumarioHtml, renderFaqHtml } from '../feriados/_util
 
 const ANOS_FALLBACK = ['2026', '2025', '2024'];
 
+// Placeholder 1x1 transparente (mesmo do Correios)
+const PLACEHOLDER = 'data:image/webp;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+
 export async function render(config, pagina, dados = {}) {
     const { supabase, scriptsAdicionais = '' } = dados;
 
@@ -30,15 +33,13 @@ export async function render(config, pagina, dados = {}) {
     const imgAlt     = 'Feriados - Calendário nacional, estadual e municipal';
 
     // ─────────────────────────────────────────────────────────
-    // Cards dos anos
-    //   • data-src + data-srcset → compatível com o lazy load
-    //     de inicializarCarregamentoImagens() da base
-    //   • SEM `fade-in` → se o JS de lazy não processar a imagem,
-    //     ela fica invisível (opacity 0). Sem `fade-in`, aparece.
+    // Cards do carrossel — src + srcset diretos (sem lazy custom)
+    // Evita que slides fora da viewport fiquem invisíveis por
+    // causa do IntersectionObserver do JS de lazy load da base.
     // ─────────────────────────────────────────────────────────
     const cardsAnos = anos.map(ano => {
-        const srcImg = `${config.url_cdn_imagens}/feriados/${ano}.webp`;
-        const srcsetImg = [250, 300, 350, 376, 400, 450, 500]
+        const srcImg   = `${config.url_cdn_imagens}/feriados/${ano}.webp`;
+        const srcsetImg = [250, 300, 376, 450, 550, 700, 900]
             .map(w => `${srcImg}?tr=w-${w} ${w}w`)
             .join(', ');
 
@@ -48,9 +49,8 @@ export async function render(config, pagina, dados = {}) {
             <img
                 width="376" height="211"
                 src="${srcImg}"
-                data-src="${srcImg}"
                 srcset="${srcsetImg}"
-                data-srcset="${srcsetImg}"
+                sizes="(max-width: 767px) 90vw, (max-width: 1023px) 45vw, 376px"
                 class="img-fluid w-full card-img-top"
                 title="Feriados ${ano}"
                 alt="Imagem ilustrativa dos feriados ${ano}"
@@ -84,13 +84,16 @@ export async function render(config, pagina, dados = {}) {
     ]);
 
     // ─────────────────────────────────────────────────────────
-    // Card "IMAGEM DE CAPA" — mesmo padrão do Correios
+    // Card "IMAGEM DE CAPA" — EXATAMENTE no padrão Correios:
+    //   src = placeholder 1×1 (vai ser trocado pelo data-src)
+    //   data-src, data-srcset, sizes
+    //   SEM srcset, SEM fade-in
     // ─────────────────────────────────────────────────────────
     const tamanhos = "(max-width: 125px), (max-width: 150px), (max-width: 175px), (max-width: 200px), (max-width: 225px), (max-width: 250px), (max-width: 275px), (max-width: 300px), (max-width: 325px), (max-width: 350px), (max-width: 375px), (max-width: 400px), (max-width: 425px), (max-width: 450px), (max-width: 475px), (-webkit-min-device-pixel-ratio: 1.1) AND (-webkit-max-device-pixel-ratio: 1.5) 80.5vw, (-webkit-min-device-pixel-ratio: 1.6) AND (-webkit-max-device-pixel-ratio: 2) 57.5vw, (-webkit-min-device-pixel-ratio: 2.1) AND (-webkit-max-device-pixel-ratio: 2.5) 42.5vw, (-webkit-min-device-pixel-ratio: 2.6) AND (-webkit-max-device-pixel-ratio: 3) 39.5vw, (-webkit-min-device-pixel-ratio: 3.1) AND (-webkit-max-device-pixel-ratio: 3.5) 32.5vw, (-webkit-min-device-pixel-ratio: 3.6) AND (-webkit-max-device-pixel-ratio: 4) 28.5vw";
 
-    const srcsetCapa = [
-        250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950
-    ].map(w => `${imagemCapa}?tr=w-${w} ${w}w`).join(', ');
+    const srcsetCapa = [250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950]
+        .map(w => `${imagemCapa}?tr=w-${w} ${w}w`)
+        .join(', ');
 
     const cardImagemCapa = `
     <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
@@ -100,16 +103,16 @@ export async function render(config, pagina, dados = {}) {
       <div class="p-4">
         <figure>
           <img
-            src="${imagemCapa}"
+            src="${PLACEHOLDER}"
             data-src="${imagemCapa}"
             sizes="${tamanhos}"
             data-srcset="${srcsetCapa}"
-            class="img-fluid w-full rounded fade-in"
+            class="img-fluid w-full rounded"
             title="${imgTitle}"
             alt="${imgAlt}"
             itemprop="image"
             loading="lazy"
-            srcset="${srcsetCapa}">
+          >
         </figure>
       </div>
     </div>`;
@@ -198,6 +201,10 @@ export async function render(config, pagina, dados = {}) {
     const scriptsCarrossel = `
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <style>
+      .anos-swiper .swiper-slide { height: auto; }
+      .anos-swiper .swiper-slide img { display: block; }
+    </style>
     <script>
     (function () {
       function initAnosSwiper() {
