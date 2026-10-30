@@ -25,8 +25,7 @@ export async function render(config, pagina, dados = {}) {
     const titulo = pagina.meta_titulo || 'Feriados nacionais | feriados estaduais | feriados municipais';
     const descricao = pagina.meta_descricao || '';
 
-    // Hero (banner) e OG usam a mesma capa
-    const imagemHero = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
+    const imagemCapa = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
 
     const cardsAnos = anos.map(ano => `
     <div class="swiper-slide h-auto">
@@ -63,19 +62,8 @@ export async function render(config, pagina, dados = {}) {
     ]);
 
     const conteudo = `
-    <!-- Banner principal (como no site dos Correios) -->
-    <section class="w-full bg-primary">
-      <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-4 md:py-6">
-        <img
-          src="${imagemHero}"
-          alt="Feriados"
-          class="w-full h-auto rounded-md shadow-lg block"
-          loading="eager" fetchpriority="high" width="1200" height="400">
-      </div>
-    </section>
-
     <!-- Barra de busca -->
-    <section class="filtro-estados-cidades bg-primary text-white pb-8 md:pb-10 w-full">
+    <section class="filtro-estados-cidades bg-primary text-white py-8 md:py-10 w-full">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto">
         <div class="text-center mb-6">
           <h1 data-nome-pagina="feriados" class="text-xl md:!text-3xl font-bold text-white uppercase drop-shadow-lg">
@@ -141,6 +129,15 @@ export async function render(config, pagina, dados = {}) {
           <p class="text-gray-700 text-justify">Nesses dias especiais, os corações se enchem de gratidão e alegria, enquanto as famílias se reúnem para compartilhar risadas, sabores e memórias. As cidades pulsam com a energia contagiante de desfiles, festivais e eventos que destacam o espírito vibrante e acolhedor do povo brasileiro. O feriado no Brasil não é apenas um intervalo no calendário, é uma oportunidade para celebrar nossa identidade única e fortalecer os laços que nos unem como uma nação apaixonada.</p>
         </div>
 
+        <!-- Card com a imagem de capa, acima do FAQ -->
+        <div class="bg-white shadow-md rounded-md overflow-hidden">
+          <img
+            src="${imagemCapa}"
+            alt="Feriados"
+            class="w-full h-auto block"
+            loading="lazy" width="1200" height="400">
+        </div>
+
         <div id="faq" class="bg-white shadow-md rounded-md p-4">
           <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-3">Perguntas Frequentes</h2>
           <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -153,7 +150,7 @@ export async function render(config, pagina, dados = {}) {
     <script id="dados-barra-cidades" type="application/json">${JSON.stringify(barra.cidades || [])}</script>
     `;
 
-    const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemHero);
+    const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemCapa);
 
     const scriptsCarrossel = `
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
