@@ -6,9 +6,6 @@ import { renderBarra, renderSumarioHtml, renderFaqHtml } from '../feriados/_util
 
 const ANOS_FALLBACK = ['2026', '2025', '2024'];
 
-// Placeholder 1x1 transparente (mesmo do Correios)
-const PLACEHOLDER = 'data:image/webp;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
-
 export async function render(config, pagina, dados = {}) {
     const { supabase, scriptsAdicionais = '' } = dados;
 
@@ -33,9 +30,10 @@ export async function render(config, pagina, dados = {}) {
     const imgAlt     = 'Feriados - Calendário nacional, estadual e municipal';
 
     // ─────────────────────────────────────────────────────────
-    // Cards do carrossel — src + srcset diretos (sem lazy custom)
-    // Evita que slides fora da viewport fiquem invisíveis por
-    // causa do IntersectionObserver do JS de lazy load da base.
+    // Cards do carrossel — MESMO padrão do correios:
+    //   src real + data-src real + srcset + data-srcset + fade-in + lazy
+    // O fallback (mais abaixo, no script) garante visibilidade
+    // se o IntersectionObserver da base não pegar os slides ocultos.
     // ─────────────────────────────────────────────────────────
     const cardsAnos = anos.map(ano => {
         const srcImg   = `${config.url_cdn_imagens}/feriados/${ano}.webp`;
@@ -49,9 +47,11 @@ export async function render(config, pagina, dados = {}) {
             <img
                 width="376" height="211"
                 src="${srcImg}"
+                data-src="${srcImg}"
                 srcset="${srcsetImg}"
+                data-srcset="${srcsetImg}"
                 sizes="(max-width: 767px) 90vw, (max-width: 1023px) 45vw, 376px"
-                class="img-fluid w-full card-img-top"
+                class="img-fluid w-full card-img-top fade-in"
                 title="Feriados ${ano}"
                 alt="Imagem ilustrativa dos feriados ${ano}"
                 loading="lazy">
@@ -84,10 +84,10 @@ export async function render(config, pagina, dados = {}) {
     ]);
 
     // ─────────────────────────────────────────────────────────
-    // Card "IMAGEM DE CAPA" — EXATAMENTE no padrão Correios:
-    //   src = placeholder 1×1 (vai ser trocado pelo data-src)
-    //   data-src, data-srcset, sizes
-    //   SEM srcset, SEM fade-in
+    // Card "IMAGEM DE CAPA" — EXATAMENTE como o correios:
+    //   src real + data-src + srcset + data-srcset + sizes
+    //   + class="img-fluid w-full rounded fade-in"
+    //   + itemprop="image" + loading="lazy"
     // ─────────────────────────────────────────────────────────
     const tamanhos = "(max-width: 125px), (max-width: 150px), (max-width: 175px), (max-width: 200px), (max-width: 225px), (max-width: 250px), (max-width: 275px), (max-width: 300px), (max-width: 325px), (max-width: 350px), (max-width: 375px), (max-width: 400px), (max-width: 425px), (max-width: 450px), (max-width: 475px), (-webkit-min-device-pixel-ratio: 1.1) AND (-webkit-max-device-pixel-ratio: 1.5) 80.5vw, (-webkit-min-device-pixel-ratio: 1.6) AND (-webkit-max-device-pixel-ratio: 2) 57.5vw, (-webkit-min-device-pixel-ratio: 2.1) AND (-webkit-max-device-pixel-ratio: 2.5) 42.5vw, (-webkit-min-device-pixel-ratio: 2.6) AND (-webkit-max-device-pixel-ratio: 3) 39.5vw, (-webkit-min-device-pixel-ratio: 3.1) AND (-webkit-max-device-pixel-ratio: 3.5) 32.5vw, (-webkit-min-device-pixel-ratio: 3.6) AND (-webkit-max-device-pixel-ratio: 4) 28.5vw";
 
@@ -103,15 +103,16 @@ export async function render(config, pagina, dados = {}) {
       <div class="p-4">
         <figure>
           <img
-            src="${PLACEHOLDER}"
+            src="${imagemCapa}"
             data-src="${imagemCapa}"
             sizes="${tamanhos}"
             data-srcset="${srcsetCapa}"
-            class="img-fluid w-full rounded"
+            class="img-fluid w-full rounded fade-in"
             title="${imgTitle}"
             alt="${imgAlt}"
             itemprop="image"
             loading="lazy"
+            srcset="${srcsetCapa}"
           >
         </figure>
       </div>
@@ -198,6 +199,9 @@ export async function render(config, pagina, dados = {}) {
 
     const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemCapa);
 
+    // ─────────────────────────────────────────────────────────
+    // Swiper + fallback de lazy load
+    // ─────────────────────────────────────────────────────────
     const scriptsCarrossel = `
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -207,27 +211,49 @@ export async function render(config, pagina, dados = {}) {
     </style>
     <script>
     (function () {
-      function initAnosSwiper() {
-        var el = document.querySelector('.anos-swiper');
-        if (!el || typeof Swiper === 'undefined') return;
-        if (el.classList.contains('swiper-initialized')) return;
-        new Swiper(el, {
-          slidesPerView: 1,
-          spaceBetween: 24,
-          watchOverflow: true,
-          grabCursor: true,
-          pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
-          navigation: {
-            nextEl: el.querySelector('.swiper-button-next'),
-            prevEl: el.querySelector('.swiper-button-prev')
-          },
-          breakpoints: {
-            640:  { slidesPerView: 1, spaceBetween: 16 },
-            768:  { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 24 }
-          }
+      function carregarImagensCarrossel() {
+        // Fallback: força o carregamento das imagens do carrossel
+        // (o IntersectionObserver da base pode não pegar os slides
+        // ocultos pelo transform do Swiper).
+        var wrapper = document.querySelector('.anos-swiper .swiper-wrapper');
+        if (!wrapper) return;
+        wrapper.querySelectorAll('img[data-src]').forEach(function (img) {
+          var ds = img.getAttribute('data-src');
+          var dss = img.getAttribute('data-srcset');
+          if (ds && img.getAttribute('src') !== ds) img.setAttribute('src', ds);
+          if (dss && img.getAttribute('srcset') !== dss) img.setAttribute('srcset', dss);
+          img.classList.remove('fade-in');
+          if (!img.style.opacity) img.style.opacity = '1';
         });
       }
+
+      function initAnosSwiper() {
+        var el = document.querySelector('.anos-swiper');
+        if (!el || typeof Swiper === 'undefined') { carregarImagensCarrossel(); return; }
+        if (!el.classList.contains('swiper-initialized')) {
+          new Swiper(el, {
+            slidesPerView: 1,
+            spaceBetween: 24,
+            watchOverflow: true,
+            grabCursor: true,
+            pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
+            navigation: {
+              nextEl: el.querySelector('.swiper-button-next'),
+              prevEl: el.querySelector('.swiper-button-prev')
+            },
+            breakpoints: {
+              640:  { slidesPerView: 1, spaceBetween: 16 },
+              768:  { slidesPerView: 2, spaceBetween: 20 },
+              1024: { slidesPerView: 3, spaceBetween: 24 }
+            }
+          });
+        }
+
+        // Após o Swiper posicionar os slides, força o carregamento
+        // (o fallback cobre o caso do observer da base não ver slides ocultos)
+        setTimeout(carregarImagensCarrossel, 50);
+      }
+
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initAnosSwiper);
       } else {
