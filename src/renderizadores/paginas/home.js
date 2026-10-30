@@ -26,6 +26,8 @@ export async function render(config, pagina, dados = {}) {
     const descricao = pagina.meta_descricao || '';
 
     const imagemCapa = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
+    const imgTitle   = 'Feriados - Calendário nacional, estadual e municipal';
+    const imgAlt     = 'Feriados - Calendário nacional, estadual e municipal';
 
     const cardsAnos = anos.map(ano => `
     <div class="swiper-slide h-auto">
@@ -60,6 +62,41 @@ export async function render(config, pagina, dados = {}) {
         { titulo: 'Feriado Brasil', href: '#feriado-brasil' },
         { titulo: 'Perguntas frequentes', href: '#faq' },
     ]);
+
+    // ─────────────────────────────────────────────────────────
+    // Card "IMAGEM DE CAPA" — mesma estrutura usada pelo Correios:
+    //   • shadow-[0_0_30px_0_rgba(0,0,0,0.1)]
+    //   • título com bg-primary + uppercase
+    //   • body p-4 com <figure> e <img> responsivo (srcset/data-srcset)
+    //   • itemprop="image" + loading="lazy" + fade-in
+    // ─────────────────────────────────────────────────────────
+    const tamanhos = "(max-width: 125px), (max-width: 150px), (max-width: 175px), (max-width: 200px), (max-width: 225px), (max-width: 250px), (max-width: 275px), (max-width: 300px), (max-width: 325px), (max-width: 350px), (max-width: 375px), (max-width: 400px), (max-width: 425px), (max-width: 450px), (max-width: 475px), (-webkit-min-device-pixel-ratio: 1.1) AND (-webkit-max-device-pixel-ratio: 1.5) 80.5vw, (-webkit-min-device-pixel-ratio: 1.6) AND (-webkit-max-device-pixel-ratio: 2) 57.5vw, (-webkit-min-device-pixel-ratio: 2.1) AND (-webkit-max-device-pixel-ratio: 2.5) 42.5vw, (-webkit-min-device-pixel-ratio: 2.6) AND (-webkit-max-device-pixel-ratio: 3) 39.5vw, (-webkit-min-device-pixel-ratio: 3.1) AND (-webkit-max-device-pixel-ratio: 3.5) 32.5vw, (-webkit-min-device-pixel-ratio: 3.6) AND (-webkit-max-device-pixel-ratio: 4) 28.5vw";
+
+    const srcsetPadrao = [
+        250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950
+    ].map(w => `${imagemCapa}?tr=w-${w} ${w}w`).join(', ');
+
+    const cardImagemCapa = `
+    <div class="bg-white shadow-[0_0_30px_0_rgba(0,0,0,0.1)] rounded-md overflow-hidden">
+      <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider">IMAGEM DE CAPA</h3>
+      </div>
+      <div class="p-4">
+        <figure>
+          <img
+            src="${imagemCapa}"
+            data-src="${imagemCapa}"
+            sizes="${tamanhos}"
+            data-srcset="${srcsetPadrao}"
+            class="img-fluid w-full rounded fade-in"
+            title="${imgTitle}"
+            alt="${imgAlt}"
+            itemprop="image"
+            loading="lazy"
+            srcset="${srcsetPadrao}">
+        </figure>
+      </div>
+    </div>`;
 
     const conteudo = `
     <!-- Barra de busca -->
@@ -129,14 +166,7 @@ export async function render(config, pagina, dados = {}) {
           <p class="text-gray-700 text-justify">Nesses dias especiais, os corações se enchem de gratidão e alegria, enquanto as famílias se reúnem para compartilhar risadas, sabores e memórias. As cidades pulsam com a energia contagiante de desfiles, festivais e eventos que destacam o espírito vibrante e acolhedor do povo brasileiro. O feriado no Brasil não é apenas um intervalo no calendário, é uma oportunidade para celebrar nossa identidade única e fortalecer os laços que nos unem como uma nação apaixonada.</p>
         </div>
 
-        <!-- Card com a imagem de capa, acima do FAQ -->
-        <div class="bg-white shadow-md rounded-md overflow-hidden">
-          <img
-            src="${imagemCapa}"
-            alt="Feriados"
-            class="w-full h-auto block"
-            loading="lazy" width="1200" height="400">
-        </div>
+        ${cardImagemCapa}
 
         <div id="faq" class="bg-white shadow-md rounded-md p-4">
           <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-3">Perguntas Frequentes</h2>
