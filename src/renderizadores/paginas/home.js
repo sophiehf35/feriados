@@ -2,10 +2,7 @@
 
 import { renderizarBase, gerarMetaTags } from '@sophiehf35/plataforma-base';
 import { escapeHtml, capitalizar } from '../../js/utils.js';
-import {
-    renderBarra, renderLegendaHtml, renderLinksUteisHtml,
-    renderSumarioHtml, renderFaqHtml,
-} from '../feriados/_utils.js';
+import { renderBarra, renderSumarioHtml, renderFaqHtml } from '../feriados/_utils.js';
 
 const ANOS_FALLBACK = ['2026', '2025', '2024'];
 
@@ -28,10 +25,9 @@ export async function render(config, pagina, dados = {}) {
     const titulo = pagina.meta_titulo || 'Feriados nacionais | feriados estaduais | feriados municipais';
     const descricao = pagina.meta_descricao || '';
 
-    // OG da home usa a capa específica da home (não é uma "página de feriado")
-    const imagemOG = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
+    // Hero (banner) e OG usam a mesma capa
+    const imagemHero = `${config.url_cdn_imagens}/paginas/capa/${pagina.slug}.webp`;
 
-    // --- Cards dos anos: imagem por ano no novo padrão /feriados/{ano}.webp ---
     const cardsAnos = anos.map(ano => `
     <div class="swiper-slide h-auto">
         <div class="card box_detail p-0 bg-white shadow-md rounded-md overflow-hidden h-full flex flex-col">
@@ -61,11 +57,25 @@ export async function render(config, pagina, dados = {}) {
     const sumarioHtml = renderSumarioHtml([
         { titulo: 'Feriados', href: '#feriado' },
         { titulo: 'Feriados nacionais', href: '#feriado-nacional' },
+        { titulo: 'Feriado nacional', href: '#feriado-nacional-single' },
+        { titulo: 'Feriado Brasil', href: '#feriado-brasil' },
         { titulo: 'Perguntas frequentes', href: '#faq' },
     ]);
 
     const conteudo = `
-    <section class="filtro-estados-cidades bg-primary text-white py-8 md:py-10 w-full">
+    <!-- Banner principal (como no site dos Correios) -->
+    <section class="w-full bg-primary">
+      <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-4 md:py-6">
+        <img
+          src="${imagemHero}"
+          alt="Feriados"
+          class="w-full h-auto rounded-md shadow-lg block"
+          loading="eager" fetchpriority="high" width="1200" height="400">
+      </div>
+    </section>
+
+    <!-- Barra de busca -->
+    <section class="filtro-estados-cidades bg-primary text-white pb-8 md:pb-10 w-full">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto">
         <div class="text-center mb-6">
           <h1 data-nome-pagina="feriados" class="text-xl md:!text-3xl font-bold text-white uppercase drop-shadow-lg">
@@ -85,6 +95,7 @@ export async function render(config, pagina, dados = {}) {
       </div>
     </section>
 
+    <!-- Carrossel de anos -->
     <section class="bg-gray-50 pt-8 pb-4">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto">
         <div class="anos-carrossel relative">
@@ -100,20 +111,34 @@ export async function render(config, pagina, dados = {}) {
       </div>
     </section>
 
+    <!-- Conteúdo em coluna única -->
     <section class="bg-gray-50 py-8">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto space-y-6">
+
         ${sumarioHtml}
 
         <div id="feriado" class="bg-white shadow-md rounded-md p-4">
           <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados</h2>
-          <p class="text-gray-700 text-justify mb-3">Ah, como é maravilhoso acordar pela manhã e perceber que o dia é envolto pela magia de um feriado! É como se o tempo desacelerasse, abrindo espaço para momentos de alegria e descontração.</p>
-          <p class="text-gray-700 text-justify">Cada feriado é como uma paleta de cores, pintando nossas vidas com tonalidades vibrantes de descanso e diversão. É a oportunidade perfeita para reencontrar amigos e familiares, compartilhar risadas e criar memórias que se tornarão tesouros em nosso coração.</p>
+          <p class="text-gray-700 text-justify mb-3">Ah, como é maravilhoso acordar pela manhã e perceber que o dia é envolto pela magia de um feriado! É como se o tempo desacelerasse, abrindo espaço para momentos de alegria e descontração. O aroma do café paira no ar, misturando-se com a expectativa de um dia livre de obrigações. As ruas, normalmente agitadas, tornam-se mais calmas, e o sol parece sorrir ainda mais radiante, como se estivesse cúmplice da felicidade que esse dia especial traz consigo.</p>
+          <p class="text-gray-700 text-justify">Cada feriado é como uma paleta de cores, pintando nossas vidas com tonalidades vibrantes de descanso e diversão. É a oportunidade perfeita para reencontrar amigos e familiares, compartilhar risadas e criar memórias que se tornarão tesouros em nosso coração. A atmosfera festiva é contagiante, e a sensação de liberdade nos permite saborear cada momento com gratidão. Os feriados não são apenas pausas no calendário, mas pausas no ritmo frenético da vida, proporcionando-nos um refúgio onde podemos recarregar as energias e celebrar a preciosidade do tempo junto àqueles que amamos.</p>
         </div>
 
         <div id="feriado-nacional" class="bg-white shadow-md rounded-md p-4">
           <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriados nacionais</h2>
-          <p class="text-gray-700 text-justify mb-3">O ano começa com uma alegria contagiante, e a ansiedade pela chegada dos feriados já se faz presente nos corações de todos. Entre as datas marcadas no calendário, o feriado promete ser uma celebração memorável.</p>
-          <p class="text-gray-700 text-justify">Nesses feriados tão aguardados, as famílias se reunirão com sorrisos sinceros, compartilhando risadas e histórias que fortaleciam os laços afetivos.</p>
+          <p class="text-gray-700 text-justify mb-3">O ano começa com uma alegria contagiante, e a ansiedade pela chegada dos feriados já se faz presente nos corações de todos. Entre as datas marcadas no calendário, o feriado de 2024 promete ser uma celebração memorável, repleta de momentos especiais e emocionantes. As ruas ganharão um colorido diferente, com decorações festivas que refletiam a atmosfera de alegria que pairava no ar.</p>
+          <p class="text-gray-700 text-justify">Nesses feriados tão aguardados, as famílias se reunirão com sorrisos sinceros, compartilhando risadas e histórias que fortaleciam os laços afetivos. As praças e parques serão palcos de encontros animados, onde amigos irão se abraçar calorosamente, celebrando a oportunidade de estar juntos. O brilho nos olhos das crianças ao vislumbrarem as festividades será cativante, transmitindo a magia que somente os feriados conseguem proporcionar. A energia positiva irá permear o ambiente, fazendo com que cada momento seja vivido intensamente, transformando os feriados em lembranças eternamente guardadas no coração de todos.</p>
+        </div>
+
+        <div id="feriado-nacional-single" class="bg-white shadow-md rounded-md p-4">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado nacional</h2>
+          <p class="text-gray-700 text-justify mb-3">O feriado nacional promete ser um verdadeiro espetáculo de união e celebração em todo o país. Desde as primeiras horas da manhã, a expectativa e o entusiasmo começam a contagiar as pessoas, que se preparam para uma jornada especial de descanso e confraternização. As cidades se preparam para ganhar um brilho peculiar, decoradas com cores vibrantes e símbolos que ressaltarão o orgulho nacional.</p>
+          <p class="text-gray-700 text-justify">Nesse dia singular, as praças e as ruas se transformarão em palcos de festa, onde a diversidade cultural do país se manifestará em danças, músicas e comidas típicas. As famílias se reunirão em almoços animados, compartilhando histórias e tradições que ecoam os valores fundamentais da nação. O sentimento de pertencimento e gratidão permeará cada abraço e sorriso, criando memórias que transcenderão o próprio feriado. O feriado nacional não será apenas um intervalo no calendário, mas uma celebração emocionante da riqueza e da união que tornam cada cidadão parte integrante desse grande mosaico cultural.</p>
+        </div>
+
+        <div id="feriado-brasil" class="bg-white shadow-md rounded-md p-4">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Feriado Brasil</h2>
+          <p class="text-gray-700 text-justify mb-3">O feriado no Brasil é como um abraço caloroso que envolve todo o país em uma atmosfera de alegria e descontração. É um momento em que as cores da nossa diversidade se misturam, criando um verdadeiro arco-íris cultural. Desde as praias ensolaradas até as montanhas verdejantes, o Brasil ganha vida com celebrações que refletem a riqueza de nossas tradições.</p>
+          <p class="text-gray-700 text-justify">Nesses dias especiais, os corações se enchem de gratidão e alegria, enquanto as famílias se reúnem para compartilhar risadas, sabores e memórias. As cidades pulsam com a energia contagiante de desfiles, festivais e eventos que destacam o espírito vibrante e acolhedor do povo brasileiro. O feriado no Brasil não é apenas um intervalo no calendário, é uma oportunidade para celebrar nossa identidade única e fortalecer os laços que nos unem como uma nação apaixonada.</p>
         </div>
 
         <div id="faq" class="bg-white shadow-md rounded-md p-4">
@@ -122,16 +147,13 @@ export async function render(config, pagina, dados = {}) {
             ${renderFaqHtml(faqQuestions)}
           </div>
         </div>
-
-        ${renderLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
-        ${renderLinksUteisHtml()}
       </div>
     </section>
 
     <script id="dados-barra-cidades" type="application/json">${JSON.stringify(barra.cidades || [])}</script>
     `;
 
-    const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemOG);
+    const meta = gerarMetaTags(config, titulo, descricao, config.dominio, imagemHero);
 
     const scriptsCarrossel = `
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
