@@ -19,35 +19,61 @@ export function inicializarBarraFeriados() {
         } catch (_) {}
     }
 
+    // Aceita 2 formatos:
+    //   1. Objeto:  { "sp": [{slug, cidade}, ...], "rj": [...] }
+    //   2. Array:   [{slug, cidade, uf}, ...]   (filtra por c.uf)
+    // Comparação de UF é case-insensitive ("SP" == "sp").
     function listaCidades(uf) {
-        if (!uf) return [];
-        if (Array.isArray(cidadesRaw)) return cidadesRaw;
-        if (cidadesRaw && typeof cidadesRaw === 'object' && Array.isArray(cidadesRaw[uf])) {
-            return cidadesRaw[uf];
+        if (!uf || !cidadesRaw) return [];
+        const ufNorm = String(uf).toLowerCase();
+
+        // Formato 1 — objeto { uf: [...] }
+        if (!Array.isArray(cidadesRaw) && typeof cidadesRaw === 'object') {
+            const chave = Object.keys(cidadesRaw)
+                .find(k => k.toLowerCase() === ufNorm);
+            return chave && Array.isArray(cidadesRaw[chave]) ? cidadesRaw[chave] : [];
         }
+
+        // Formato 2 — array plano
+        if (Array.isArray(cidadesRaw)) {
+            const temUf = cidadesRaw.some(c => c && c.uf);
+            if (!temUf) return cidadesRaw; // se não há .uf, não dá pra filtrar
+            return cidadesRaw.filter(c =>
+                c && String(c.uf || '').toLowerCase() === ufNorm
+            );
+        }
+
         return [];
     }
 
     function preencherCidades(uf, selecionarSlug) {
         selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
-        listaCidades(uf).forEach(c => {
+
+        const cidades = listaCidades(uf);
+        cidades.forEach(c => {
             const opt = document.createElement('option');
             opt.value = c.slug;
             opt.textContent = capitalizar(c.cidade);
             selCidade.appendChild(opt);
         });
+
+        // Se veio uma cidade pré-selecionada (ex.: /2026/sp/sao-paulo/),
+        // tenta marcar. Se não existir na lista, deixa vazio.
         if (selecionarSlug) {
             selCidade.value = selecionarSlug;
             if (selCidade.value !== selecionarSlug) selCidade.value = '';
+        } else {
+            selCidade.value = '';
         }
     }
 
-    // Se a página já veio com estado definido (ex.: /2025/sp/),
-    // carrega as cidades desse estado com o slug atual marcado.
+    // Se a página já veio com estado definido (ex.: /2026/sp/),
+    // carrega as cidades desse estado com o slug atual marcado (se for o caso).
     if (selEstado.value) {
         preencherCidades(selEstado.value, selCidade.value);
     }
 
+    // Troca de estado: SEMPRE repopula as cidades do novo estado
     selEstado.addEventListener('change', function () {
         preencherCidades(this.value, '');
     });
