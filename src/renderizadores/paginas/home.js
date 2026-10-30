@@ -29,13 +29,32 @@ export async function render(config, pagina, dados = {}) {
     const imgTitle   = 'Feriados - Calendário nacional, estadual e municipal';
     const imgAlt     = 'Feriados - Calendário nacional, estadual e municipal';
 
-    const cardsAnos = anos.map(ano => `
+    // ─────────────────────────────────────────────────────────
+    // Cards dos anos
+    //   • data-src + data-srcset → compatível com o lazy load
+    //     de inicializarCarregamentoImagens() da base
+    //   • SEM `fade-in` → se o JS de lazy não processar a imagem,
+    //     ela fica invisível (opacity 0). Sem `fade-in`, aparece.
+    // ─────────────────────────────────────────────────────────
+    const cardsAnos = anos.map(ano => {
+        const srcImg = `${config.url_cdn_imagens}/feriados/${ano}.webp`;
+        const srcsetImg = [250, 300, 350, 376, 400, 450, 500]
+            .map(w => `${srcImg}?tr=w-${w} ${w}w`)
+            .join(', ');
+
+        return `
     <div class="swiper-slide h-auto">
         <div class="card box_detail p-0 bg-white shadow-md rounded-md overflow-hidden h-full flex flex-col">
-            <img width="376" height="211"
-                src="${config.url_cdn_imagens}/feriados/${ano}.webp"
-                class="img-fluid fade-in card-img-top w-full"
-                title="Feriados ${ano}" alt="Imagem ilustrativa dos feriados ${ano}" loading="lazy">
+            <img
+                width="376" height="211"
+                src="${srcImg}"
+                data-src="${srcImg}"
+                srcset="${srcsetImg}"
+                data-srcset="${srcsetImg}"
+                class="img-fluid w-full card-img-top"
+                title="Feriados ${ano}"
+                alt="Imagem ilustrativa dos feriados ${ano}"
+                loading="lazy">
             <div class="card-body p-4 flex flex-col flex-grow">
                 <h2 class="card-title text-xl font-semibold mb-2">
                     <a href="/${ano}/" class="text-gray-800 hover:text-primary">Feriados ${ano}</a>
@@ -46,7 +65,8 @@ export async function render(config, pagina, dados = {}) {
                 <a href="/${ano}/" class="block text-center bg-botao-acao hover:brightness-110 text-white font-medium py-2 px-4 rounded-md transition">Ver feriados</a>
             </div>
         </div>
-    </div>`).join('');
+    </div>`;
+    }).join('');
 
     const faqQuestions = [
         { pergunta: 'O que é ponto facultativo?', resposta: 'Ponto facultativo é um dia de trabalho opcional para empregadores e funcionários, diferindo dos feriados obrigatórios. A decisão de funcionamento cabe a cada organização.' },
@@ -64,15 +84,11 @@ export async function render(config, pagina, dados = {}) {
     ]);
 
     // ─────────────────────────────────────────────────────────
-    // Card "IMAGEM DE CAPA" — mesma estrutura usada pelo Correios:
-    //   • shadow-[0_0_30px_0_rgba(0,0,0,0.1)]
-    //   • título com bg-primary + uppercase
-    //   • body p-4 com <figure> e <img> responsivo (srcset/data-srcset)
-    //   • itemprop="image" + loading="lazy" + fade-in
+    // Card "IMAGEM DE CAPA" — mesmo padrão do Correios
     // ─────────────────────────────────────────────────────────
     const tamanhos = "(max-width: 125px), (max-width: 150px), (max-width: 175px), (max-width: 200px), (max-width: 225px), (max-width: 250px), (max-width: 275px), (max-width: 300px), (max-width: 325px), (max-width: 350px), (max-width: 375px), (max-width: 400px), (max-width: 425px), (max-width: 450px), (max-width: 475px), (-webkit-min-device-pixel-ratio: 1.1) AND (-webkit-max-device-pixel-ratio: 1.5) 80.5vw, (-webkit-min-device-pixel-ratio: 1.6) AND (-webkit-max-device-pixel-ratio: 2) 57.5vw, (-webkit-min-device-pixel-ratio: 2.1) AND (-webkit-max-device-pixel-ratio: 2.5) 42.5vw, (-webkit-min-device-pixel-ratio: 2.6) AND (-webkit-max-device-pixel-ratio: 3) 39.5vw, (-webkit-min-device-pixel-ratio: 3.1) AND (-webkit-max-device-pixel-ratio: 3.5) 32.5vw, (-webkit-min-device-pixel-ratio: 3.6) AND (-webkit-max-device-pixel-ratio: 4) 28.5vw";
 
-    const srcsetPadrao = [
+    const srcsetCapa = [
         250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950
     ].map(w => `${imagemCapa}?tr=w-${w} ${w}w`).join(', ');
 
@@ -87,19 +103,18 @@ export async function render(config, pagina, dados = {}) {
             src="${imagemCapa}"
             data-src="${imagemCapa}"
             sizes="${tamanhos}"
-            data-srcset="${srcsetPadrao}"
+            data-srcset="${srcsetCapa}"
             class="img-fluid w-full rounded fade-in"
             title="${imgTitle}"
             alt="${imgAlt}"
             itemprop="image"
             loading="lazy"
-            srcset="${srcsetPadrao}">
+            srcset="${srcsetCapa}">
         </figure>
       </div>
     </div>`;
 
     const conteudo = `
-    <!-- Barra de busca -->
     <section class="filtro-estados-cidades bg-primary text-white py-8 md:py-10 w-full">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto">
         <div class="text-center mb-6">
@@ -120,7 +135,6 @@ export async function render(config, pagina, dados = {}) {
       </div>
     </section>
 
-    <!-- Carrossel de anos -->
     <section class="bg-gray-50 pt-8 pb-4">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto">
         <div class="anos-carrossel relative">
@@ -136,7 +150,6 @@ export async function render(config, pagina, dados = {}) {
       </div>
     </section>
 
-    <!-- Conteúdo em coluna única -->
     <section class="bg-gray-50 py-8">
       <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto space-y-6">
 
