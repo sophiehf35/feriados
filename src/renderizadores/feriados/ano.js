@@ -79,7 +79,6 @@ export function render(config, data, contexto = {}) {
         },
     ];
 
-    // Sumário: TODOS os h2 visíveis, com href batendo nos ids abaixo.
     const sumarioHtml = renderSumarioHtml([
         { titulo: `Feriados ${ano}`,            href: '#sobre-feriados' },
         { titulo: `Lista de feriados ${ano}`,   href: '#lista-feriados' },
@@ -168,16 +167,20 @@ export function render(config, data, contexto = {}) {
 
         <div id="proximo-feriado-container"></div>
 
-        <div class="bg-white shadow-md rounded-md p-4 mb-6">
-            <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> ${data.paragrafo1 || ''}</p>
+        <!-- Parágrafo (2/3) + Legenda (1/3) na mesma linha -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="lg:col-span-2">
+                <div class="bg-white shadow-md rounded-md p-4 h-full">
+                    <p class="text-gray-700 text-justify"><b>Feriados ${ano}:</b> ${data.paragrafo1 || ''}</p>
+                </div>
+            </div>
+            <div class="lg:col-span-1">
+                ${renderLegendaHtml(['nacional', 'facultativo'])}
+            </div>
         </div>
 
         <div id="calendario" class="mb-6">
             ${renderCalendarioHtml()}
-        </div>
-
-        <div class="mb-6">
-            ${renderLegendaHtml(['nacional', 'facultativo'])}
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
