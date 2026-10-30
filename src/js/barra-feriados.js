@@ -10,99 +10,118 @@ export function inicializarBarraFeriados() {
 
     if (!selAno || !selEstado || !selCidade || !botao) return;
 
+    // ── 1. Lê o que o backend embutiu no HTML ──────────────
+    let cidadesHtml = null;
     const elCidades = document.getElementById('dados-barra-cidades');
-    let cidadesRaw = null;
     if (elCidades) {
         try {
-            const texto = elCidades.textContent.trim();
-            if (texto) cidadesRaw = JSON.parse(texto);
+            const parsed = JSON.parse(elCidades.textContent.trim() || 'null');
+            if (parsed && typeof parsed === 'object') cidadesHtml = parsed;
         } catch (_) {}
     }
 
-    // Cache do objeto completo { uf: [{slug, cidade}, ...] }
-    let cidadesCompletas = null;
+    // Cache em memória — usado depois do fetch
+    let cidadesCompletas = null; // sempre { uf: [...] }
+    let fetchPromise = null;
 
     // Se o HTML já veio no formato objeto, usa direto
-    if (cidadesRaw && !Array.isArray(cidadesRaw) && typeof cidadesRaw === 'object') {
-        cidadesCompletas = cidadesRaw;
+    if (cidadesHtml && !Array.isArray(cidadesHtml)) {
+        cidadesCompletas = cidadesHtml;
     }
 
-    // ─── Fetch (só se precisar) ────────────────────────────
-    // Chama a MESMA RPC sem p_uf → retorna { uf: [...] } de todos os estados.
-    async function carregarTodasCidades() {
-        if (cidadesCompletas) return cidadesCompletas;
+    console.log('[barra-feriados] cidadesHtml:', cidadesHtml);
+    console.log('[barra-feriados] PORTAL_CONFIG keys:', Object.keys(window.PORTAL_CONFIG || {}));
+
+    // ── 2. Fetch — busca TUDO se precisar ──────────────────
+    function carregarTodasCidades() {
+        if (cidadesCompletas) return Promise.resolve(cidadesCompletas);
+        if (fetchPromise) return fetchPromise;
 
         const cfg = window.PORTAL_CONFIG || {};
         const url = cfg.supabase_url;
         const key = cfg.supabase_anon_key;
 
-        if (!url || !key) return null;
-
-        try {
-            const res = await fetch(`${url}/rest/v1/rpc/get_barra_feriados`, {
-                method: 'POST',
-                headers: {
-                    'apikey': key,
-                    'Authorization': `Bearer ${key}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({}),
-            });
-            if (!res.ok) return null;
-            const data = await res.json();
-            if (data && typeof data === 'object' && data.cidades && !Array.isArray(data.cidades)) {
-                cidadesCompletas = data.cidades;
-                return cidadesCompletas;
-            }
-            return null;
-        } catch (_) {
-            return null;
+        if (!url || !key) {
+            console.warn('[barra-feriados] supabase_url/supabase_anon_key ausentes no PORTAL_CONFIG');
+            return Promise.resolve(null);
         }
+
+        fetchPromise = fetch(`${url}/rest/v1/rpc/get_barra_feriados`, {
+            method: 'POST',
+            headers: {
+                'apikey': key,
+                'Authorization': `Bearer ${key}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        })
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(data => {
+                const cid = data && data.cidades;
+                if (cid && typeof cid === 'object' && !Array.isArray(cid)) {
+                    cidadesCompletas = cid;
+                    return cidadesCompletas;
+                }
+                return null;
+            })
+            .catch(err => {
+                console.warn('[barra-feriados] fetch falhou:', err);
+                return null;
+            });
+
+        return fetchPromise;
     }
 
-    // ─── Lista local (fallback quando o fetch falha) ──────
-    function listaCidadesLocal(uf) {
+    // ── 3. Extrai lista de um UF ───────────────────────────
+    function extrairLista(uf) {
         if (!uf) return [];
         const ufNorm = String(uf).toLowerCase();
 
-        // Objeto { uf: [...] }
+        // Formato objeto (preferido): { uf: [...] }
         if (cidadesCompletas) {
             const chave = Object.keys(cidadesCompletas)
                 .find(k => k.toLowerCase() === ufNorm);
-            return chave ? cidadesCompletas[chave] : [];
+            return chave && Array.isArray(cidadesCompletas[chave])
+                ? cidadesCompletas[chave]
+                : [];
         }
 
-        // Array plano (fallback do backend atual)
-        if (Array.isArray(cidadesRaw)) {
-            const temUf = cidadesRaw.some(c => c && c.uf);
+        // Formato array plano com .uf
+        if (Array.isArray(cidadesHtml)) {
+            const temUf = cidadesHtml.some(c => c && c.uf);
             if (temUf) {
-                return cidadesRaw.filter(c =>
+                return cidadesHtml.filter(c =>
                     String(c.uf || '').toLowerCase() === ufNorm
                 );
             }
-            return cidadesRaw; // sem .uf → mantém comportamento antigo
+            // Fallback antigo: backend mandou só do estado atual (sem .uf)
+            return cidadesHtml;
         }
 
         return [];
     }
 
-    async function obterCidades(uf) {
-        if (!uf) return [];
-        // Se já temos o objeto completo, não precisa de fetch
-        if (cidadesCompletas) return listaCidadesLocal(uf);
-        // Tenta carregar tudo 1 vez
-        const carregado = await carregarTodasCidades();
-        if (carregado) return listaCidadesLocal(uf);
-        // Fallback: só o que estava no HTML
-        return listaCidadesLocal(uf);
-    }
-
-    // ─── Render ────────────────────────────────────────────
+    // ── 4. Preenche o select ───────────────────────────────
     async function preencherCidades(uf, selecionarSlug) {
+        if (!uf) {
+            selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
+            selCidade.value = '';
+            return;
+        }
+
         selCidade.innerHTML = '<option value="">Carregando...</option>';
         selCidade.disabled = true;
 
-        const cidades = await obterCidades(uf);
+        let cidades = extrairLista(uf);
+
+        // Se não achou localmente, tenta buscar do servidor
+        if (!cidades.length) {
+            const carregado = await carregarTodasCidades();
+            if (carregado) cidades = extrairLista(uf);
+        }
 
         selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
         cidades.forEach(c => {
@@ -122,6 +141,7 @@ export function inicializarBarraFeriados() {
         }
     }
 
+    // ── 5. Inicialização + eventos ─────────────────────────
     if (selEstado.value) {
         preencherCidades(selEstado.value, selCidade.value);
     }
