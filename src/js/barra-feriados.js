@@ -10,137 +10,50 @@ export function inicializarBarraFeriados() {
 
     if (!selAno || !selEstado || !selCidade || !botao) return;
 
-    // UF "dona" da página (ex.: /2026/mt/ → "mt"). Vem do <h1 data-uf>.
-    const h1 = document.querySelector('h1');
-    const ufInicial = String(h1?.dataset?.uf || '').toLowerCase();
-
-    // Lê o que o backend embutiu no HTML.
-    let cidadesHtml = null;
+    // Lê o JSON que o backend embutiu no HTML.
+    // O backend DEVE ter entregado o objeto completo { uf: [...] },
+    // com todas as cidades de todos os estados.
+    let cidadesPorUf = null;
     const elCidades = document.getElementById('dados-barra-cidades');
     if (elCidades) {
         try {
             const parsed = JSON.parse(elCidades.textContent.trim() || 'null');
-            if (parsed && typeof parsed === 'object') cidadesHtml = parsed;
-        } catch (_) {}
-    }
-
-    // Cache do objeto completo { uf: [...] } preenchido pelo fetch.
-    let cidadesCompletas = null;
-    let fetchPromise = null;
-
-    // Se o HTML já veio como objeto { uf: [...] }, usa direto.
-    if (cidadesHtml && !Array.isArray(cidadesHtml)) {
-        cidadesCompletas = cidadesHtml;
-    }
-
-    // ── Fetch: todas as cidades agrupadas por UF ───────────
-    function carregarTodasCidades() {
-        if (cidadesCompletas) return Promise.resolve(cidadesCompletas);
-        if (fetchPromise) return fetchPromise;
-
-        const cfg = window.PORTAL_CONFIG || {};
-        const url = cfg.supabase_url;
-        const key = cfg.supabase_anon_key;
-
-        if (!url || !key) {
-            console.warn('[barra-feriados] PORTAL_CONFIG.supabase_url e/ou supabase_anon_key ausentes — troca de estado não vai funcionar. Adicione no render que gera window.PORTAL_CONFIG.');
-            return Promise.resolve(null);
-        }
-
-        fetchPromise = fetch(`${url}/rest/v1/rpc/get_barra_feriados`, {
-            method: 'POST',
-            headers: {
-                'apikey': key,
-                'Authorization': `Bearer ${key}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({}), // sem p_uf → RPC retorna { uf: [...] } de TODOS os estados
-        })
-            .then(r => {
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                return r.json();
-            })
-            .then(data => {
-                const cid = data && data.cidades;
-                if (cid && typeof cid === 'object' && !Array.isArray(cid)) {
-                    cidadesCompletas = cid;
-                    return cidadesCompletas;
-                }
-                console.warn('[barra-feriados] RPC respondeu sem cidades agrupadas por UF');
-                return null;
-            })
-            .catch(err => {
-                console.warn('[barra-feriados] fetch falhou:', err);
-                return null;
-            });
-
-        return fetchPromise;
-    }
-
-    // ── Extrai lista de um UF ──────────────────────────────
-    // Regras:
-    //   • { uf: [...] } → filtra direto (após fetch)
-    //   • array com .uf em cada item → filtra por .uf
-    //   • array SEM .uf → SÓ usa se o UF pedido for o UF da própria página
-    //                     (backend mandou só do estado inicial). Pedindo
-    //                     outro UF, retorna [] → força o fetch.
-    function extrairLista(uf) {
-        if (!uf) return [];
-        const ufNorm = String(uf).toLowerCase();
-
-        // Objeto por UF (depois do fetch, ou se o backend já mandou assim)
-        if (cidadesCompletas) {
-            const chave = Object.keys(cidadesCompletas)
-                .find(k => k.toLowerCase() === ufNorm);
-            return chave && Array.isArray(cidadesCompletas[chave])
-                ? cidadesCompletas[chave]
-                : [];
-        }
-
-        // Array plano (vem do HTML antes do fetch)
-        if (Array.isArray(cidadesHtml)) {
-            const temUf = cidadesHtml.some(c => c && c.uf);
-            if (temUf) {
-                return cidadesHtml.filter(c =>
-                    String(c.uf || '').toLowerCase() === ufNorm
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                cidadesPorUf = parsed;
+            } else if (Array.isArray(parsed)) {
+                console.error(
+                    '[barra-feriados] O <script id="dados-barra-cidades"> veio como ARRAY (só um estado). ' +
+                    'O backend precisa chamar get_barra_feriados() SEM p_uf para retornar { uf: [...] } com todas as cidades.'
                 );
             }
-            // Sem .uf → só serve pro estado da própria página.
-            if (ufNorm === ufInicial) return cidadesHtml;
-            return []; // força o fetch
+        } catch (e) {
+            console.error('[barra-feriados] JSON inválido em dados-barra-cidades:', e);
         }
-
-        return [];
     }
 
-    // ── Preenche o select ──────────────────────────────────
-    async function preencherCidades(uf, selecionarSlug) {
-        if (!uf) {
-            selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
-            selCidade.value = '';
-            return;
-        }
+    // Filtra localmente — zero requisição HTTP.
+    function listaCidades(uf) {
+        if (!uf || !cidadesPorUf) return [];
+        const ufNorm = String(uf).toLowerCase();
 
-        selCidade.innerHTML = '<option value="">Carregando...</option>';
-        selCidade.disabled = true;
+        const chave = Object.keys(cidadesPorUf)
+            .find(k => k.toLowerCase() === ufNorm);
 
-        let cidades = extrairLista(uf);
+        return chave && Array.isArray(cidadesPorUf[chave])
+            ? cidadesPorUf[chave]
+            : [];
+    }
 
-        // Não achou localmente → busca todas do servidor
-        if (!cidades.length) {
-            const carregado = await carregarTodasCidades();
-            if (carregado) cidades = extrairLista(uf);
-        }
-
+    function preencherCidades(uf, selecionarSlug) {
         selCidade.innerHTML = '<option value="">Selecione a Cidade</option>';
+
+        const cidades = listaCidades(uf);
         cidades.forEach(c => {
             const opt = document.createElement('option');
             opt.value = c.slug;
             opt.textContent = capitalizar(c.cidade);
             selCidade.appendChild(opt);
         });
-
-        selCidade.disabled = false;
 
         if (selecionarSlug) {
             selCidade.value = selecionarSlug;
@@ -150,11 +63,12 @@ export function inicializarBarraFeriados() {
         }
     }
 
-    // ── Inicialização + eventos ────────────────────────────
+    // Estado inicial (página /2026/mt/ ou /2026/mt/cuiaba-mt/)
     if (selEstado.value) {
         preencherCidades(selEstado.value, selCidade.value);
     }
 
+    // Troca de estado → repopula cidades lendo do JSON em memória
     selEstado.addEventListener('change', function () {
         preencherCidades(this.value, '');
     });

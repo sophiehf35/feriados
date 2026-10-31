@@ -1,4 +1,4 @@
-// public/assets/js/validador-comentario-feriados.js
+// src/js/validador-comentario-feriados.js
 
 (function () {
     'use strict';

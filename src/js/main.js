@@ -12,25 +12,23 @@ import {
     inicializarMenuMobile,
     inicializarMenuDesktop
 } from '@sophiehf35/plataforma-base/client';
+
+// Validador customizado de comentário (IIFE — auto-executa no import)
+// Registra o próprio DOMContentLoaded e assume o #formularioDeComentario.
+import './validador-comentario-feriados.js';
+
 import { inicializarBarraFeriados } from './barra-feriados.js';
 import { TabelaGenerica } from './tabela.js';
 import { decodeData, escapeHtml } from './utils.js';
 import { inicializarAnaliseFeriados } from './analise-feriados.js';
 
+// Exposição da versão da plataforma-base (mantém compatibilidade)
 window.configurarValidacaoComentario = configurarValidacaoComentario;
 
 const config = window.PORTAL_CONFIG || {};
 
 function inicializarFlowbite() {
     try { initFlowbite(); } catch (_) {}
-}
-
-function inicializarFormularioComentario() {
-    const form = document.querySelector('#formularioDeComentario');
-    if (!form) return;
-    if (typeof configurarValidacaoComentario === 'function') {
-        configurarValidacaoComentario(form, form.dataset.endpoint || '/api/comentario-feriados');
-    }
 }
 
 function inicializarFormularioContato() {
@@ -347,7 +345,8 @@ async function inicializarAnuncios() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     inicializarCarregamentoImagens();
-    inicializarFormularioComentario();
+    // ❌ inicializarFormularioComentario() removido — o validador customizado
+    //    (import './validador-comentario-feriados.js') assume o #formularioDeComentario.
     inicializarFormularioContato();
     inicializarAnalyticsPortal();
     inicializarFlowbite();
