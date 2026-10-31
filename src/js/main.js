@@ -13,16 +13,12 @@ import {
     inicializarMenuDesktop
 } from '@sophiehf35/plataforma-base/client';
 
-// Validador customizado de comentário (IIFE — auto-executa no import)
-// Registra o próprio DOMContentLoaded e assume o #formularioDeComentario.
 import './validador-comentario-feriados.js';
-
 import { inicializarBarraFeriados } from './barra-feriados.js';
 import { TabelaGenerica } from './tabela.js';
 import { decodeData, escapeHtml } from './utils.js';
 import { inicializarAnaliseFeriados } from './analise-feriados.js';
 
-// Exposição da versão da plataforma-base (mantém compatibilidade)
 window.configurarValidacaoComentario = configurarValidacaoComentario;
 
 const config = window.PORTAL_CONFIG || {};
@@ -88,16 +84,8 @@ function inicializarCalendario() {
         months: tipoPagina !== 'mes' ? 12 : 1,
         settings: {
             lang: 'pt-br',
-            visibility: {
-                theme: 'light',
-                weekend: false,
-                daysOutside: false,
-            },
-            selection: {
-                day: false,
-                month: false,
-                year: false,
-            },
+            visibility: { theme: 'light', weekend: false, daysOutside: false },
+            selection: { day: false, month: false, year: false },
             selected: {
                 year: parseInt(ano, 10),
                 month: tipoPagina !== 'mes' ? 0 : pegaNumeroMes(h1.dataset.mes),
@@ -116,15 +104,12 @@ function inicializarTabelaFeriados() {
     const acessoMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (acessoMobile) {
-        const linhasData = document.querySelectorAll('table.tabela-customizada.feriados > tbody > tr > td.th');
-        for (const linha of linhasData) {
+        document.querySelectorAll('table.tabela-customizada.feriados > tbody > tr > td.th').forEach(linha => {
             const mes = linha.textContent.split(' ').splice(-1)[0];
-            const mesAbrev = mes.substring(0, 3);
-            linha.textContent = linha.textContent.replace(mes, mesAbrev);
-        }
+            linha.textContent = linha.textContent.replace(mes, mes.substring(0, 3));
+        });
 
-        const linhasDesc = document.querySelectorAll('table.tabela-customizada.feriados > tbody > tr > td:nth-child(2)');
-        for (const linha of linhasDesc) {
+        document.querySelectorAll('table.tabela-customizada.feriados > tbody > tr > td:nth-child(2)').forEach(linha => {
             const match = linha.textContent.match(/\(([^)]+)\)/);
             if (match) {
                 const descricao = match[1];
@@ -138,7 +123,7 @@ function inicializarTabelaFeriados() {
                 btn.dataset.descricao = descricao;
                 linha.appendChild(btn);
             }
-        }
+        });
         return;
     }
 
@@ -191,10 +176,6 @@ function inicializarBotoesDescricao() {
         }
     });
 }
-
-// ============================================================
-// TABELAS DINÂMICAS — TabelaGenerica
-// ============================================================
 
 function renderLinhaEstados(ano, item, colunasAtivas) {
     let cells = '';
@@ -252,7 +233,7 @@ function inicializarTabelaEstados() {
     const h1 = document.querySelector('h1');
     const ano = h1?.dataset.ano || new Date().getFullYear();
 
-    const tabela = new TabelaGenerica({
+    new TabelaGenerica({
         dados,
         containerId: 'tabelaEstadosContainer',
         colunas: [
@@ -264,8 +245,7 @@ function inicializarTabelaEstados() {
         chaveBusca: 'estado',
         labelBusca: 'Buscar estado',
         renderLinha: (item, cols) => renderLinhaEstados(ano, item, cols)
-    });
-    tabela.renderizar();
+    }).renderizar();
 }
 
 function inicializarTabelaMeses() {
@@ -286,7 +266,7 @@ function inicializarTabelaMeses() {
     const h1 = document.querySelector('h1');
     const ano = h1?.dataset.ano || new Date().getFullYear();
 
-    const tabela = new TabelaGenerica({
+    new TabelaGenerica({
         dados,
         containerId: 'tabelaMesesContainer',
         colunas: [
@@ -296,8 +276,7 @@ function inicializarTabelaMeses() {
         chaveBusca: 'mes',
         labelBusca: 'Buscar mês',
         renderLinha: (item, cols) => renderLinhaMeses(ano, item, cols)
-    });
-    tabela.renderizar();
+    }).renderizar();
 }
 
 function inicializarTabelaCidades() {
@@ -319,7 +298,7 @@ function inicializarTabelaCidades() {
     const ano = h1?.dataset.ano || new Date().getFullYear();
     const uf  = h1?.dataset.uf;
 
-    const tabela = new TabelaGenerica({
+    new TabelaGenerica({
         dados,
         containerId: 'tabelaCidadesContainer',
         colunas: [
@@ -329,8 +308,7 @@ function inicializarTabelaCidades() {
         chaveBusca: 'cidade',
         labelBusca: 'Buscar cidade',
         renderLinha: (item, cols) => renderLinhaCidades(ano, uf, item, cols)
-    });
-    tabela.renderizar();
+    }).renderizar();
 }
 
 async function inicializarAnuncios() {
@@ -345,8 +323,6 @@ async function inicializarAnuncios() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     inicializarCarregamentoImagens();
-    // ❌ inicializarFormularioComentario() removido — o validador customizado
-    //    (import './validador-comentario-feriados.js') assume o #formularioDeComentario.
     inicializarFormularioContato();
     inicializarAnalyticsPortal();
     inicializarFlowbite();

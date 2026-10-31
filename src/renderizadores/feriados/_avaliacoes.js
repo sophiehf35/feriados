@@ -311,13 +311,9 @@ export function renderFormularioComentario(config) {
 
 export function renderScriptsTurnstile(config) {
     const ativo = !!(config.possui_turnstile && config.codigo_sitekey_turnstile);
-
-    const turnstileTag = ativo
-        ? '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>'
-        : '';
+    if (!ativo) return '';
 
     return `
-        ${turnstileTag}
-        <script src="/assets/js/validador-comentario-feriados.js" defer></script>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     `;
 }

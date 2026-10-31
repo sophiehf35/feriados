@@ -10,9 +10,6 @@ export function inicializarBarraFeriados() {
 
     if (!selAno || !selEstado || !selCidade || !botao) return;
 
-    // Lê o JSON que o backend embutiu no HTML.
-    // O backend DEVE ter entregado o objeto completo { uf: [...] },
-    // com todas as cidades de todos os estados.
     let cidadesPorUf = null;
     const elCidades = document.getElementById('dados-barra-cidades');
     if (elCidades) {
@@ -22,8 +19,8 @@ export function inicializarBarraFeriados() {
                 cidadesPorUf = parsed;
             } else if (Array.isArray(parsed)) {
                 console.error(
-                    '[barra-feriados] O <script id="dados-barra-cidades"> veio como ARRAY (só um estado). ' +
-                    'O backend precisa chamar get_barra_feriados() SEM p_uf para retornar { uf: [...] } com todas as cidades.'
+                    '[barra-feriados] <script id="dados-barra-cidades"> veio como ARRAY. ' +
+                    'O backend precisa chamar get_barra_feriados() SEM p_uf.'
                 );
             }
         } catch (e) {
@@ -31,17 +28,11 @@ export function inicializarBarraFeriados() {
         }
     }
 
-    // Filtra localmente — zero requisição HTTP.
     function listaCidades(uf) {
         if (!uf || !cidadesPorUf) return [];
         const ufNorm = String(uf).toLowerCase();
-
-        const chave = Object.keys(cidadesPorUf)
-            .find(k => k.toLowerCase() === ufNorm);
-
-        return chave && Array.isArray(cidadesPorUf[chave])
-            ? cidadesPorUf[chave]
-            : [];
+        const chave = Object.keys(cidadesPorUf).find(k => k.toLowerCase() === ufNorm);
+        return chave && Array.isArray(cidadesPorUf[chave]) ? cidadesPorUf[chave] : [];
     }
 
     function preencherCidades(uf, selecionarSlug) {
@@ -63,12 +54,10 @@ export function inicializarBarraFeriados() {
         }
     }
 
-    // Estado inicial (página /2026/mt/ ou /2026/mt/cuiaba-mt/)
     if (selEstado.value) {
         preencherCidades(selEstado.value, selCidade.value);
     }
 
-    // Troca de estado → repopula cidades lendo do JSON em memória
     selEstado.addEventListener('change', function () {
         preencherCidades(this.value, '');
     });
