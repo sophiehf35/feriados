@@ -226,3 +226,5 @@ export async function renderizar(config, pagina, dados = {}) {
 
     return renderizarBase(config, conteudo, meta, scriptsAdicionais + scriptsCarrossel);
 }
+
+export const render = renderizar;
