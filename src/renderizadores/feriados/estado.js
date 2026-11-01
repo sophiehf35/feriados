@@ -7,22 +7,22 @@ import {
     gerarTabelaFeriados,
     proximaDataComemorativa,
     filtrarFeriados,
-    renderBarra,
-    renderCalendarioHtml,
-    renderLegendaHtml,
-    renderSumarioHtml,
-    renderFaqHtml,
-    renderLinksUteisHtml,
-    renderScriptsFeriados,
-    renderTabelaCidades,
+    renderizarBarra,
+    renderizarCalendarioHtml,
+    renderizarLegendaHtml,
+    renderizarSumarioHtml,
+    renderizarFaqHtml,
+    renderizarLinksUteisHtml,
+    renderizarScriptsFeriados,
+    renderizarTabelaCidades,
 } from './_utils.js';
 import {
     renderizarAvaliacoes,
-    renderFormularioComentario,
-    renderScriptsTurnstile,
+    renderizarFormularioComentario,
+    renderizarScriptsTurnstile,
 } from './_avaliacoes.js';
 
-export function render(config, data, contexto = {}) {
+export function renderizar(config, data, contexto = {}) {
     const { scriptsAdicionais = '' } = contexto;
 
     const ano       = String(data.ano);
@@ -58,7 +58,7 @@ export function render(config, data, contexto = {}) {
         }
     ];
 
-    const sumarioHtml = renderSumarioHtml([
+    const sumarioHtml = renderizarSumarioHtml([
         { titulo: `Feriados ${estado} ${ano}`,          href: '#sobre-feriados' },
         { titulo: `Lista de feriados ${estado} ${ano}`, href: '#lista-feriados' },
         { titulo: `Feriado ${estado} ${ano}`,           href: '#feriado-estado' },
@@ -143,7 +143,7 @@ export function render(config, data, contexto = {}) {
         ${breadcrumbHtml}
     </div>
 
-    ${renderBarra(data.barra, { anoAtual: ano, ufAtual: uf })}
+    ${renderizarBarra(data.barra, { anoAtual: ano, ufAtual: uf })}
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
@@ -154,11 +154,11 @@ export function render(config, data, contexto = {}) {
         </div>
 
         <div id="calendario" class="mb-6">
-            ${renderCalendarioHtml()}
+            ${renderizarCalendarioHtml()}
         </div>
 
         <div class="mb-6">
-            ${renderLegendaHtml(['nacional', 'estadual', 'facultativo'])}
+            ${renderizarLegendaHtml(['nacional', 'estadual', 'facultativo'])}
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -181,7 +181,7 @@ export function render(config, data, contexto = {}) {
                     <p class="text-gray-700 text-justify">${data.paragrafo3 || `Vale ressaltar que o estado de ${estado} pode a qualquer momento enviar um decreto onde é criado um novo feriado estadual e assim mudar os feriados em ${estado} ${ano}.`}</p>
                 </div>
 
-                ${renderTabelaCidades(data.cidades_concatenadas, ano, uf)}
+                ${renderizarTabelaCidades(data.cidades_concatenadas, ano, uf)}
 
                 <div id="comparacao-container"></div>
 
@@ -189,7 +189,7 @@ export function render(config, data, contexto = {}) {
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${estado} ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-4">Confira abaixo algumas perguntas e respostas sobre os feriados ${estado} ${ano}.</p>
                     <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 gap-6">
-                        ${renderFaqHtml(faqQuestions)}
+                        ${renderizarFaqHtml(faqQuestions)}
                     </div>
                 </div>
 
@@ -200,26 +200,26 @@ export function render(config, data, contexto = {}) {
 
                 ${renderizarAvaliacoes(data.comentarios || [])}
 
-                ${renderFormularioComentario(config)}
+                ${renderizarFormularioComentario(config)}
             </div>
 
             <aside class="flex flex-col gap-6">
                 ${cardImagemCapa}
                 ${sumarioHtml}
-                ${renderLinksUteisHtml()}
+                ${renderizarLinksUteisHtml()}
                 ${cardNumeros}
                 ${cardFeriadoes}
             </aside>
         </div>
     </div>
 
-    ${renderScriptsFeriados(feriados, {
+    ${renderizarScriptsFeriados(feriados, {
         ano,
         contexto: 'estado',
         label: estado,
         comparacao: data.comparacao || null,
     })}
-    ${renderScriptsTurnstile(config)}
+    ${renderizarScriptsTurnstile(config)}
     `;
 
     const meta = gerarMetaTags(

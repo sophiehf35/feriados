@@ -2,11 +2,15 @@
 
 import { renderizarBase, gerarMetaTags } from '@sophiehf35/plataforma-base';
 import { escapeHtml, capitalizar } from '../../js/utils.js';
-import { renderBarra, renderSumarioHtml, renderFaqHtml } from '../feriados/_utils.js';
+import {
+    renderizarBarra,
+    renderizarSumarioHtml,
+    renderizarFaqHtml,
+} from '../feriados/_utils.js';
 
 const ANOS_FALLBACK = ['2026', '2025', '2024'];
 
-export async function render(config, pagina, dados = {}) {
+export async function renderizar(config, pagina, dados = {}) {
     const { supabase, scriptsAdicionais = '' } = dados;
 
     let barra = { anos: [], estados: [], cidades: [] };
@@ -69,7 +73,7 @@ export async function render(config, pagina, dados = {}) {
         { pergunta: 'O que é feriado municipal?', resposta: 'Feriado municipal é uma data comemorativa oficial dentro de um município. É decretado pelo governo municipal e celebrado apenas pelos moradores daquele município.' },
     ];
 
-    const sumarioHtml = renderSumarioHtml([
+    const sumarioHtml = renderizarSumarioHtml([
         { titulo: 'Feriados', href: '#feriado' },
         { titulo: 'Feriados nacionais', href: '#feriado-nacional' },
         { titulo: 'Feriado nacional', href: '#feriado-nacional-single' },
@@ -118,7 +122,7 @@ export async function render(config, pagina, dados = {}) {
           </p>
         </div>
 
-        ${renderBarra(barra, {})}
+        ${renderizarBarra(barra, {})}
 
         <ul class="flex justify-center gap-6 mt-6 text-sm md:text-base text-white">
           <li><strong class="text-2xl font-bold">${barra.estados?.length || 27}</strong> Estados</li>
@@ -175,7 +179,7 @@ export async function render(config, pagina, dados = {}) {
         <div id="faq" class="bg-white shadow-md rounded-md p-4">
           <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-3">Perguntas Frequentes</h2>
           <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            ${renderFaqHtml(faqQuestions)}
+            ${renderizarFaqHtml(faqQuestions)}
           </div>
         </div>
       </div>

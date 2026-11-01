@@ -7,21 +7,21 @@ import {
     gerarTabelaFeriados,
     proximaDataComemorativa,
     filtrarFeriados,
-    renderBarra,
-    renderCalendarioHtml,
-    renderLegendaHtml,
-    renderSumarioHtml,
-    renderFaqHtml,
-    renderLinksUteisHtml,
-    renderScriptsFeriados,
+    renderizarBarra,
+    renderizarCalendarioHtml,
+    renderizarLegendaHtml,
+    renderizarSumarioHtml,
+    renderizarFaqHtml,
+    renderizarLinksUteisHtml,
+    renderizarScriptsFeriados,
 } from './_utils.js';
 import {
     renderizarAvaliacoes,
-    renderFormularioComentario,
-    renderScriptsTurnstile,
+    renderizarFormularioComentario,
+    renderizarScriptsTurnstile,
 } from './_avaliacoes.js';
 
-export function render(config, data, contexto = {}) {
+export function renderizar(config, data, contexto = {}) {
     const { scriptsAdicionais = '' } = contexto;
 
     const ano     = String(data.ano);
@@ -59,7 +59,7 @@ export function render(config, data, contexto = {}) {
         }
     ];
 
-    const sumarioHtml = renderSumarioHtml([
+    const sumarioHtml = renderizarSumarioHtml([
         { titulo: `Feriados ${cidade} ${ano}`,          href: '#sobre-feriados' },
         { titulo: `Lista de feriados ${cidade} ${ano}`, href: '#lista-feriados' },
         { titulo: `Feriado ${cidade} ${ano}`,           href: '#feriado-cidade' },
@@ -147,7 +147,7 @@ export function render(config, data, contexto = {}) {
         ${breadcrumbHtml}
     </div>
 
-    ${renderBarra(data.barra, { anoAtual: ano, ufAtual: uf, cidadeAtual: slug })}
+    ${renderizarBarra(data.barra, { anoAtual: ano, ufAtual: uf, cidadeAtual: slug })}
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
@@ -158,11 +158,11 @@ export function render(config, data, contexto = {}) {
         </div>
 
         <div id="calendario" class="mb-6">
-            ${renderCalendarioHtml()}
+            ${renderizarCalendarioHtml()}
         </div>
 
         <div class="mb-6">
-            ${renderLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
+            ${renderizarLegendaHtml(['nacional', 'estadual', 'municipal', 'facultativo'])}
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -191,7 +191,7 @@ export function render(config, data, contexto = {}) {
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados em ${cidade} ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-4">Confira abaixo algumas perguntas e respostas sobre os feriados ${cidade} ${ano}.</p>
                     <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 gap-6">
-                        ${renderFaqHtml(faqQuestions)}
+                        ${renderizarFaqHtml(faqQuestions)}
                     </div>
                 </div>
 
@@ -202,26 +202,26 @@ export function render(config, data, contexto = {}) {
 
                 ${renderizarAvaliacoes(data.comentarios || [])}
 
-                ${renderFormularioComentario(config)}
+                ${renderizarFormularioComentario(config)}
             </div>
 
             <aside class="flex flex-col gap-6">
                 ${cardImagemCapa}
                 ${sumarioHtml}
-                ${renderLinksUteisHtml()}
+                ${renderizarLinksUteisHtml()}
                 ${cardNumeros}
                 ${cardFeriadoes}
             </aside>
         </div>
     </div>
 
-    ${renderScriptsFeriados(feriados, {
+    ${renderizarScriptsFeriados(feriados, {
         ano,
         contexto: 'cidade',
         label: cidade,
         comparacao: data.comparacao || null,
     })}
-    ${renderScriptsTurnstile(config)}
+    ${renderizarScriptsTurnstile(config)}
     `;
 
     const meta = gerarMetaTags(

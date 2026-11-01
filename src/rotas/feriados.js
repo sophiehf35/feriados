@@ -33,33 +33,30 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
     const ano = parts[0];
 
     try {
-        // /2026/
         if (parts.length === 1) {
             const mod = renderizadores['ano'];
-            if (!mod?.render) return erroInterno('renderizador "ano" ausente');
+            if (!mod?.renderizar) return erroInterno('renderizador "ano" ausente');
 
             const { data, error } = await supabase.rpc('get_ano', { p_ano: ano });
             if (error) return erroInterno('RPC get_ano', error);
             if (!data?.length) return naoEncontrado(`Não há dados para o ano ${ano}.`);
 
-            // Busca comparação em paralelo (não bloqueia se falhar)
             const comp = await supabase.rpc('get_comparacao_ano', { p_ano: ano });
             data[0].comparacao = (comp && !comp.error && comp.data) ? comp.data : null;
             data[0].ano = data[0].ano || ano;
 
             return {
-                html: mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
+                html: mod.renderizar(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
                 status: 200,
             };
         }
 
-        // /2026/sp/ ou /2026/janeiro/
         if (parts.length === 2) {
             const slug = parts[1];
 
             if (slug.length === 2) {
                 const mod = renderizadores['estado'];
-                if (!mod?.render) return erroInterno('renderizador "estado" ausente');
+                if (!mod?.renderizar) return erroInterno('renderizador "estado" ausente');
 
                 const { data, error } = await supabase.rpc('get_estado', { p_slug: slug, p_ano: ano });
                 if (error) return erroInterno('RPC get_estado', error);
@@ -67,13 +64,13 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
 
                 data[0].ano = ano;
                 return {
-                    html: mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
+                    html: mod.renderizar(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
                     status: 200,
                 };
             }
 
             const mod = renderizadores['mes'];
-            if (!mod?.render) return erroInterno('renderizador "mes" ausente');
+            if (!mod?.renderizar) return erroInterno('renderizador "mes" ausente');
 
             const { data, error } = await supabase.rpc('get_mes', { p_slug: slug, p_ano: ano });
             if (error) {
@@ -86,16 +83,15 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
 
             data[0].ano = ano;
             return {
-                html: mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
+                html: mod.renderizar(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
                 status: 200,
             };
         }
 
-        // /2026/pr/abatia-pr/
         if (parts.length === 3) {
             const cidadeSlug = parts[2];
             const mod = renderizadores['cidade'];
-            if (!mod?.render) return erroInterno('renderizador "cidade" ausente');
+            if (!mod?.renderizar) return erroInterno('renderizador "cidade" ausente');
 
             const { data, error } = await supabase.rpc('get_cidade', { p_slug: cidadeSlug, p_ano: ano });
             if (error) return erroInterno('RPC get_cidade', error);
@@ -103,7 +99,7 @@ export async function resolver({ supabase, slugParts, config, scriptsAdicionaisB
 
             data[0].ano = ano;
             return {
-                html: mod.render(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
+                html: mod.renderizar(config, data[0], { scriptsAdicionais: scriptsAdicionaisBase, url }),
                 status: 200,
             };
         }

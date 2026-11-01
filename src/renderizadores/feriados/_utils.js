@@ -80,7 +80,7 @@ export function gerarTabelaFeriados(feriados) {
     return html;
 }
 
-export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
+export function renderizarBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
     const anos = barra?.anos || [];
     const estados = barra?.estados || [];
 
@@ -145,11 +145,11 @@ export function renderBarra(barra, { anoAtual, ufAtual, cidadeAtual } = {}) {
     </div>`;
 }
 
-export function renderCalendarioHtml() {
+export function renderizarCalendarioHtml() {
     return `<div id="calendario-de-feriados"></div>`;
 }
 
-export function renderLegendaHtml(tipos) {
+export function renderizarLegendaHtml(tipos) {
     const map = {
         nacional:    ['bg-feriado-nacional',  'Feriado Nacional'],
         estadual:    ['bg-feriado-estadual',  'Feriado Estadual'],
@@ -179,7 +179,7 @@ export function renderLegendaHtml(tipos) {
     </div>`;
 }
 
-export function renderSumarioHtml(itens) {
+export function renderizarSumarioHtml(itens) {
     if (!itens || itens.length === 0) return '';
 
     const setaGrande = `<svg class="w-4 h-4 text-primary flex-shrink-0 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
@@ -221,7 +221,7 @@ export function renderSumarioHtml(itens) {
     </div>`;
 }
 
-export function renderFaqHtml(faqQuestions) {
+export function renderizarFaqHtml(faqQuestions) {
     return (faqQuestions || []).map(faq => {
         const perguntaSlug = slugify(faq.pergunta);
         return `
@@ -234,7 +234,7 @@ export function renderFaqHtml(faqQuestions) {
     }).join('');
 }
 
-export function renderLinksUteisHtml() {
+export function renderizarLinksUteisHtml() {
     return `
     <div class="bg-white shadow-md rounded-md overflow-hidden">
         <div class="titulo_secao bg-primary px-5 py-2.5 rounded-t-md">
@@ -248,7 +248,7 @@ export function renderLinksUteisHtml() {
     </div>`;
 }
 
-export function renderScriptsFeriados(feriados, anoData = null) {
+export function renderizarScriptsFeriados(feriados, anoData = null) {
     let html = `<script>window.__FERIADOS__ = ${JSON.stringify(feriados)};</script>`;
     if (anoData) {
         html += `<script>window.__FERIADOS_ANO__ = ${JSON.stringify(anoData)};</script>`;
@@ -256,7 +256,7 @@ export function renderScriptsFeriados(feriados, anoData = null) {
     return html;
 }
 
-export function renderContainersAnaliseHtml() {
+export function renderizarContainersAnaliseHtml() {
     return `
     <div id="proximo-feriado-container"></div>
     <div id="numeros-container"></div>
@@ -292,7 +292,7 @@ export const MESES = [
     { slug: 'dezembro',  nome: 'Dezembro'  },
 ];
 
-export function renderTabelaEstados(estadosConcatenados, ano) {
+export function renderizarTabelaEstados(estadosConcatenados, ano) {
     const estados = parseConcatenado(estadosConcatenados, ['uf', 'estado']);
     if (!estados.length) return '';
 
@@ -313,7 +313,7 @@ export function renderTabelaEstados(estadosConcatenados, ano) {
     <script id="dados-tabela-estados" type="application/json">${dadosCodificados}</script>`;
 }
 
-export function renderTabelaMeses(ano) {
+export function renderizarTabelaMeses(ano) {
     const dados = MESES.map(m => ({
         mes: m.nome,
         slug: m.slug,
@@ -330,7 +330,7 @@ export function renderTabelaMeses(ano) {
     <script id="dados-tabela-meses" type="application/json">${dadosCodificados}</script>`;
 }
 
-export function renderTabelaCidades(cidadesConcatenadas, ano, uf) {
+export function renderizarTabelaCidades(cidadesConcatenadas, ano, uf) {
     const cidades = parseConcatenado(cidadesConcatenadas, ['slug', 'cidade']);
     if (!cidades.length) return '';
 

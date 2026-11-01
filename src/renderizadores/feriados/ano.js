@@ -7,23 +7,23 @@ import {
     gerarTabelaFeriados,
     proximaDataComemorativa,
     converterData,
-    renderBarra,
-    renderCalendarioHtml,
-    renderLegendaHtml,
-    renderSumarioHtml,
-    renderFaqHtml,
-    renderLinksUteisHtml,
-    renderScriptsFeriados,
-    renderTabelaEstados,
-    renderTabelaMeses,
+    renderizarBarra,
+    renderizarCalendarioHtml,
+    renderizarLegendaHtml,
+    renderizarSumarioHtml,
+    renderizarFaqHtml,
+    renderizarLinksUteisHtml,
+    renderizarScriptsFeriados,
+    renderizarTabelaEstados,
+    renderizarTabelaMeses,
 } from './_utils.js';
 import {
     renderizarAvaliacoes,
-    renderFormularioComentario,
-    renderScriptsTurnstile,
+    renderizarFormularioComentario,
+    renderizarScriptsTurnstile,
 } from './_avaliacoes.js';
 
-export function render(config, data, contexto = {}) {
+export function renderizar(config, data, contexto = {}) {
     const { scriptsAdicionais = '' } = contexto;
 
     const ano = String(data.ano);
@@ -79,7 +79,7 @@ export function render(config, data, contexto = {}) {
         },
     ];
 
-    const sumarioHtml = renderSumarioHtml([
+    const sumarioHtml = renderizarSumarioHtml([
         { titulo: `Feriados ${ano}`,            href: '#sobre-feriados' },
         { titulo: `Lista de feriados ${ano}`,   href: '#lista-feriados' },
         { titulo: `Feriados Nacionais ${ano}`,  href: '#feriados-nacionais' },
@@ -161,7 +161,7 @@ export function render(config, data, contexto = {}) {
         ${breadcrumbHtml}
     </div>
 
-    ${renderBarra(data.barra, { anoAtual: ano })}
+    ${renderizarBarra(data.barra, { anoAtual: ano })}
 
     <div class="xl:max-w-5xl 2xl:max-w-7xl max-xl:p-4 mx-auto py-8">
 
@@ -174,12 +174,12 @@ export function render(config, data, contexto = {}) {
                 </div>
             </div>
             <div class="lg:col-span-1">
-                ${renderLegendaHtml(['nacional', 'facultativo'])}
+                ${renderizarLegendaHtml(['nacional', 'facultativo'])}
             </div>
         </div>
 
         <div id="calendario" class="mb-6">
-            ${renderCalendarioHtml()}
+            ${renderizarCalendarioHtml()}
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -206,8 +206,8 @@ export function render(config, data, contexto = {}) {
                     <p class="text-gray-700 text-justify">Confira no calendário acima as datas móveis e fixas do ano, incluindo Carnaval, Páscoa, Corpus Christi, Independência, Natal e os demais feriados nacionais.</p>
                 </div>
 
-                ${renderTabelaEstados(data.estados_concatenados, ano)}
-                ${renderTabelaMeses(ano)}
+                ${renderizarTabelaEstados(data.estados_concatenados, ano)}
+                ${renderizarTabelaMeses(ano)}
 
                 <div id="comparacao-container"></div>
 
@@ -215,7 +215,7 @@ export function render(config, data, contexto = {}) {
                     <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3">Feriados nacionais ${ano}</h2>
                     <p class="text-gray-700 text-justify mb-4">Confira abaixo algumas perguntas e respostas sobre as datas comemorativas de ${ano}.</p>
                     <div itemscope itemtype="https://schema.org/FAQPage" class="grid grid-cols-1 gap-6">
-                        ${renderFaqHtml(faqQuestions)}
+                        ${renderizarFaqHtml(faqQuestions)}
                     </div>
                 </div>
 
@@ -226,24 +226,24 @@ export function render(config, data, contexto = {}) {
 
                 ${renderizarAvaliacoes(data.comentarios || [])}
 
-                ${renderFormularioComentario(config)}
+                ${renderizarFormularioComentario(config)}
             </div>
 
             <aside class="flex flex-col gap-6">
                 ${cardImagemCapa}
                 ${sumarioHtml}
-                ${renderLinksUteisHtml()}
+                ${renderizarLinksUteisHtml()}
                 ${cardNumeros}
                 ${cardFeriadoes}
             </aside>
         </div>
     </div>
 
-    ${renderScriptsFeriados(feriados, {
+    ${renderizarScriptsFeriados(feriados, {
         ano,
         comparacao: data.comparacao || null,
     })}
-    ${renderScriptsTurnstile(config)}
+    ${renderizarScriptsTurnstile(config)}
     `;
 
     const meta = gerarMetaTags(

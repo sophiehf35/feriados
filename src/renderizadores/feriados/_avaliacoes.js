@@ -100,7 +100,7 @@ export function renderizarAvaliacoes(comentarios) {
         `;
     }).join('');
 
-    const renderCard = (c, isReply) => {
+    const renderizarCard = (c, isReply) => {
         const inicial = (c.nome || 'A').charAt(0).toUpperCase();
         const nota = Number(c.avaliacao) || 0;
         const sexoLabel = c.sexo === '1' ? 'Feminino' : c.sexo === '2' ? 'Masculino' : '';
@@ -137,7 +137,7 @@ export function renderizarAvaliacoes(comentarios) {
 
     const cardsHtml = topOrdenado.map(c => {
         const replies = (byPai[c.id] || []).slice().sort((a, b) => ts(a) - ts(b));
-        return renderCard(c, false) + replies.map(r => renderCard(r, true)).join('');
+        return renderizarCard(c, false) + replies.map(r => renderizarCard(r, true)).join('');
     }).join('');
 
     return `
@@ -245,7 +245,7 @@ export function renderizarAvaliacoes(comentarios) {
     `;
 }
 
-export function renderFormularioComentario(config) {
+export function renderizarFormularioComentario(config) {
     const turnstileAtivo = !!(config.possui_turnstile && config.codigo_sitekey_turnstile);
     const turnstileWidget = turnstileAtivo ? `
         <div class="cf-turnstile mt-4" data-sitekey="${config.codigo_sitekey_turnstile}" data-theme="light"></div>
@@ -309,7 +309,7 @@ export function renderFormularioComentario(config) {
     `;
 }
 
-export function renderScriptsTurnstile(config) {
+export function renderizarScriptsTurnstile(config) {
     const ativo = !!(config.possui_turnstile && config.codigo_sitekey_turnstile);
     if (!ativo) return '';
 
