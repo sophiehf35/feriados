@@ -1,7 +1,6 @@
 // src/js/main.js
 
 import '../css/input.css';
-import { inicializarValidadorComentarioFeriados } from './validador-comentario-feriados.js';
 import { initFlowbite } from 'flowbite';
 import VanillaCalendar from 'vanilla-calendar-pro';
 import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
@@ -333,7 +332,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarTabelaFeriados();
     inicializarBotoesDescricao();
     inicializarAnaliseFeriados();
-    inicializarValidadorComentarioFeriados();
 
     inicializarTabelaEstados();
     inicializarTabelaMeses();
